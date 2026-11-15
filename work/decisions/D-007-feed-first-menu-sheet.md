@@ -14,10 +14,10 @@ header icons, channel chips and a menu sheet.
 ## Decision
 
 No tab bar. Home is the feed ("What's new"), with a floating bar at the
-bottom: a **+** button to share news and an input to ask about anything
-you follow. A menu button (top left) opens a sheet from the bottom with
-Connections, your channels, Start a channel, Scan a code, and Your AI and
-settings. Your avatar (top right) goes to Your AI and settings. Every
+bottom for asking about anything you follow, and nothing else on it. A
+menu button (top left) is the only other control: it opens a sheet from
+the bottom with Share news (once you run a channel), Connections, your
+channels, Start a channel, Scan a code, and Your AI and settings. Every
 other screen has a "‹ What's new" back link.
 
 ## Options considered
@@ -29,5 +29,5 @@ other screen has a "‹ What's new" back link.
 
 ## Consequences
 
-Connections are one tap further away. Watch in testing whether people find
-them, and whether they confuse **+** (share) with asking. Revisit if they do.
+Connections and sharing are one tap further away. Watch in testing whether
+people find them. Revisit if they don't.
