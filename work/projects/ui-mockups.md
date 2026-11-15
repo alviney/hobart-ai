@@ -1,6 +1,6 @@
 # UI mockups: options for the key screens and the landing page
 
-- **Status:** ready
+- **Status:** building
 - **Size guess:** M
 - **Touches:** design files or clickable HTML prototypes only, no product code
 - **Related decisions:** [D-004](../decisions/D-004-mockups-first-and-ads.md), [D-003](../decisions/D-003-marketing-sells-the-dream.md)
@@ -23,7 +23,7 @@ screens, from which the owner picks one (recorded as a decision).
 
 ## Open questions
 
-- [ ] Format: clickable HTML prototypes or Figma (the owner's preference; default is clickable HTML, shareable by link)
+- [x] Format: a Claude design canvas (private artifact, shareable from its Share menu): https://claude.ai/artifact/Pqur9C8nAW3zan5uhUUQmq
 
 ## Screens
 
@@ -43,10 +43,11 @@ screens, from which the owner picks one (recorded as a decision).
 
 ## Done when
 
-- [ ] 2–3 directions, each covering screens 1–7
-- [ ] Shared with the owner as links they can open on a phone
+- [x] 2–3 directions, each covering screens 1–7 (three: A Harbour, B Signal, C Market day; the channel page is folded into the publisher screen)
+- [x] Shared with the owner as links they can open on a phone
 - [ ] The owner's pick written up as a decision
 
 ## Log
 
 - 2026-11-15: created, marked ready (needs nothing from the owner)
+- 2026-11-15: three directions published to the design canvas; waiting on the owner's pick
