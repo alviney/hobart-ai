@@ -67,6 +67,10 @@ p { margin: 0; }
 
 .card { padding: 16px 18px; border-radius: 24px; background: var(--soft); display: flex; flex-direction: column; gap: 8px; }
 .card p.msg { font-size: 16px; line-height: 1.45; }
+.ping-title { font-family: var(--display); font-weight: 600; font-size: 20px; line-height: 1.2; margin: 2px 0 0; text-wrap: balance; }
+.ping-body { font-size: 16px; line-height: 1.55; white-space: pre-line; color: var(--body); }
+.ping-body.clamp { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.more-btn { align-self: flex-start; border: 0; background: none; padding: 4px 0; min-height: 36px; color: var(--primary); font-weight: 700; font-size: 14px; }
 .meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
 .tag { padding: 4px 10px; border-radius: 99px; font-size: 12px; font-weight: 700; white-space: nowrap; }
 .t4 { background: var(--urgent-bg); color: var(--urgent-fg); }
@@ -214,7 +218,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
   const km = (m) => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
 
   const fresh = () => ({
-    v: 3, screen: 'home', connId: null, showQuiet: false, pullOnly: false, sheet: null,
+    v: 4, screen: 'home', open: {}, connId: null, showQuiet: false, pullOnly: false, sheet: null,
     draft: { text: '', pri: 2, manual: false, ch: null }, subId: 'elm', scanLevel: 3, seq: 100,
     newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false, chat: [],
     connections: [
@@ -248,14 +252,15 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
     ],
     posts: [
       { id: 1, conn: 'netball', pri: 3, text: 'Saturday games move to 9am at the Domain courts. Same team sheet.', time: '7:40am' },
-      { id: 2, conn: 'pf', pri: 4, text: 'School closed Friday for the power upgrade. Before-care is still running.', time: 'Yesterday' },
+      { id: 2, conn: 'pf', pri: 4, title: "Friday closure: what's open and what isn't", text: "School is closed this Friday while Aurora upgrades the power to the new building. The upgrade can't happen with students on site, so it's a full closure, not a pupil-free day.\n\nBefore-care and after-care are still running in the hall from 7:30am to 6pm. Book through the office by Thursday at 3pm so we have enough staff.\n\nThe canteen is closed, so pack lunch if your child is in care. The uniform shop will open on Monday instead.\n\nIf you can't find care, reply to this ping and we'll try to match you with another family. Thanks for your patience; the new building opens in Term 1.", time: 'Yesterday' },
       { id: 3, conn: 'elm', pri: 2, text: 'Hot cross buns are back from Monday. Pre-orders open now.', time: 'Yesterday' },
-      { id: 4, conn: 'landcare', pri: 2, text: 'Working bee this Sunday at 9am. We are planting 200 natives along the creek.', time: 'Yesterday' },
+      { id: 4, conn: 'landcare', pri: 2, title: 'The creek, one year on', text: "A year ago the bank along Mt Stuart Rd was blackberry and broken glass. Since then 41 of you have planted 1,860 natives over eleven working bees.\n\nThe survival rate is 82%, well above the 60% we hoped for. The wattles are head height and the tussocks have closed the gaps that were washing out in every storm. Last month someone spotted a platypus below the footbridge for the first time in years.\n\nNext up is the steep section near the gate. It needs jute matting before we plant, so this Sunday is a matting day: gloves and sturdy shoes, and we'll have the stakes and mallets. 9am at the gate, morning tea at 11.", time: 'Yesterday' },
       { id: 5, conn: 'netball', pri: 1, text: 'Photos from last week are up in the club gallery.', time: 'Mon' },
       { id: 6, conn: 'pf', pri: 2, text: 'Second-hand uniform sale next Wednesday after school.', time: 'Mon' },
       { id: 7, conn: 'bodycorp', pri: 1, text: 'Gardeners are in on Thursday morning.', time: 'Mon' },
       { id: 8, conn: 'elm', pri: 1, text: 'New sourdough rye on the shelves this week.', time: 'Sun' },
-      { id: 9, conn: 'garden', pri: 2, text: 'Seedling swap at the shed this Saturday, 10am.', time: 'Sun' }
+      { id: 9, conn: 'garden', pri: 2, text: 'Seedling swap at the shed this Saturday, 10am.', time: 'Sun' },
+      { id: 10, conn: 'netball', pri: 3, title: 'Finals day: everything you need to know', text: "We made the grand final! It's on Saturday 29 November at the Domain courts, court 3, at 10:20am. Please have players there by 9:50 for warm-up.\n\nUniforms: full club kit, including the navy socks. If your child has lost theirs, we have spares at the canteen.\n\nParking fills up fast on finals day. The Queens Walk car park is the best bet, or the 9:30 bus from the city stops right outside.\n\nAfter the game we're doing a team breakfast at Elm St Bakehouse. The club is covering the players; parents pay their own. Let me know by Thursday if you're coming so I can give them numbers.\n\nWin or lose, it's been a brilliant season. Thanks for every early morning, every lift and every orange quarter.", time: '8:15am' }
     ]
   });
 
@@ -312,31 +317,26 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
     for (const t of [1, 2, 3, 4]) (t <= pri ? (pinged += a[t]) : (quiet += a[t]));
     return { pinged, quiet, ai: a.ai };
   }
-  const pingCard = (p) => `<article class="card"><div class="meta">${tag(p.pri)}${conn(p.conn).owner ? '<span class="tag you">You</span>' : ''}${p.isNew ? '<span class="tag new">New</span>' : ''}<span>${esc(conn(p.conn).short)} · ${esc(p.time)}</span></div><p class="msg">${esc(p.text)}</p></article>`;
+  const isLong = (p) => !!p.title || p.text.length > 240;
+  const pingCard = (p) => {
+    const meta = `<div class="meta">${tag(p.pri)}${conn(p.conn).owner ? '<span class="tag you">You</span>' : ''}${p.isNew ? '<span class="tag new">New</span>' : ''}<span>${esc(conn(p.conn).short)} · ${esc(p.time)}</span></div>`;
+    if (!isLong(p)) return `<article class="card">${meta}<p class="msg">${esc(p.text)}</p></article>`;
+    const open = !!S.open[p.id];
+    return `<article class="card">${meta}${p.title ? `<h3 class="ping-title">${esc(p.title)}</h3>` : ''}
+      <p class="ping-body ${open ? '' : 'clamp'}" id="ping-${p.id}">${esc(p.text)}</p>
+      <button type="button" class="more-btn" data-act="expand" data-arg="${p.id}" aria-expanded="${open}" aria-controls="ping-${p.id}">${open ? 'Show less' : 'Read more'}</button></article>`;
+  };
 
-  // ---------- Home ----------
+  // ---------- Home: the full feed ----------
   function home() {
-    const latest = myPosts().find((p) => pings(p) || conn(p.conn).owner);
+    const mine = myPosts();
+    const loud = mine.filter((p) => pings(p) || conn(p.conn).owner), quiet = mine.filter((p) => !pings(p) && !conn(p.conn).owner);
     return `<div class="topline"><button type="button" class="iconbtn" data-act="menu" aria-label="Menu">${icon.menu}</button>
         <span class="wordmark" style="flex:1">${icon.sonar}Sub1</span>
         <button type="button" class="radar-btn" data-act="go" data-arg="radar" aria-label="Radar: Troves near you">${icon.radar}</button></div>
-      ${latest
-        ? `<button type="button" class="latest" data-act="go" data-arg="feed">
-            <span class="meta">${tag(latest.pri)}${conn(latest.conn).owner ? '<span class="tag you">You</span>' : ''}<span>${esc(conn(latest.conn).short)} · ${esc(latest.time)}</span></span>
-            <span class="msg">${esc(latest.text)}</span>
-            <span class="more">All pings ›</span></button>`
-        : '<button type="button" class="latest" data-act="go" data-arg="feed"><span class="msg">No new pings.</span><span class="more">All pings ›</span></button>'}
-      <div class="home-empty">Room to build</div>`;
-  }
-
-  // ---------- Pings (full feed) ----------
-  function feed() {
-    const mine = myPosts();
-    const loud = mine.filter((p) => pings(p) || conn(p.conn).owner), quiet = mine.filter((p) => !pings(p) && !conn(p.conn).owner);
-    return `<button type="button" class="back" data-act="go" data-arg="home">‹ Home</button><h1>Pings</h1>
-      <p class="sub">${S.pullOnly ? 'Pull only is on, so nothing pings you. Everything is here when you or your AI look.' : 'These cleared your line and pinged you.'}</p>
+      ${S.pullOnly ? '<p class="sub">Pull only is on, so nothing pings you. Everything is here when you or your AI look.</p>' : ''}
       ${loud.length ? loud.map(pingCard).join('') : '<div class="empty">Nothing important right now.</div>'}
-      ${quiet.length ? `<button type="button" class="quiet-btn" data-act="quiet" aria-expanded="${S.showQuiet}"><span><b>${quiet.length} quiet pings</b> <span class="sub">saved for later</span></span><span aria-hidden="true">${S.showQuiet ? '▴' : '▾'}</span></button>` : ''}
+      ${quiet.length ? `<button type="button" class="quiet-btn" data-act="quiet" aria-expanded="${S.showQuiet}"><span><b>${quiet.length} quiet pings</b> <span class="sub">below your line</span></span><span aria-hidden="true">${S.showQuiet ? '▴' : '▾'}</span></button>` : ''}
       ${S.showQuiet ? quiet.map(pingCard).join('') : ''}`;
   }
 
@@ -420,7 +420,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
       <p class="label">Documents</p>
       ${c.docs.map((d) => `<details class="doc"><summary>${esc(d.t)}</summary><p>${esc(d.b)}</p></details>`).join('')}
       <p class="label">Recent pings</p>
-      ${recent.map((p) => `<div class="card"><div class="meta">${tag(p.pri)}<span>${esc(p.time)}</span></div><p class="msg">${esc(p.text)}</p></div>`).join('')}
+      ${recent.map(pingCard).join('')}
       <button type="button" class="link-btn" data-act="leave" style="color:var(--urgent-fg);align-self:flex-start">Unsubscribe from ${esc(c.short)}</button>`;
   }
 
@@ -604,10 +604,10 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
       </div>`;
   }
 
-  const SCREENS = { home, feed, radar, troves, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
+  const SCREENS = { home, feed: home, radar, troves, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
   function render() {
     const el = $('screen');
-    const fab = ['home', 'feed', 'ask', 'radar'].includes(S.screen);
+    const fab = ['home', 'feed', 'ask'].includes(S.screen);
     el.className = 'screen' + (S.screen === 'subscribe' ? ' flush' : '') + (fab ? ' has-fab' : '') + (S.screen === 'radar' ? ' radar-screen' : '');
     el.innerHTML = (SCREENS[S.screen] || home)();
     $('float').innerHTML = fab ? floatBar() : '';
@@ -636,7 +636,8 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
     'menu-go': (a) => act.go(a),
     'menu-mine': (a) => { S.sheet = null; act['open-mine'](a); },
     trove: (a) => { S.sheet = a; render(); },
-    quiet: () => { S.showQuiet = !S.showQuiet; render(); },
+    quiet: () => { const y = $('screen').scrollTop; S.showQuiet = !S.showQuiet; render(); $('screen').scrollTop = y; },
+    expand: (a) => { S.open[a] = !S.open[a]; const y = $('screen').scrollTop; render(); $('screen').scrollTop = y; },
     'open-conn': (a) => { S.connId = a; S.screen = 'conn'; S.sheet = null; render(); scrollTop(); },
     'open-mine': (a) => { S.connId = a; S.screen = 'mine'; S.addingDoc = false; render(); scrollTop(); },
     'toggle-conn': () => { const c = conn(S.connId); c.on = !c.on; render(); toast(c.on ? `Notifications on for ${c.short}` : `${c.short} paused`); },
@@ -723,7 +724,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
 
   const hot = window.claude && window.claude.hot;
   if (hot && hot.snapshot) hot.snapshot(() => S);
-  const boot = (data) => { if (data && data.v === 3) S = Object.assign(fresh(), data, { sheet: null }); render(); };
+  const boot = (data) => { if (data && data.v === 4) S = Object.assign(fresh(), data, { sheet: null }); render(); };
   if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>
