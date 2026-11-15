@@ -50,6 +50,34 @@ publisher badges, "one of the first 100 in Hobart" and similar.
 The tech crowd isn't the main market, but their approval ("this is actually
 a proper MCP setup") gives everyone else confidence.
 
+## Physical presence: the QR code is the campaign
+
+The "scan for live updates" QR poster (idea in `work/ideas.md`) is our
+strongest early marketing channel, because every publisher who uses it is
+advertising us.
+
+- **It makes the dream visible.** One QR code on a café counter is a
+  feature. The same mark on counters, club noticeboards, school gates and
+  market stalls all over Hobart is "Hobart, connected", visible in the street
+  before anyone reads a word of copy. Seeing it everywhere is what makes
+  people feel "this is the new way of doing things".
+- **It recruits subscribers for free.** Publishers don't need their
+  customers' contact details. Walk-ins become an audience.
+- **It recruits publishers.** Other shop owners see the poster next door
+  and want one. Each poster carries a small "Get your own" line.
+- **A consistent, recognisable mark.** One design and one call to action
+  ("Scan for live updates") on every poster, so people learn to look for it,
+  like a "tap to pay" sign. The publisher's name and logo sit alongside it;
+  ours stays small but constant.
+- **The first scan should feel magic.** Scan, pick how much you want to
+  hear, done in seconds, with an optional "connect your AI" step. That's the
+  moment the average person feels capable rather than out of their depth.
+- **Founding-publisher pride.** "A founding Hobart publisher" sticker or
+  badge on early posters.
+
+Printing posters and stickers costs money, so the owner decides when and
+how much; sessions only design them.
+
 ## Tone
 
 - **Confident, warm, local.** Proudly Hobart, not Silicon Valley.

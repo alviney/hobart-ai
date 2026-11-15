@@ -30,6 +30,28 @@ Drafts for the owner to react to. None of these are approved copy. Follow
 > important things come through. Everything else waits until you, or your
 > AI, go looking.
 
+## QR poster and counter card
+
+> **Scan for live updates**
+> Specials, changes and news from [Café name], straight to you, or to your
+> AI. You choose how much you hear.
+>
+> *A founding Hobart publisher · Get your own: [url]*
+
+Variants for the main line:
+
+- "Never miss the specials. Scan for live updates."
+- "Don't follow us on five apps. Scan once."
+- (Clubs) "Fixtures, changes and wet-weather calls. Scan to stay in the loop."
+- (Markets) "Find out what's on before you get here. Scan for live updates."
+
+## Pitch to a shop owner (QR angle)
+
+> You don't have your customers' emails, but you do have a counter. Put this
+> card next to the till. Your regulars scan it once, and from then on they
+> hear about your specials and changes however they like. You post once;
+> they decide what's worth a ping.
+
 ## For the AI-curious
 
 > People have been building this with self-hosted agents, webhooks and
