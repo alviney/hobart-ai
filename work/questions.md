@@ -55,3 +55,11 @@ or to `withdrawn` with a reason; it is never deleted.
 - **Blocks:** [pilot-publishers](projects/pilot-publishers.md), the pitch wording
 - **Options:** A: free for everyone during the pilot, with SMS and higher volumes paid later / B: publishers pay from day one / C: free forever for community groups, paid for businesses
 - **Recommendation:** A now, keeping C as the likely long-term model, because removing friction matters most while proving publishers stick.
+
+## Q-004: Can anyone create a channel instantly, and is it free?
+
+- **Status:** open
+- **Asked:** 2026-11-15, by brainstorm session
+- **Blocks:** [notify-core](projects/notify-core.md) (channel creation)
+- **Options:** A: invite-only channels are instant; public, findable ones get a quick check first / B: every channel is instant / C: every channel is checked
+- **Recommendation:** A, and free during the pilot, because private channels carry little risk while public ones are where duplicates and impersonation happen. The prototype already works this way.

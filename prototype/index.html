@@ -40,9 +40,6 @@ button { cursor: pointer; }
 .bar { width: 100%; max-width: 760px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; padding-block: 14px; }
 .brand { font-family: var(--display); font-weight: 800; font-size: 20px; }
 .brand small { font-family: var(--text); font-weight: 500; font-size: 13px; color: var(--muted); margin-left: 6px; }
-.seg { display: flex; background: var(--surface); border-radius: 99px; padding: 4px; border: 1px solid var(--line); }
-.seg button { border: 0; background: transparent; padding: 8px 14px; border-radius: 99px; font-weight: 600; font-size: 14px; color: var(--body); }
-.seg button[aria-pressed="true"] { background: var(--ink); color: #FFFFFF; }
 .link-btn { border: 0; background: none; color: var(--primary); font-weight: 600; font-size: 14px; padding: 8px 4px; }
 
 .phone { position: relative; width: min(390px, 100%); height: min(844px, calc(100% - 76px)); min-height: 560px; background: var(--surface); border-radius: 40px; border: 1px solid var(--line); overflow: hidden; display: flex; flex-direction: column; margin-bottom: 16px; }
@@ -131,17 +128,19 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
 .empty { padding: 24px; border-radius: 24px; border: 2px dashed var(--line); text-align: center; color: var(--muted); line-height: 1.5; }
 .demo-note { font-size: 12px; color: var(--muted); text-align: center; }
 .stat { font-variant-numeric: tabular-nums; }
+.section-h { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
+.you { background: var(--ink); color: #FFFFFF; }
+.conn.mine { background: var(--tint); }
+select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%2314212B' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 18px center; padding-right: 40px; font-weight: 600; }
+.panel { padding: 18px; border-radius: 24px; border: 2px solid #E1E7EB; display: flex; flex-direction: column; gap: 12px; }
+.minirow { display: flex; gap: 14px; align-items: center; }
+.miniqr { width: 76px; height: 76px; flex-shrink: 0; background: #FFFFFF; border-radius: 12px; padding: 6px; border: 2px solid var(--line); }
+.demo-btn { border: 2px dashed #C9A27A; background: #FBF4EA; color: #6B4510; border-radius: 99px; min-height: 44px; padding: 0 16px; font-weight: 700; font-size: 14px; }
 </style>
 
 <div class="bar">
   <div class="brand">Hobart AI<small>clickable prototype</small></div>
-  <div class="row">
-    <div class="seg" role="group" aria-label="View as">
-      <button type="button" data-act="role" data-arg="sub" id="role-sub">Subscriber</button>
-      <button type="button" data-act="role" data-arg="pub" id="role-pub">Publisher</button>
-    </div>
-    <button type="button" class="link-btn" data-act="reset">Reset</button>
-  </div>
+  <button type="button" class="link-btn" data-act="reset">Reset</button>
 </div>
 <div class="phone">
   <main class="screen" id="screen" aria-live="polite"></main>
@@ -154,12 +153,13 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
   const LEVELS = { 4: 'Urgent', 3: 'Important', 2: 'Good to know', 1: 'FYI' };
   const LINE = { 4: 'Urgent only', 3: 'Important and up', 2: 'Good to know and up', 1: 'Everything' };
   const VIA = ['Email', 'My AI only', 'Webhook', 'SMS'];
-  // Simulated audience for the publisher's channel: how many members set each threshold, plus pull-only agents.
-  const AUDIENCE = { 4: 7, 3: 20, 2: 8, 1: 3, ai: 4 };
+  const KINDS = ['Club or team', 'School group', 'Business', 'Neighbours', 'Something else'];
+  const EMPTY_AUD = () => ({ 4: 0, 3: 0, 2: 0, 1: 0, ai: 0 });
 
   const fresh = () => ({
-    role: 'sub', screen: 'feed', connId: null, showQuiet: false, unseen: 0, pullOnly: false,
-    pubScreen: 'compose', draft: { text: '', pri: 2, manual: false }, scanLevel: 3, seq: 100,
+    screen: 'feed', connId: null, showQuiet: false, unseen: 0, pullOnly: false,
+    draft: { text: '', pri: 2, manual: false, ch: null }, scanLevel: 3, seq: 100,
+    newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false,
     chat: [],
     connections: [
       { id: 'netball', name: 'South Hobart Netball U12s', short: 'Netball U12s', level: 3, via: 'Email', on: true, joined: true,
@@ -186,11 +186,11 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
         docs: [ { t: 'Bin days', b: 'General waste Tuesday night, recycling every second Thursday.' } ] }
     ],
     posts: [
-      { id: 1, conn: 'netball', pri: 3, text: 'Saturday games move to 9am at the Domain courts. Same team sheet.', time: '7:40am', reach: '31 pinged · 7 in feed · 4 AI' },
+      { id: 1, conn: 'netball', pri: 3, text: 'Saturday games move to 9am at the Domain courts. Same team sheet.', time: '7:40am' },
       { id: 2, conn: 'pf', pri: 4, text: 'School closed Friday for the power upgrade. Before-care is still running.', time: 'Yesterday' },
       { id: 3, conn: 'elm', pri: 2, text: 'Hot cross buns are back from Monday. Pre-orders open now.', time: 'Yesterday' },
       { id: 4, conn: 'landcare', pri: 2, text: 'Working bee this Sunday at 9am. We are planting 200 natives along the creek.', time: 'Yesterday' },
-      { id: 5, conn: 'netball', pri: 1, text: 'Photos from last week are up in the club gallery.', time: 'Mon', reach: '3 pinged · 35 in feed · 4 AI' },
+      { id: 5, conn: 'netball', pri: 1, text: 'Photos from last week are up in the club gallery.', time: 'Mon' },
       { id: 6, conn: 'pf', pri: 2, text: 'Second-hand uniform sale next Wednesday after school.', time: 'Mon' },
       { id: 7, conn: 'bodycorp', pri: 1, text: 'Gardeners are in on Thursday morning.', time: 'Mon' },
       { id: 8, conn: 'elm', pri: 1, text: 'New sourdough rye on the shelves this week.', time: 'Sun' }
@@ -201,18 +201,18 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
   const $ = (id) => document.getElementById(id);
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const conn = (id) => S.connections.find((c) => c.id === id);
+  const owned = () => S.connections.filter((c) => c.owner);
+  const subs = (c) => c.audience ? c.audience[1] + c.audience[2] + c.audience[3] + c.audience[4] + c.audience.ai : 0;
   const tag = (p) => `<span class="tag t${p}">${LEVELS[p]}</span>`;
-  const pings = (p) => { const c = conn(p.conn); return c.on && !S.pullOnly && c.via !== 'My AI only' && p.pri >= c.level; };
+  const pings = (p) => { const c = conn(p.conn); return !c.owner && c.on && !S.pullOnly && c.via !== 'My AI only' && p.pri >= c.level; };
+  const scrollTop = () => { $('screen').scrollTop = 0; };
 
   const icon = {
     feed: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16M4 12h16M4 19h10"/></svg>',
     people: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.8c1.8.7 3 2.4 3.5 5.2"/></svg>',
+    share: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>',
     ask: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l1-4A8 8 0 1 1 20 12Z"/></svg>',
-    plug: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3v5M15 3v5M6 8h12v3a6 6 0 0 1-12 0V8ZM12 17v4"/></svg>',
-    pen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4Z"/></svg>',
-    list: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg>',
-    doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>',
-    qr: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 18h2v2h-2zM14 18h2M18 14h2"/></svg>'
+    plug: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3v5M15 3v5M6 8h12v3a6 6 0 0 1-12 0V8ZM12 17v4"/></svg>'
   };
 
   // A QR-like pattern: finder squares in three corners, seeded noise elsewhere. Visual only.
@@ -234,46 +234,56 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
     const t = text.toLowerCase();
     if (!t.trim()) return null;
     if (/(cancel|closed|close |emergency|urgent|today only|evacuat|not on)/.test(t)) return { pri: 4, why: 'it cancels or closes something people were counting on' };
-    if (/(move|moved|change|changed|time|reschedul|postpon|instead|now at|new venue)/.test(t)) return { pri: 3, why: 'it changes plans for every family this weekend' };
+    if (/(move|moved|change|changed|time|reschedul|postpon|instead|now at|new venue)/.test(t)) return { pri: 3, why: 'it changes plans for people this week' };
     if (/(special|back|new|sale|open|offer|reminder|this week)/.test(t)) return { pri: 2, why: "it's useful, but nobody's plans change if they miss it" };
     return { pri: 1, why: 'it reads like general news' };
   }
-  function reachFor(pri) {
+  function reachFor(c, pri) {
+    const a = c.audience || EMPTY_AUD();
     let pinged = 0, quiet = 0;
-    for (const t of [1, 2, 3, 4]) (t <= pri ? (pinged += AUDIENCE[t]) : (quiet += AUDIENCE[t]));
-    return { pinged, quiet, ai: AUDIENCE.ai };
+    for (const t of [1, 2, 3, 4]) (t <= pri ? (pinged += a[t]) : (quiet += a[t]));
+    return { pinged, quiet, ai: a.ai };
   }
 
-  // ---------- Subscriber screens ----------
+  // ---------- Following ----------
   function feed() {
     const mine = S.posts.filter((p) => conn(p.conn).joined).sort((a, b) => b.id - a.id);
-    const loud = mine.filter(pings), quiet = mine.filter((p) => !pings(p));
-    const card = (p) => `<article class="card"><div class="meta">${tag(p.pri)}${p.isNew ? '<span class="tag new">New</span>' : ''}<span>${esc(conn(p.conn).short)} · ${esc(p.time)}</span></div><p class="msg">${esc(p.text)}</p></article>`;
+    const loud = mine.filter((p) => pings(p) || conn(p.conn).owner), quiet = mine.filter((p) => !pings(p) && !conn(p.conn).owner);
+    const card = (p) => `<article class="card"><div class="meta">${tag(p.pri)}${conn(p.conn).owner ? '<span class="tag you">You</span>' : ''}${p.isNew ? '<span class="tag new">New</span>' : ''}<span>${esc(conn(p.conn).short)} · ${esc(p.time)}</span></div><p class="msg">${esc(p.text)}</p></article>`;
     return `<h1>What's new</h1>
-      <p class="sub">${S.pullOnly ? "Pull only is on, so nothing pings you. Everything is here when you or your AI look." : "These cleared your line and pinged you."}</p>
+      <p class="sub">${S.pullOnly ? 'Pull only is on, so nothing pings you. Everything is here when you or your AI look.' : 'These cleared your line and pinged you.'}</p>
       ${loud.length ? loud.map(card).join('') : '<div class="empty">Nothing important right now.</div>'}
       <button type="button" class="quiet-btn" data-act="quiet" aria-expanded="${S.showQuiet}"><span><b>${quiet.length} quiet updates</b> <span class="sub">saved for later</span></span><span aria-hidden="true">${S.showQuiet ? '▴' : '▾'}</span></button>
       ${S.showQuiet ? quiet.map(card).join('') : ''}
-      <form class="askbox" data-form="ask-from-feed"><label for="feed-ask">Ask about anything you follow</label><input class="input" id="feed-ask" placeholder="What do I need for Saturday?" autocomplete="off"></form>`;
+      <form class="askbox" data-form="ask"><label for="feed-ask">Ask about anything you follow</label><input class="input" id="feed-ask" placeholder="What do I need for Saturday?" autocomplete="off"></form>`;
   }
 
   function connections() {
-    const rows = S.connections.filter((c) => c.joined).map((c) => `
+    const mine = owned().map((c) => `
+      <button type="button" class="conn mine" data-act="open-mine" data-arg="${c.id}">
+        <span class="avatar" style="background:var(--ink)">${esc(c.name[0])}</span>
+        <span class="grow"><span class="name">${esc(c.name)}</span>
+          <span class="row" style="gap:6px"><span class="tag you">You run this</span><span class="tag plain"><span class="stat">${subs(c)}</span> subscribers</span></span></span>
+        <span aria-hidden="true" style="color:var(--muted)">›</span></button>`).join('');
+    const following = S.connections.filter((c) => c.joined && !c.owner).map((c) => `
       <button type="button" class="conn ${c.on ? '' : 'off'}" data-act="open-conn" data-arg="${c.id}">
-        <span class="avatar">${c.name[0]}</span>
+        <span class="avatar">${esc(c.name[0])}</span>
         <span class="grow"><span class="name">${esc(c.name)}</span>
           <span class="row" style="gap:6px"><span class="tag t${c.level}">${LINE[c.level]}</span><span class="tag plain">${c.on ? esc(c.via) : 'Paused'}</span></span></span>
-        <span aria-hidden="true" style="color:var(--muted)">›</span>
-      </button>`).join('');
-    return `<h1>Connections</h1><p class="sub">Tap one to change how much you hear, or pause it.</p>${rows}
-      <button type="button" class="btn dashed" data-act="go" data-arg="scan" style="margin-top:auto">+ Scan a code</button>`;
+        <span aria-hidden="true" style="color:var(--muted)">›</span></button>`).join('');
+    return `<h1>Connections</h1>
+      ${mine ? `<p class="section-h">Yours</p>${mine}` : ''}
+      <p class="section-h">Following</p>${following}
+      <div class="row" style="margin-top:auto;flex-wrap:nowrap">
+        <button type="button" class="btn dashed small" data-act="go" data-arg="scan" style="flex:1">+ Scan a code</button>
+        <button type="button" class="btn dashed small" data-act="go" data-arg="start" style="flex:1">+ Start a channel</button></div>`;
   }
 
   function connDetail() {
     const c = conn(S.connId);
     const recent = S.posts.filter((p) => p.conn === c.id).sort((a, b) => b.id - a.id).slice(0, 3);
     return `<button type="button" class="back" data-act="go" data-arg="connections">‹ Connections</button>
-      <div class="row"><span class="avatar big">${c.name[0]}</span><div class="grow"><h2>${esc(c.name)}</h2></div></div>
+      <div class="row"><span class="avatar big">${esc(c.name[0])}</span><div class="grow"><h2>${esc(c.name)}</h2></div></div>
       <div class="setting"><span><b>Notifications</b><br><span class="sub">${c.on ? 'On' : 'Paused. Updates still land in your feed.'}</span></span>
         <button type="button" class="switch" role="switch" aria-checked="${c.on}" aria-label="Notifications" data-act="toggle-conn"><span></span></button></div>
       <p class="label">Ping me for</p>
@@ -295,10 +305,8 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
       <div class="counter"><p style="font-weight:700">On the counter at Elm St Bakehouse</p>
         <button type="button" data-act="${c.joined ? 'noop' : 'scanned'}" aria-label="Scan the Elm St Bakehouse code" style="border:0;background:var(--primary);border-radius:24px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:12px;color:#FFFFFF">
           <span class="qr" style="width:140px;height:140px">${qrSvg}</span>
-          <span style="font-family:var(--display);font-weight:800;font-size:22px">Scan for live updates</span>
-        </button>
-        <p style="font-size:13px">${c.joined ? "You're already connected to Elm St Bakehouse." : 'Tap the code to scan it'}</p>
-      </div>`;
+          <span style="font-family:var(--display);font-weight:800;font-size:22px">Scan for live updates</span></button>
+        <p style="font-size:13px">${c.joined ? "You're already connected to Elm St Bakehouse." : 'Tap the code to scan it'}</p></div>`;
   }
 
   function subscribe() {
@@ -311,8 +319,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
         <input class="input" id="sub-email" type="email" placeholder="you@example.com" autocomplete="off">
         <button type="button" class="btn" data-act="join" data-arg="Email">Keep me in the loop</button>
         <button type="button" class="link-btn" data-act="join" data-arg="My AI only">Connect my AI instead</button>
-        <p class="demo-note">Your connections are yours. Leave or export any time.</p>
-      </div>`;
+        <p class="demo-note">Your connections are yours. Leave or export any time.</p></div>`;
   }
 
   function joined() {
@@ -320,9 +327,85 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
     return `<div style="margin:auto 0;display:flex;flex-direction:column;gap:16px;text-align:center;align-items:center">
       <span class="avatar big">E</span><h1>You're in</h1>
       <p class="sub" style="font-size:16px">Elm St Bakehouse will ping you for <b>${LINE[c.level].toLowerCase()}</b>${c.via === 'My AI only' ? ', through your AI only' : ' by email'}. Change it any time in Connections.</p>
-      <button type="button" class="btn" data-act="go" data-arg="feed">See what's new</button></div>`;
+      <button type="button" class="btn" data-act="go" data-arg="feed">See what's new</button>
+      <p class="sub">Got news of your own? <button type="button" class="link-btn" data-act="go" data-arg="start" style="padding:0">Start a channel</button></p></div>`;
   }
 
+  // ---------- Your channels ----------
+  function start() {
+    const n = S.newCh;
+    return `<button type="button" class="back" data-act="go" data-arg="connections">‹ Connections</button>
+      <h1>Start a channel</h1>
+      <p class="sub" style="font-size:16px;color:var(--body)">Keep people in the loop about your club, street, shop or group. It takes a minute.</p>
+      <label class="label" for="ch-name">What's it called?</label>
+      <input class="input" id="ch-name" placeholder="Lenna St neighbours" value="${esc(n.name)}" autocomplete="off">
+      <p class="label">What is it?</p>
+      <div class="pills">${KINDS.map((k) => `<button type="button" class="pill" aria-pressed="${n.kind === k}" data-act="ch-kind" data-arg="${k}">${k}</button>`).join('')}</div>
+      <p class="label">Who can join?</p>
+      <button type="button" class="choice" aria-pressed="${n.access === 'invite'}" data-act="ch-access" data-arg="invite"><span class="radio"></span><span class="grow" style="gap:2px"><b>People I invite</b><span class="sub">By link or QR code. Ready straight away.</span></span></button>
+      <button type="button" class="choice" aria-pressed="${n.access === 'public'}" data-act="ch-access" data-arg="public"><span class="radio"></span><span class="grow" style="gap:2px"><b>Anyone, and findable</b><span class="sub">Shows up when people look for it. We check public channels within a day.</span></span></button>
+      <button type="button" class="btn" id="ch-create" data-act="create" style="margin-top:auto" ${n.name.trim() ? '' : 'disabled'}>Create channel</button>
+      <p class="demo-note">Free during the pilot.</p>`;
+  }
+
+  function mineDetail() {
+    const c = conn(S.connId);
+    const posts = S.posts.filter((p) => p.conn === c.id).sort((a, b) => b.id - a.id);
+    const n = subs(c);
+    return `<button type="button" class="back" data-act="go" data-arg="connections">‹ Connections</button>
+      <div class="row"><span class="avatar big" style="background:var(--ink)">${esc(c.name[0])}</span>
+        <div class="grow"><h2>${esc(c.name)}</h2><span class="row" style="gap:6px"><span class="tag you">You run this</span><span class="tag t1">${c.access === 'public' ? (c.checked ? 'Public' : 'Public · being checked') : 'Invite only'}</span></span></div></div>
+      <button type="button" class="btn" data-act="share-to" data-arg="${c.id}">Share news</button>
+      <div class="panel">
+        <p class="label"><span class="stat">${n}</span> subscriber${n === 1 ? '' : 's'}</p>
+        ${n ? `<p class="sub">${c.audience[4]} want urgent only · ${c.audience[3]} important and up · ${c.audience[2] + c.audience[1]} more · ${c.audience.ai} use their AI</p>` : '<p class="sub">Nobody yet. Invite people with your link or poster.</p>'}
+        <div class="minirow"><span class="miniqr">${qrSvg}</span>
+          <div class="grow"><p style="font-weight:600;font-size:14px;word-break:break-all;font-family:var(--mono)">[domain]/j/${esc(c.id)}</p>
+            <div class="row" style="gap:8px"><button type="button" class="btn small" data-act="copy-invite" data-arg="${c.id}">Copy invite link</button>
+            <button type="button" class="link-btn" data-act="soon" data-arg="Poster downloads">Get the poster</button></div></div></div>
+        <button type="button" class="demo-btn" data-act="sim-join">Prototype: 12 people scan your poster</button>
+      </div>
+      <p class="label">Documents</p>
+      <p class="sub">People can ask questions of these instead of messaging you.</p>
+      ${c.docs.map((d) => `<details class="doc"><summary>${esc(d.t)}</summary><p>${esc(d.b)}</p></details>`).join('')}
+      ${S.addingDoc ? `<form class="panel" data-form="doc"><label class="label" for="doc-t">Page title</label><input class="input" id="doc-t" placeholder="Wet weather plan" autocomplete="off">
+          <label class="label" for="doc-b">What should people know?</label><textarea class="input" id="doc-b" style="height:110px;font-size:15px" placeholder="If it's raining at 7am…"></textarea>
+          <div class="row"><button class="btn small" type="submit">Add page</button><button type="button" class="link-btn" data-act="doc-cancel">Cancel</button></div></form>`
+        : '<button type="button" class="btn dashed small" data-act="doc-add">+ Add a page</button>'}
+      <p class="label">Past news</p>
+      ${posts.length ? posts.map((p) => `<div class="card"><div class="meta">${tag(p.pri)}<span>${esc(p.time)}</span></div><p class="msg">${esc(p.text)}</p>${p.reach ? `<p class="sub">${esc(p.reach)}</p>` : ''}</div>`).join('') : '<div class="empty">Nothing shared yet.</div>'}
+      <button type="button" class="link-btn" data-act="soon" data-arg="Channel settings" style="align-self:flex-start">Channel settings</button>`;
+  }
+
+  function compose() {
+    const mine = owned();
+    if (!mine.length) return start();
+    const d = S.draft;
+    if (!d.ch || !conn(d.ch) || !conn(d.ch).owner) d.ch = mine[0].id;
+    const c = conn(d.ch), s = suggest(d.text), r = reachFor(c, d.pri);
+    return `${mine.length > 1
+        ? `<label class="label" for="ch-pick">Posting to</label><select class="input" id="ch-pick">${mine.map((m) => `<option value="${m.id}" ${m.id === c.id ? 'selected' : ''}>${esc(m.name)}</option>`).join('')}</select>`
+        : `<p class="sub" style="font-weight:600">${esc(c.name)}</p>`}
+      <h1>What's the news?</h1>
+      <label for="draft" style="position:absolute;left:-9999px">Message</label>
+      <textarea class="input" id="draft" placeholder="Saturday games move to 9am at the Domain courts…">${esc(d.text)}</textarea>
+      <button type="button" class="link-btn" data-act="example" style="align-self:flex-start;padding:0">Use an example</button>
+      <p class="label">How big a deal is it?</p>
+      <div class="pills" id="pri-pills">${[1, 2, 3, 4].map((l) => `<button type="button" class="pill" aria-pressed="${d.pri === l}" data-act="pri" data-arg="${l}">${LEVELS[l]}</button>`).join('')}</div>
+      <p class="sub" id="why" style="font-size:15px;color:var(--body)">${whyText(s)}</p>
+      <div class="reach" id="reach">${reachText(r)}</div>
+      <div class="row" style="margin-top:auto"><button type="button" class="btn" id="share" data-act="share" ${d.text.trim() ? '' : 'disabled'}>Share it</button>
+      <button type="button" class="btn ghost" data-act="soon" data-arg="Scheduling">Later</button></div>
+      <button type="button" class="link-btn" data-act="go" data-arg="start" style="align-self:flex-start">+ Start another channel</button>`;
+  }
+  const whyText = (s) => !s ? "Write something and we'll suggest how big a deal it is."
+    : S.draft.manual && S.draft.pri !== s.pri ? `You picked <b>${LEVELS[S.draft.pri]}</b>. We'd have said ${LEVELS[s.pri]}, because ${s.why}.`
+    : `We picked <b>${LEVELS[s.pri]}</b> because ${s.why}. Change it if we're wrong.`;
+  const reachText = (r) => r.pinged + r.quiet + r.ai === 0
+    ? "Nobody has joined yet, so this will wait in your channel. Invite people from Connections."
+    : `<b class="stat">${r.pinged} ${r.pinged === 1 ? 'person' : 'people'}</b> will get a ping. <span class="stat">${r.quiet}</span> more will see it next time they look. <span class="stat">${r.ai}</span> have their AI keeping watch.`;
+
+  // ---------- Ask and your AI ----------
   function ask() {
     const msgs = S.chat.map((m) => `<div class="bubble ${m.who}">${m.who === 'ai' ? m.html : esc(m.text)}</div>`).join('');
     const sugg = ["What's on for me this week?", 'What do I need for Saturday?', 'Is school on Friday?', "When's the next working bee?"];
@@ -341,53 +424,15 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
       <div class="card" style="gap:12px"><p class="label">1. Copy your link</p>
         <div class="row" style="flex-wrap:nowrap"><input class="input" id="mcp-link" readonly value="https://[domain]/mcp" style="font-family:var(--mono);font-size:14px;background:#FFFFFF">
         <button type="button" class="btn small" data-act="copy">Copy</button></div>
-        <p class="label">2. Paste it into your assistant</p><p class="sub">We'll show you exactly where for the one you use.</p></div>
+        <p class="label">2. Paste it into your assistant</p><p class="sub">We'll show you exactly where for the one you use. Your AI can post to channels you run, too.</p></div>
       <div class="setting"><span><b>Pull only</b><br><span class="sub">No notifications at all. My AI checks when it wants.</span></span>
         <button type="button" class="switch" role="switch" aria-checked="${S.pullOnly}" aria-label="Pull only" data-act="pull"><span></span></button></div>
-      <div class="card" style="background:var(--soft)"><p class="label">Daily digest</p><p class="sub">A morning summary of your quiet updates, written your way. Coming later.</p></div>
-      <button type="button" data-act="ask-go" style="margin-top:auto;border:0;text-align:left;padding:20px;border-radius:24px;background:var(--primary);color:#FFFFFF">
+      <div class="card"><p class="label">Daily digest</p><p class="sub">A morning summary of your quiet updates, written your way. Coming later.</p></div>
+      <button type="button" data-act="ask" data-arg="What's on for me this week?" style="margin-top:auto;border:0;text-align:left;padding:20px;border-radius:24px;background:var(--primary);color:#FFFFFF">
         <span style="font-size:13px;font-weight:700;color:var(--tint-2)">Then just ask</span><br>
         <span style="font-family:var(--display);font-weight:600;font-size:22px;line-height:1.25">“What's on for me this week?”</span></button>`;
   }
 
-  // ---------- Publisher screens ----------
-  function compose() {
-    const d = S.draft, s = suggest(d.text), r = reachFor(d.pri);
-    return `<p class="sub" style="font-weight:600">South Hobart Netball U12s</p>
-      <h1>What's the news?</h1>
-      <label for="draft" style="position:absolute;left:-9999px">Message</label>
-      <textarea class="input" id="draft" placeholder="Saturday games move to 9am at the Domain courts…">${esc(d.text)}</textarea>
-      <button type="button" class="link-btn" data-act="example" style="align-self:flex-start;padding:0">Use an example</button>
-      <p class="label">How big a deal is it?</p>
-      <div class="pills" id="pri-pills">${[1, 2, 3, 4].map((l) => `<button type="button" class="pill" aria-pressed="${d.pri === l}" data-act="pri" data-arg="${l}">${LEVELS[l]}</button>`).join('')}</div>
-      <p class="sub" id="why" style="font-size:15px;color:var(--body)">${whyText(s)}</p>
-      <div class="reach" id="reach">${reachText(r)}</div>
-      <div class="row" style="margin-top:auto"><button type="button" class="btn" id="share" data-act="share" ${d.text.trim() ? '' : 'disabled'}>Share it</button>
-      <button type="button" class="btn ghost" data-act="later">Later</button></div>`;
-  }
-  const whyText = (s) => !s ? "Write something and we'll suggest how big a deal it is."
-    : S.draft.manual && S.draft.pri !== s.pri ? `You picked <b>${LEVELS[S.draft.pri]}</b>. We'd have said ${LEVELS[s.pri]}, because ${s.why}.`
-    : `We picked <b>${LEVELS[s.pri]}</b> because ${s.why}. Change it if we're wrong.`;
-  const reachText = (r) => `<b class="stat">${r.pinged} families</b> will get a ping. <span class="stat">${r.quiet}</span> more will see it next time they look. <span class="stat">${r.ai}</span> have their AI keeping watch.`;
-
-  function past() {
-    const mine = S.posts.filter((p) => p.conn === 'netball').sort((a, b) => b.id - a.id);
-    return `<h1>Past news</h1>${mine.map((p) => `<div class="card"><div class="meta">${tag(p.pri)}<span>${esc(p.time)}</span></div><p class="msg">${esc(p.text)}</p>${p.reach ? `<p class="sub">${esc(p.reach)}</p>` : ''}</div>`).join('')}`;
-  }
-  function docs() {
-    return `<h1>Documents</h1><p class="sub">Families can ask questions of these instead of messaging you.</p>
-      ${conn('netball').docs.map((d) => `<details class="doc"><summary>${esc(d.t)}</summary><p>${esc(d.b)}</p></details>`).join('')}
-      <button type="button" class="btn dashed" data-act="soon" data-arg="Adding pages">+ Add a page</button>`;
-  }
-  function poster() {
-    return `<h1>QR poster</h1><p class="sub">Put it on the noticeboard or the canteen window. Anyone who scans can join in seconds.</p>
-      <div class="qrcard"><div class="qr">${qrSvg}</div><div class="title">Scan for live updates</div>
-        <p>South Hobart Netball U12s</p><span class="tag plain" style="color:var(--primary-ink)">A founding Hobart publisher</span></div>
-      <button type="button" class="btn" data-act="soon" data-arg="Poster downloads">Get the A4 poster</button>
-      <p class="sub" style="text-align:center"><span class="stat">42</span> people follow this channel.</p>`;
-  }
-
-  // ---------- Ask (simulated) ----------
   function answer(q) {
     const t = q.toLowerCase();
     const mine = S.connections.filter((c) => c.joined);
@@ -400,7 +445,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
     const hits = [];
     for (const c of mine) {
       for (const d of c.docs) hits.push({ s: score(d.t + ' ' + d.b), html: `<b>${esc(c.short)} · ${esc(d.t)}:</b> ${esc(d.b)}` });
-      for (const p of S.posts.filter((x) => x.conn === c.id)) hits.push({ s: score(p.text) + 0.5 * (score(p.text) > 0), html: `<b>${esc(c.short)} update:</b> ${esc(p.text)}` });
+      for (const p of S.posts.filter((x) => x.conn === c.id)) { const s = score(p.text); hits.push({ s: s + (s > 0 ? 0.5 : 0), html: `<b>${esc(c.short)} update:</b> ${esc(p.text)}` }); }
     }
     const top = hits.filter((h) => h.s > 0).sort((a, b) => b.s - a.s).slice(0, 2);
     return top.length ? top.map((h) => h.html).join('\n\n') : "I couldn't find that in your connections' updates or documents. Try asking about a club, school or shop you follow.";
@@ -412,70 +457,85 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
   }
 
   // ---------- Render ----------
+  const SCREENS = { feed, connections, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
+  const TAB_OF = { conn: 'connections', mine: 'connections', scan: 'connections', subscribe: 'connections', joined: 'connections', start: 'share' };
   function tabs() {
-    const t = S.role === 'sub'
-      ? [['feed', 'What\'s new', icon.feed], ['connections', 'Connections', icon.people], ['ask', 'Ask', icon.ask], ['ai', 'Your AI', icon.plug]]
-      : [['compose', 'Share news', icon.pen], ['past', 'Past news', icon.list], ['docs', 'Documents', icon.doc], ['poster', 'Poster', icon.qr]];
-    const cur = S.role === 'sub' ? ({ conn: 'connections', scan: 'connections', subscribe: 'connections', joined: 'connections' }[S.screen] || S.screen) : S.pubScreen;
+    const t = [['feed', "What's new", icon.feed], ['connections', 'Connections', icon.people], ['share', 'Share', icon.share], ['ask', 'Ask', icon.ask], ['ai', 'Your AI', icon.plug]];
+    const cur = TAB_OF[S.screen] || S.screen;
     $('tabbar').innerHTML = t.map(([id, label, ic]) => `<button type="button" data-act="tab" data-arg="${id}" ${cur === id ? 'aria-current="page"' : ''}>${ic}${label}${id === 'feed' && S.unseen ? `<span class="dot">${S.unseen}</span>` : ''}</button>`).join('');
   }
   function render() {
-    $('role-sub').setAttribute('aria-pressed', S.role === 'sub');
-    $('role-pub').setAttribute('aria-pressed', S.role === 'pub');
-    const v = S.role === 'sub'
-      ? ({ feed, connections, conn: connDetail, scan, subscribe, joined, ask, ai }[S.screen] || feed)()
-      : ({ compose, past, docs, poster }[S.pubScreen] || compose)();
     const el = $('screen');
-    el.className = 'screen' + (S.role === 'sub' && S.screen === 'subscribe' ? ' flush' : '');
-    el.innerHTML = v;
+    el.className = 'screen' + (S.screen === 'subscribe' ? ' flush' : '');
+    el.innerHTML = (SCREENS[S.screen] || feed)();
     tabs();
-    if (S.screen === 'ask' && S.role === 'sub') el.scrollTop = el.scrollHeight;
+    if (S.screen === 'ask') el.scrollTop = el.scrollHeight;
   }
   let toastTimer;
   function toast(msg) {
     const t = $('toast'); t.textContent = msg; t.hidden = false;
     clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.hidden = true; }, 2600);
   }
+  function copyText(text, inputId) {
+    const fallback = () => { const i = inputId && $(inputId); if (i) i.select(); toast(inputId ? 'Link selected. Copy it from here.' : text); };
+    try { navigator.clipboard.writeText(text).then(() => toast('Link copied'), fallback); } catch (e) { fallback(); }
+  }
 
   // ---------- Actions ----------
   const act = {
-    role: (a) => { S.role = a; render(); $('screen').scrollTop = 0; },
     reset: () => { S = fresh(); render(); toast('Prototype reset'); },
     tab: (a) => {
-      if (S.role === 'sub') { S.screen = a; if (a === 'feed') { S.unseen = 0; } } else S.pubScreen = a;
-      render(); $('screen').scrollTop = 0;
-      if (a === 'feed' && S.role === 'sub') setTimeout(() => S.posts.forEach((p) => { p.isNew = false; }), 0);
+      S.screen = a; S.addingDoc = false;
+      if (a === 'feed') S.unseen = 0;
+      render(); scrollTop();
+      if (a === 'feed') setTimeout(() => S.posts.forEach((p) => { p.isNew = false; }), 0);
     },
-    go: (a) => { S.screen = a; render(); $('screen').scrollTop = 0; },
+    go: (a) => { S.screen = a; S.addingDoc = false; render(); scrollTop(); },
     quiet: () => { S.showQuiet = !S.showQuiet; render(); },
-    'open-conn': (a) => { S.connId = a; S.screen = 'conn'; render(); $('screen').scrollTop = 0; },
+    'open-conn': (a) => { S.connId = a; S.screen = 'conn'; render(); scrollTop(); },
+    'open-mine': (a) => { S.connId = a; S.screen = 'mine'; S.addingDoc = false; render(); scrollTop(); },
     'toggle-conn': () => { const c = conn(S.connId); c.on = !c.on; render(); toast(c.on ? `Notifications on for ${c.short}` : `${c.short} paused`); },
     level: (a) => { const c = conn(S.connId); c.level = +a; render(); toast(`${c.short}: ${LINE[a].toLowerCase()}`); },
-    via: (a) => { if (a === 'SMS') { toast('SMS is on the Plus plan. Coming later.'); return; } const c = conn(S.connId); c.via = a; render(); },
+    via: (a) => { if (a === 'SMS') { toast('SMS is on the Plus plan. Coming later.'); return; } conn(S.connId).via = a; render(); },
     leave: () => { const c = conn(S.connId); c.joined = false; S.screen = 'connections'; render(); toast(`You left ${c.short}`); },
-    scanned: () => { S.screen = 'subscribe'; render(); $('screen').scrollTop = 0; },
+    scanned: () => { S.screen = 'subscribe'; render(); scrollTop(); },
     noop: () => {},
     'scan-level': (a) => { S.scanLevel = +a; render(); },
-    join: (a) => { const c = conn('elm'); c.joined = true; c.on = true; c.level = S.scanLevel; c.via = a; S.screen = 'joined'; render(); },
+    join: (a) => { const c = conn('elm'); Object.assign(c, { joined: true, on: true, level: S.scanLevel, via: a }); S.screen = 'joined'; render(); },
     ask: (a) => doAsk(a),
-    'ask-go': () => doAsk("What's on for me this week?"),
     pull: () => { S.pullOnly = !S.pullOnly; render(); toast(S.pullOnly ? 'Pull only on. Nothing will ping you.' : 'Pull only off'); },
-    copy: () => {
-      const v = $('mcp-link').value;
-      const fallback = () => { $('mcp-link').select(); toast('Link selected. Copy it from here.'); };
-      try { navigator.clipboard.writeText(v).then(() => toast('Link copied'), fallback); } catch (e) { fallback(); }
+    copy: () => copyText($('mcp-link').value, 'mcp-link'),
+    'copy-invite': (a) => copyText(`https://[domain]/j/${a}`),
+    'ch-kind': (a) => { S.newCh.kind = a; render(); },
+    'ch-access': (a) => { S.newCh.access = a; render(); },
+    create: () => {
+      const n = S.newCh; if (!n.name.trim()) return;
+      const name = n.name.trim();
+      const id = (name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'channel') + '-' + (++S.seq);
+      S.connections.unshift({ id, name, short: name.length > 22 ? name.slice(0, 21) + '…' : name, owner: true, joined: true, on: true, level: 1, via: 'Email', kind: n.kind, access: n.access, checked: false, audience: EMPTY_AUD(), docs: [] });
+      S.newCh = { name: '', kind: 'Club or team', access: 'invite' };
+      S.connId = id; S.screen = 'mine'; S.draft.ch = id;
+      render(); scrollTop(); toast(`${name} is ready. Invite some people.`);
     },
+    'sim-join': () => {
+      const c = conn(S.connId);
+      [[4, 2], [3, 5], [2, 3], [1, 1], ['ai', 1]].forEach(([k, v]) => { c.audience[k] += v; });
+      if (c.access === 'public') c.checked = true;
+      render(); toast('12 people joined from your poster');
+    },
+    'doc-add': () => { S.addingDoc = true; render(); const i = $('doc-t'); if (i) i.focus(); },
+    'doc-cancel': () => { S.addingDoc = false; render(); },
+    'share-to': (a) => { S.draft.ch = a; S.screen = 'share'; render(); scrollTop(); },
     pri: (a) => { S.draft.pri = +a; S.draft.manual = true; updateCompose(); },
-    example: () => { S.draft = { text: 'Training is cancelled tonight because of the storm warning. Stay safe and see you Saturday.', pri: 4, manual: false }; render(); },
+    example: () => { Object.assign(S.draft, { text: 'Training is cancelled tonight because of the storm warning. Stay safe and see you Saturday.', pri: 4, manual: false }); render(); },
     share: () => {
       const d = S.draft; if (!d.text.trim()) return;
-      const r = reachFor(d.pri);
-      S.posts.push({ id: ++S.seq, conn: 'netball', pri: d.pri, text: d.text.trim(), time: 'Just now', isNew: true, reach: `${r.pinged} pinged · ${r.quiet} in feed · ${r.ai} AI` });
-      S.draft = { text: '', pri: 2, manual: false };
-      if (conn('netball').joined) S.unseen += 1;
-      render(); toast(`Shared. ${r.pinged} families pinged.`);
+      const c = conn(d.ch), r = reachFor(c, d.pri);
+      S.posts.push({ id: ++S.seq, conn: c.id, pri: d.pri, text: d.text.trim(), time: 'Just now', isNew: true, reach: `${r.pinged} pinged · ${r.quiet} in feed · ${r.ai} AI` });
+      Object.assign(S.draft, { text: '', pri: 2, manual: false });
+      S.unseen += 1;
+      render(); toast(r.pinged + r.quiet + r.ai ? `Shared. ${r.pinged} pinged.` : 'Shared. It will be waiting when people join.');
     },
-    later: () => toast('Scheduling is coming later'),
     soon: (a) => toast(`${a}: coming later`)
   };
 
@@ -484,29 +544,37 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
     if (s && !S.draft.manual) S.draft.pri = s.pri;
     document.querySelectorAll('#pri-pills .pill').forEach((b) => b.setAttribute('aria-pressed', +b.dataset.arg === S.draft.pri));
     $('why').innerHTML = whyText(s);
-    $('reach').innerHTML = reachText(reachFor(S.draft.pri));
+    $('reach').innerHTML = reachText(reachFor(conn(S.draft.ch), S.draft.pri));
     $('share').disabled = !S.draft.text.trim();
   }
 
   document.addEventListener('click', (e) => {
     const b = e.target.closest('[data-act]');
-    if (!b) return;
+    if (!b || b.disabled) return;
     const f = act[b.dataset.act];
     if (f) f(b.dataset.arg);
   });
   document.addEventListener('input', (e) => {
     if (e.target.id === 'draft') { S.draft.text = e.target.value; if (!e.target.value.trim()) S.draft.manual = false; updateCompose(); }
+    if (e.target.id === 'ch-name') { S.newCh.name = e.target.value; $('ch-create').disabled = !e.target.value.trim(); }
+  });
+  document.addEventListener('change', (e) => {
+    if (e.target.id === 'ch-pick') { S.draft.ch = e.target.value; updateCompose(); }
   });
   document.addEventListener('submit', (e) => {
     const f = e.target.dataset.form; if (!f) return;
     e.preventDefault();
-    const input = e.target.querySelector('input');
-    doAsk(input.value);
+    if (f === 'ask') doAsk(e.target.querySelector('input').value);
+    if (f === 'doc') {
+      const t = $('doc-t').value.trim(), b = $('doc-b').value.trim();
+      if (!t || !b) { toast('Add a title and some text first'); return; }
+      conn(S.connId).docs.push({ t, b }); S.addingDoc = false; render(); toast('Page added. People can ask about it now.');
+    }
   });
 
   const hot = window.claude && window.claude.hot;
   if (hot && hot.snapshot) hot.snapshot(() => S);
-  const start = (data) => { if (data && data.connections) S = data; render(); };
-  if (hot && hot.ready) hot.ready(start); else start((hot && hot.data) || {});
+  const boot = (data) => { if (data && data.connections && data.newCh) S = data; render(); };
+  if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>
