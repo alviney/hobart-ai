@@ -70,6 +70,12 @@ p { margin: 0; }
 .ping-title { font-family: var(--display); font-weight: 600; font-size: 20px; line-height: 1.2; margin: 2px 0 0; text-wrap: balance; }
 .ping-body { font-size: 16px; line-height: 1.55; white-space: pre-line; color: var(--body); }
 .ping-body.clamp { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.filters { display: flex; gap: 8px; overflow-x: auto; margin: 0 -20px; padding: 2px 20px 4px; scrollbar-width: none; flex-shrink: 0; }
+.filters::-webkit-scrollbar { display: none; }
+.fchip { flex-shrink: 0; min-height: 40px; padding: 0 14px; border-radius: 99px; border: 2px solid var(--line); background: var(--surface); font-weight: 700; font-size: 14px; color: var(--body); display: inline-flex; align-items: center; gap: 6px; }
+.fchip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #FFFFFF; }
+.fchip .n { font-variant-numeric: tabular-nums; font-weight: 600; opacity: .7; }
+.below { font-size: 12px; font-weight: 600; color: var(--muted); }
 .more-btn { align-self: flex-start; border: 0; background: none; padding: 4px 0; min-height: 36px; color: var(--primary); font-weight: 700; font-size: 14px; }
 .meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
 .tag { padding: 4px 10px; border-radius: 99px; font-size: 12px; font-weight: 700; white-space: nowrap; }
@@ -218,7 +224,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
   const km = (m) => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
 
   const fresh = () => ({
-    v: 4, screen: 'home', open: {}, connId: null, showQuiet: false, pullOnly: false, sheet: null,
+    v: 5, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
     draft: { text: '', pri: 2, manual: false, ch: null }, subId: 'elm', scanLevel: 3, seq: 100,
     newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false, chat: [],
     connections: [
@@ -318,8 +324,8 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
     return { pinged, quiet, ai: a.ai };
   }
   const isLong = (p) => !!p.title || p.text.length > 240;
-  const pingCard = (p) => {
-    const meta = `<div class="meta">${tag(p.pri)}${conn(p.conn).owner ? '<span class="tag you">You</span>' : ''}${p.isNew ? '<span class="tag new">New</span>' : ''}<span>${esc(conn(p.conn).short)} · ${esc(p.time)}</span></div>`;
+  const pingCard = (p, belowLine) => {
+    const meta = `<div class="meta">${tag(p.pri)}${belowLine ? '<span class="below">Below your line</span>' : ''}${conn(p.conn).owner ? '<span class="tag you">You</span>' : ''}${p.isNew ? '<span class="tag new">New</span>' : ''}<span>${esc(conn(p.conn).short)} · ${esc(p.time)}</span></div>`;
     if (!isLong(p)) return `<article class="card">${meta}<p class="msg">${esc(p.text)}</p></article>`;
     const open = !!S.open[p.id];
     return `<article class="card">${meta}${p.title ? `<h3 class="ping-title">${esc(p.title)}</h3>` : ''}
@@ -331,14 +337,24 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
   function home() {
     const mine = myPosts();
     const loud = mine.filter((p) => pings(p) || conn(p.conn).owner), quiet = mine.filter((p) => !pings(p) && !conn(p.conn).owner);
-    return `<div class="topline"><button type="button" class="iconbtn" data-act="menu" aria-label="Menu">${icon.menu}</button>
+    const count = (l) => mine.filter((p) => p.pri === l).length;
+    const chip = (v, label) => `<button type="button" class="fchip" aria-pressed="${String(S.filter) === String(v)}" data-act="filter" data-arg="${v}">${label}</button>`;
+    const filters = `<div class="filters" role="group" aria-label="Filter by rating">${chip('all', 'All')}${[4, 3, 2, 1].map((l) => chip(l, `${LEVELS[l]} <span class="n">${count(l)}</span>`)).join('')}</div>`;
+    const header = `<div class="topline"><button type="button" class="iconbtn" data-act="menu" aria-label="Menu">${icon.menu}</button>
         <span class="wordmark" style="flex:1">${icon.sonar}Sub1</span>
-        <button type="button" class="radar-btn" data-act="go" data-arg="radar" aria-label="Radar: Troves near you">${icon.radar}</button></div>
+        <button type="button" class="radar-btn" data-act="go" data-arg="radar" aria-label="Radar: Troves near you">${icon.radar}</button></div>${filters}`;
+    if (S.filter !== 'all') {
+      const l = +S.filter, list = mine.filter((p) => p.pri === l);
+      return `${header}<p class="sub">All ${LEVELS[l]} pings, newest first, including ones below your line.</p>
+        ${list.length ? list.map((p) => pingCard(p, !pings(p) && !conn(p.conn).owner)).join('') : `<div class="empty">No ${LEVELS[l]} pings right now.</div>`}`;
+    }
+    return `${header}
       ${S.pullOnly ? '<p class="sub">Pull only is on, so nothing pings you. Everything is here when you or your AI look.</p>' : ''}
-      ${loud.length ? loud.map(pingCard).join('') : '<div class="empty">Nothing important right now.</div>'}
+      ${loud.length ? loud.map((p) => pingCard(p)).join('') : '<div class="empty">Nothing important right now.</div>'}
       ${quiet.length ? `<button type="button" class="quiet-btn" data-act="quiet" aria-expanded="${S.showQuiet}"><span><b>${quiet.length} quiet pings</b> <span class="sub">below your line</span></span><span aria-hidden="true">${S.showQuiet ? '▴' : '▾'}</span></button>` : ''}
-      ${S.showQuiet ? quiet.map(pingCard).join('') : ''}`;
+      ${S.showQuiet ? quiet.map((p) => pingCard(p)).join('') : ''}`;
   }
+
 
   // ---------- Radar ----------
   function radar() {
@@ -420,7 +436,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
       <p class="label">Documents</p>
       ${c.docs.map((d) => `<details class="doc"><summary>${esc(d.t)}</summary><p>${esc(d.b)}</p></details>`).join('')}
       <p class="label">Recent pings</p>
-      ${recent.map(pingCard).join('')}
+      ${recent.map((p) => pingCard(p)).join('')}
       <button type="button" class="link-btn" data-act="leave" style="color:var(--urgent-fg);align-self:flex-start">Unsubscribe from ${esc(c.short)}</button>`;
   }
 
@@ -637,6 +653,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
     'menu-mine': (a) => { S.sheet = null; act['open-mine'](a); },
     trove: (a) => { S.sheet = a; render(); },
     quiet: () => { const y = $('screen').scrollTop; S.showQuiet = !S.showQuiet; render(); $('screen').scrollTop = y; },
+    filter: (a) => { S.filter = a === 'all' ? 'all' : +a; render(); },
     expand: (a) => { S.open[a] = !S.open[a]; const y = $('screen').scrollTop; render(); $('screen').scrollTop = y; },
     'open-conn': (a) => { S.connId = a; S.screen = 'conn'; S.sheet = null; render(); scrollTop(); },
     'open-mine': (a) => { S.connId = a; S.screen = 'mine'; S.addingDoc = false; render(); scrollTop(); },
@@ -724,7 +741,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
 
   const hot = window.claude && window.claude.hot;
   if (hot && hot.snapshot) hot.snapshot(() => S);
-  const boot = (data) => { if (data && data.v === 4) S = Object.assign(fresh(), data, { sheet: null }); render(); };
+  const boot = (data) => { if (data && data.v === 5) S = Object.assign(fresh(), data, { sheet: null }); render(); };
   if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>
