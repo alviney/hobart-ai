@@ -1,0 +1,8 @@
+{
+  "name": "autonomous-project",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node tools/check-work.mjs"
+  }
+}
