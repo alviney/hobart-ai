@@ -1,8 +1,8 @@
-<title>Hobart AI Prototype</title>
+<title>Sub1 Prototype</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
 <style>
-/* Layout: one phone-sized app column, centred on desktop, filling the width on a phone. Single light look by choice (D-005). */
+/* Layout: one phone-sized app column, centred on desktop, filling the width on a phone. Single light look by choice (D-005); the radar is a dark sonar screen. */
 :root {
   color-scheme: light;
   --bg: #E9EEF1;
@@ -16,6 +16,9 @@
   --primary-ink: #123E5C;
   --tint: #EEF5FA;
   --tint-2: #DCEBF5;
+  --sonar: #0F1E29;
+  --sonar-line: rgba(156, 195, 222, 0.22);
+  --sonar-glow: #9CD6F0;
   --urgent-bg: #FDE3D3; --urgent-fg: #9A3412;
   --imp-bg: #DCEBF5; --imp-fg: #123E5C;
   --good-bg: #E3F0EA; --good-fg: #1F5137;
@@ -32,10 +35,9 @@ body {
   box-sizing: border-box; display: flex; flex-direction: column; align-items: center;
 }
 * { box-sizing: border-box; }
-button, input, textarea { font: inherit; color: inherit; }
+button, input, textarea, select { font: inherit; color: inherit; }
 button { cursor: pointer; }
 :focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
-@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 
 .bar { width: 100%; max-width: 760px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; padding-block: 14px; }
 .brand { font-family: var(--display); font-weight: 800; font-size: 20px; }
@@ -44,13 +46,9 @@ button { cursor: pointer; }
 
 .phone { position: relative; width: min(390px, 100%); height: min(844px, calc(100% - 76px)); min-height: 560px; background: var(--surface); border-radius: 40px; border: 1px solid var(--line); overflow: hidden; display: flex; flex-direction: column; margin-bottom: 16px; }
 @media (max-width: 480px) { .phone { border-radius: 24px; height: calc(100% - 70px); } }
-.screen { flex: 1; overflow-y: auto; padding: 28px 20px 24px; display: flex; flex-direction: column; gap: 14px; }
+.screen { flex: 1; overflow-y: auto; padding: 22px 20px 24px; display: flex; flex-direction: column; gap: 14px; }
 .screen.flush { padding: 0 0 24px; }
-.tabbar { display: flex; border-top: 1px solid #E4E9EC; background: var(--surface); padding: 6px 6px 8px; }
-.tabbar button { flex: 1; border: 0; background: none; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 0; font-size: 11px; font-weight: 600; color: var(--muted); position: relative; min-height: 48px; }
-.tabbar button[aria-current="page"] { color: var(--primary); }
-.tabbar svg { width: 22px; height: 22px; }
-.dot { position: absolute; top: 4px; left: calc(50% + 8px); min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px; background: var(--urgent-fg); color: #FFFFFF; font-size: 10px; line-height: 16px; }
+.screen.has-fab { padding-bottom: 100px; }
 
 h1, h2 { font-family: var(--display); font-weight: 800; margin: 0; line-height: 1.02; text-wrap: balance; }
 h1 { font-size: 34px; }
@@ -58,6 +56,14 @@ h2 { font-size: 22px; font-weight: 600; }
 p { margin: 0; }
 .sub { color: var(--muted); font-size: 14px; line-height: 1.45; }
 .label { font-weight: 700; font-size: 14px; }
+.section-h { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
+.stat { font-variant-numeric: tabular-nums; }
+
+.topline { display: flex; align-items: center; gap: 10px; }
+.iconbtn { width: 44px; height: 44px; flex-shrink: 0; border-radius: 22px; border: 0; background: var(--soft); color: var(--ink); display: flex; align-items: center; justify-content: center; }
+.iconbtn svg { width: 22px; height: 22px; }
+.wordmark { font-family: var(--display); font-weight: 800; font-size: 26px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px; }
+.wordmark svg { width: 26px; height: 26px; color: var(--primary); }
 
 .card { padding: 16px 18px; border-radius: 24px; background: var(--soft); display: flex; flex-direction: column; gap: 8px; }
 .card p.msg { font-size: 16px; line-height: 1.45; }
@@ -69,6 +75,12 @@ p { margin: 0; }
 .t1 { background: var(--fyi-bg); color: var(--fyi-fg); }
 .tag.plain { background: var(--surface); color: var(--body); font-weight: 600; }
 .new { background: var(--primary); color: #FFFFFF; }
+.you { background: var(--ink); color: #FFFFFF; }
+
+.latest { border: 0; text-align: left; width: 100%; padding: 22px; border-radius: 28px; background: var(--tint); display: flex; flex-direction: column; gap: 10px; color: var(--ink); }
+.latest .msg { font-size: 19px; line-height: 1.4; font-weight: 500; }
+.latest .more { font-size: 14px; font-weight: 700; color: var(--primary); }
+.home-empty { flex: 1; display: flex; align-items: center; justify-content: center; color: #A9B8C2; font-size: 13px; text-align: center; border: 2px dashed #E1E7EB; border-radius: 28px; min-height: 160px; }
 
 .btn { height: 54px; border-radius: 99px; border: 0; background: var(--primary); color: #FFFFFF; font-weight: 700; font-size: 16px; padding: 0 26px; }
 .btn:hover { background: var(--primary-ink); }
@@ -84,15 +96,18 @@ p { margin: 0; }
 .input { height: 50px; border-radius: 99px; border: 2px solid var(--line); background: #F8FAFB; padding: 0 18px; width: 100%; }
 textarea.input { height: 150px; border-radius: 22px; padding: 16px; resize: none; line-height: 1.5; font-size: 17px; }
 .input:focus { border-color: var(--primary); outline: none; }
+select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%2314212B' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 18px center; padding-right: 40px; font-weight: 600; }
 
 .conn { padding: 14px 16px; border-radius: 24px; background: var(--soft); display: flex; align-items: center; gap: 12px; width: 100%; border: 0; text-align: left; }
 .conn.off { opacity: 0.6; }
+.conn.mine { background: var(--tint); }
 .avatar { width: 40px; height: 40px; flex-shrink: 0; border-radius: 20px; background: var(--primary); color: #FFFFFF; font-family: var(--display); font-weight: 800; font-size: 18px; display: flex; align-items: center; justify-content: center; }
 .avatar.big { width: 56px; height: 56px; border-radius: 28px; font-size: 24px; }
+.avatar.ink { background: var(--ink); }
 .grow { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
 .name { font-weight: 700; font-size: 15px; line-height: 1.25; }
 
-.switch { width: 50px; height: 30px; flex-shrink: 0; border-radius: 15px; border: 0; background: #C9D3D9; padding: 4px; display: flex; justify-content: flex-start; transition: background .15s; }
+.switch { width: 50px; height: 30px; flex-shrink: 0; border-radius: 15px; border: 0; background: #C9D3D9; padding: 4px; display: flex; justify-content: flex-start; }
 .switch[aria-checked="true"] { background: var(--primary); justify-content: flex-end; }
 .switch span { width: 22px; height: 22px; border-radius: 11px; background: #FFFFFF; }
 .setting { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 16px 18px; border-radius: 24px; background: var(--tint); }
@@ -107,64 +122,74 @@ textarea.input { height: 150px; border-radius: 22px; padding: 16px; resize: none
 
 .back { border: 0; background: none; color: var(--primary); font-weight: 600; padding: 4px 0; align-self: flex-start; min-height: 44px; }
 .quiet-btn { padding: 16px 18px; border-radius: 24px; border: 2px solid #E1E7EB; background: var(--surface); text-align: left; display: flex; justify-content: space-between; align-items: center; }
-.askbox { padding: 14px 16px; border-radius: 24px; background: var(--ink); color: #FFFFFF; display: flex; flex-direction: column; gap: 8px; }
-.askbox label { font-size: 13px; font-weight: 700; color: #C9D6DF; }
-.askbox .input { background: #FFFFFF; border: 0; height: 44px; color: var(--ink); }
 .bubble { padding: 14px 16px; border-radius: 22px; line-height: 1.5; font-size: 15px; max-width: 92%; white-space: pre-line; }
 .bubble.me { align-self: flex-end; background: var(--primary); color: #FFFFFF; border-bottom-right-radius: 8px; }
 .bubble.ai { align-self: flex-start; background: var(--soft); border-bottom-left-radius: 8px; }
-.bubble.ai b { font-weight: 700; }
 .chips { display: flex; gap: 8px; flex-wrap: wrap; }
 .chip { border: 2px solid var(--line); background: var(--surface); border-radius: 99px; padding: 8px 14px; font-size: 14px; font-weight: 600; color: var(--body); min-height: 40px; }
 .reach { padding: 16px 18px; border-radius: 22px; background: var(--tint); color: var(--primary-ink); font-size: 16px; line-height: 1.45; }
 details.doc { border-radius: 18px; background: var(--soft); padding: 14px 16px; }
 details.doc summary { font-weight: 600; cursor: pointer; }
 details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size: 14px; }
-.qrcard { border-radius: 28px; background: var(--primary); color: #FFFFFF; padding: 26px; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; }
 .qr { width: 168px; height: 168px; background: #FFFFFF; border-radius: 16px; padding: 10px; }
-.qrcard .title { font-family: var(--display); font-weight: 800; font-size: 26px; line-height: 1.05; }
 .counter { border-radius: 28px; background: #F2E9DC; padding: 22px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; color: #3B2F25; }
-.toast { position: absolute; left: 16px; right: 16px; bottom: 78px; background: var(--ink); color: #FFFFFF; padding: 14px 18px; border-radius: 18px; font-weight: 600; font-size: 14px; box-shadow: 0 8px 24px rgba(20,33,43,.25); }
+.toast { position: absolute; left: 16px; right: 16px; bottom: 86px; background: var(--ink); color: #FFFFFF; padding: 14px 18px; border-radius: 18px; font-weight: 600; font-size: 14px; box-shadow: 0 8px 24px rgba(20,33,43,.25); z-index: 5; }
 .empty { padding: 24px; border-radius: 24px; border: 2px dashed var(--line); text-align: center; color: var(--muted); line-height: 1.5; }
 .demo-note { font-size: 12px; color: var(--muted); text-align: center; }
-.stat { font-variant-numeric: tabular-nums; }
-.section-h { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
-.you { background: var(--ink); color: #FFFFFF; }
-.conn.mine { background: var(--tint); }
-select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%2314212B' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 18px center; padding-right: 40px; font-weight: 600; }
 .panel { padding: 18px; border-radius: 24px; border: 2px solid #E1E7EB; display: flex; flex-direction: column; gap: 12px; }
 .minirow { display: flex; gap: 14px; align-items: center; }
 .miniqr { width: 76px; height: 76px; flex-shrink: 0; background: #FFFFFF; border-radius: 12px; padding: 6px; border: 2px solid var(--line); }
-.seg { display: flex; background: var(--surface); border-radius: 99px; padding: 4px; border: 1px solid var(--line); flex-wrap: wrap; }
-.seg button { border: 0; background: transparent; padding: 8px 12px; border-radius: 99px; font-weight: 600; font-size: 13px; color: var(--body); }
-.seg button[aria-pressed="true"] { background: var(--ink); color: #FFFFFF; }
-.seg-label { font-size: 13px; font-weight: 600; color: var(--muted); }
-.screen.has-fab { padding-bottom: 96px; }
-.topline { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.iconbtn { width: 44px; height: 44px; flex-shrink: 0; border-radius: 22px; border: 0; background: var(--soft); color: var(--ink); display: flex; align-items: center; justify-content: center; }
-.iconbtn svg { width: 22px; height: 22px; }
-.iconbtn.me { background: var(--primary); color: #FFFFFF; font-family: var(--display); font-weight: 800; font-size: 18px; }
-.brand-sm { font-family: var(--display); font-weight: 800; font-size: 20px; }
-.chipsrow { display: flex; gap: 8px; overflow-x: auto; margin: 0 -20px; padding: 2px 20px 4px; scrollbar-width: none; }
-.chipsrow::-webkit-scrollbar { display: none; }
-.chipsrow .chip { flex-shrink: 0; }
-.chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #FFFFFF; }
-.fab { position: absolute; left: 14px; right: 14px; bottom: 14px; display: flex; gap: 8px; align-items: center; padding: 6px; border-radius: 99px; background: var(--surface); border: 2px solid var(--line); box-shadow: 0 10px 30px rgba(20,33,43,.16); }
-.fab .input { border: 0; background: transparent; height: 44px; padding: 0 14px; }
-.fab-send, .fab-plus { width: 44px; height: 44px; flex-shrink: 0; border-radius: 22px; border: 0; background: var(--primary); color: #FFFFFF; font-weight: 800; font-size: 20px; }
-.fab-plus { background: var(--ink); }
-.backdrop { position: absolute; inset: 0; background: rgba(20,33,43,.35); }
-.sheet { position: absolute; left: 0; right: 0; bottom: 0; background: var(--surface); border-radius: 28px 28px 0 0; padding: 12px 18px 22px; display: flex; flex-direction: column; gap: 4px; max-height: 85%; overflow-y: auto; }
+.demo-btn { border: 2px dashed #C9A27A; background: #FBF4EA; color: #6B4510; border-radius: 99px; min-height: 44px; padding: 0 16px; font-weight: 700; font-size: 14px; }
+
+/* Bottom bar: radar button + ask input */
+.fab { position: absolute; left: 14px; right: 14px; bottom: 14px; display: flex; gap: 10px; align-items: center; }
+.fab-ask { flex: 1; min-width: 0; display: flex; gap: 6px; align-items: center; padding: 5px; border-radius: 99px; background: var(--surface); border: 2px solid var(--line); box-shadow: 0 10px 30px rgba(20,33,43,.14); }
+.fab-ask .input { border: 0; background: transparent; height: 44px; padding: 0 14px; }
+.fab-send { width: 44px; height: 44px; flex-shrink: 0; border-radius: 22px; border: 0; background: var(--primary); color: #FFFFFF; font-weight: 800; font-size: 20px; }
+.radar-btn { width: 58px; height: 58px; flex-shrink: 0; border-radius: 29px; border: 0; background: var(--sonar); color: var(--sonar-glow); display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(20,33,43,.25); }
+.radar-btn svg { width: 30px; height: 30px; }
+.radar-btn[aria-current="page"] { outline: 3px solid var(--sonar-glow); outline-offset: 2px; }
+
+/* Strength meter */
+.meter { display: inline-flex; gap: 2px; align-items: flex-end; height: 14px; flex-shrink: 0; }
+.meter i { width: 4px; border-radius: 2px; background: #C9D3D9; }
+.meter i:nth-child(1) { height: 5px; } .meter i:nth-child(2) { height: 8px; } .meter i:nth-child(3) { height: 11px; } .meter i:nth-child(4) { height: 14px; }
+.meter.s4 i, .meter.s3 i:nth-child(-n+3), .meter.s2 i:nth-child(-n+2), .meter.s1 i:nth-child(1) { background: var(--primary); }
+
+/* Radar */
+.radar-screen { background: var(--sonar); color: #E6F1F7; }
+.radar-screen .back { color: var(--sonar-glow); }
+.radar-screen .sub { color: #9FB4C2; }
+.radar { position: relative; width: 100%; max-width: 340px; aspect-ratio: 1; align-self: center; border-radius: 50%; background: radial-gradient(circle, #153044 0%, #0F2131 70%); overflow: hidden; border: 1px solid var(--sonar-line); flex-shrink: 0; }
+.radar svg.grid { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sweep { position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 0deg, rgba(156,214,240,0) 0deg, rgba(156,214,240,0) 300deg, rgba(156,214,240,.28) 360deg); animation: spin 4s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.you-dot { position: absolute; left: 50%; top: 50%; width: 12px; height: 12px; margin: -6px; border-radius: 6px; background: #FFFFFF; box-shadow: 0 0 0 4px rgba(255,255,255,.18); }
+.blip { position: absolute; width: 44px; height: 44px; margin: -22px; border: 0; background: transparent; padding: 0; display: flex; align-items: center; justify-content: center; }
+.blip span { display: block; position: relative; border-radius: 50%; background: var(--sonar-glow); box-shadow: 0 0 12px rgba(156,214,240,.8); }
+.blip.s4 span::after { content: ""; position: absolute; left: 50%; top: 50%; width: 16px; height: 16px; margin: -8px; border-radius: 50%; border: 2px solid var(--sonar-glow); animation: pulse 2s ease-out infinite; }
+.blip.subd span { background: #FFFFFF; }
+@keyframes pulse { from { transform: scale(1); opacity: .9; } to { transform: scale(3); opacity: 0; } }
+.legend { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; font-size: 12px; color: #9FB4C2; }
+.legend b { display: inline-block; width: 10px; height: 10px; border-radius: 5px; background: var(--sonar-glow); margin-right: 5px; vertical-align: -1px; }
+.trove-row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 20px; background: rgba(255,255,255,.06); border: 0; color: inherit; text-align: left; width: 100%; }
+.trove-row .meter i { background: rgba(255,255,255,.18); }
+.trove-row .meter.s4 i, .trove-row .meter.s3 i:nth-child(-n+3), .trove-row .meter.s2 i:nth-child(-n+2), .trove-row .meter.s1 i:nth-child(1) { background: var(--sonar-glow); }
+.trove-row .dist { font-variant-numeric: tabular-nums; font-size: 13px; color: #9FB4C2; min-width: 52px; text-align: right; }
+.trove-row .tag.plain { background: rgba(255,255,255,.12); color: #E6F1F7; }
+
+.backdrop { position: absolute; inset: 0; background: rgba(20,33,43,.4); z-index: 3; }
+.sheet { position: absolute; left: 0; right: 0; bottom: 0; background: var(--surface); border-radius: 28px 28px 0 0; padding: 12px 18px 22px; display: flex; flex-direction: column; gap: 6px; max-height: 85%; overflow-y: auto; z-index: 4; color: var(--ink); }
 .grabber { width: 40px; height: 5px; border-radius: 3px; background: var(--line); align-self: center; margin-bottom: 8px; }
 .sheet-item { display: flex; align-items: center; gap: 12px; padding: 12px 10px; border: 0; background: none; border-radius: 16px; text-align: left; font-weight: 600; font-size: 16px; min-height: 52px; }
 .sheet-item:hover { background: var(--soft); }
 .sheet-item .iconbtn { width: 40px; height: 40px; }
-.channel-head { padding: 14px 16px; border-radius: 22px; background: var(--tint); display: flex; align-items: center; gap: 12px; }
-.demo-btn { border: 2px dashed #C9A27A; background: #FBF4EA; color: #6B4510; border-radius: 99px; min-height: 44px; padding: 0 16px; font-weight: 700; font-size: 14px; }
+
+@media (prefers-reduced-motion: reduce) { .sweep, .blip.s4 span::after { animation: none; } .sweep { opacity: .6; } }
 </style>
 
 <div class="bar">
-  <div class="brand">Hobart AI<small>clickable prototype</small></div>
+  <div class="brand">Sub1<small>clickable prototype</small></div>
   <button type="button" class="link-btn" data-act="reset">Reset</button>
 </div>
 <div class="phone">
@@ -180,36 +205,47 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
   const LINE = { 4: 'Urgent only', 3: 'Important and up', 2: 'Good to know and up', 1: 'Everything' };
   const VIA = ['Email', 'My AI only', 'Webhook', 'SMS'];
   const KINDS = ['Club or team', 'School group', 'Business', 'Neighbours', 'Something else'];
+  const STRENGTH = { 4: 'Strong ping', 3: 'Good ping', 2: 'Weak ping', 1: 'Faint ping' };
+  const RANGE = 2500; // metres shown at the radar's edge
   const EMPTY_AUD = () => ({ 4: 0, 3: 0, 2: 0, 1: 0, ai: 0 });
 
+  // Ping strength comes from how recently the Trove's owner confirmed its details.
+  const strength = (days) => days <= 7 ? 4 : days <= 30 ? 3 : days <= 90 ? 2 : days <= 180 ? 1 : 0;
+  const ago = (d) => d === 0 ? 'today' : d === 1 ? 'yesterday' : d < 14 ? `${d} days ago` : d < 60 ? `${Math.round(d / 7)} weeks ago` : `${Math.round(d / 30)} months ago`;
+  const km = (m) => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
+
   const fresh = () => ({
-    screen: 'feed', connId: null, showQuiet: false, unseen: 0, pullOnly: false, sheet: false,
-    draft: { text: '', pri: 2, manual: false, ch: null }, scanLevel: 3, seq: 100,
-    newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false,
-    chat: [],
+    v: 3, screen: 'home', connId: null, showQuiet: false, pullOnly: false, sheet: null,
+    draft: { text: '', pri: 2, manual: false, ch: null }, subId: 'elm', scanLevel: 3, seq: 100,
+    newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false, chat: [],
     connections: [
-      { id: 'netball', name: 'South Hobart Netball U12s', short: 'Netball U12s', level: 3, via: 'Email', on: true, joined: true,
+      { id: 'netball', name: 'South Hobart Netball U12s', short: 'Netball U12s', level: 3, via: 'Email', on: true, joined: true, verified: 3, dist: 1200, bearing: 165,
         docs: [
           { t: 'Season overview', b: 'Games are on Saturday mornings at the Domain courts. Arrive 20 minutes before your game. Bring a water bottle and your bib.' },
-          { t: 'Wet weather plan', b: "If it's raining at 7am, check for an Urgent update by 7:30am. No update means we play." },
+          { t: 'Wet weather plan', b: "If it's raining at 7am, check for an Urgent ping by 7:30am. No ping means we play." },
           { t: 'Uniforms and canteen', b: 'Navy skirt or shorts with the club top. Two families run the canteen each week; canteen families arrive at 8:30am.' }
         ] },
-      { id: 'pf', name: 'Lansdowne Primary P&F', short: 'Lansdowne P&F', level: 4, via: 'Email', on: true, joined: true,
+      { id: 'pf', name: 'Lansdowne Primary P&F', short: 'Lansdowne P&F', level: 4, via: 'Email', on: true, joined: true, verified: 20, dist: 800, bearing: 80,
         docs: [
           { t: 'Term dates', b: 'Term 4 runs until Friday 18 December. Pupil-free day on Friday 20 November.' },
           { t: 'Before and after care', b: 'Runs 7:30–8:45am and 3:00–6:00pm in the hall, including pupil-free days. Book through the office.' }
         ] },
-      { id: 'elm', name: 'Elm St Bakehouse', short: 'Elm St Bakehouse', level: 3, via: 'Email', on: true, joined: false,
+      { id: 'elm', name: 'Elm St Bakehouse', short: 'Elm St Bakehouse', level: 3, via: 'Email', on: true, joined: false, verified: 2, dist: 350, bearing: 35,
         docs: [
           { t: 'Opening hours', b: 'Tuesday to Sunday, 7am to 3pm. Closed Mondays and public holidays.' },
           { t: 'Pre-orders', b: 'Order whole loaves and hot cross buns by 2pm the day before. Pick up from 7am.' }
         ] },
-      { id: 'landcare', name: 'Mt Stuart Landcare', short: 'Mt Stuart Landcare', level: 1, via: 'My AI only', on: true, joined: true,
-        docs: [
-          { t: 'Working bees', b: 'Second Sunday of every month, 9am at the Mt Stuart Rd gate. Bring gloves, water and sturdy shoes. Tools and morning tea provided.' }
-        ] },
-      { id: 'bodycorp', name: 'Waterside Body Corporate', short: 'Waterside Body Corp', level: 4, via: 'Email', on: false, joined: true,
-        docs: [ { t: 'Bin days', b: 'General waste Tuesday night, recycling every second Thursday.' } ] }
+      { id: 'landcare', name: 'Mt Stuart Landcare', short: 'Mt Stuart Landcare', level: 1, via: 'My AI only', on: true, joined: true, verified: 60, dist: 2100, bearing: 255,
+        docs: [ { t: 'Working bees', b: 'Second Sunday of every month, 9am at the Mt Stuart Rd gate. Bring gloves, water and sturdy shoes. Tools and morning tea provided.' } ] },
+      { id: 'bodycorp', name: 'Waterside Body Corporate', short: 'Waterside Body Corp', level: 4, via: 'Email', on: false, joined: true, verified: 140, dist: 120, bearing: 320,
+        docs: [ { t: 'Bin days', b: 'General waste Tuesday night, recycling every second Thursday.' } ] },
+      { id: 'garden', name: 'Lenna Ave Community Garden', short: 'Lenna Ave Garden', level: 3, via: 'Email', on: true, joined: false, verified: 12, dist: 620, bearing: 205,
+        docs: [ { t: 'Plots and watering', b: 'Plots are $20 a year. The watering roster is on the shed door; take one evening a fortnight.' } ] },
+      { id: 'records', name: 'Back Alley Records', short: 'Back Alley Records', level: 3, via: 'Email', on: true, joined: false, verified: 45, dist: 950, bearing: 300,
+        docs: [ { t: 'Opening hours', b: 'Thursday to Saturday, 11am to 5pm.' } ] },
+      { id: 'rivulet', name: 'Rivulet Track Friends', short: 'Rivulet Track Friends', level: 3, via: 'Email', on: true, joined: false, verified: 120, dist: 1500, bearing: 120,
+        docs: [ { t: 'Clean-up days', b: 'We meet at the Molle St end, first Saturday of the month.' } ] },
+      { id: 'pantry', name: 'Corner Pantry', short: 'Corner Pantry', level: 3, via: 'Email', on: true, joined: false, verified: 230, dist: 400, bearing: 140, docs: [] }
     ],
     posts: [
       { id: 1, conn: 'netball', pri: 3, text: 'Saturday games move to 9am at the Domain courts. Same team sheet.', time: '7:40am' },
@@ -219,7 +255,8 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
       { id: 5, conn: 'netball', pri: 1, text: 'Photos from last week are up in the club gallery.', time: 'Mon' },
       { id: 6, conn: 'pf', pri: 2, text: 'Second-hand uniform sale next Wednesday after school.', time: 'Mon' },
       { id: 7, conn: 'bodycorp', pri: 1, text: 'Gardeners are in on Thursday morning.', time: 'Mon' },
-      { id: 8, conn: 'elm', pri: 1, text: 'New sourdough rye on the shelves this week.', time: 'Sun' }
+      { id: 8, conn: 'elm', pri: 1, text: 'New sourdough rye on the shelves this week.', time: 'Sun' },
+      { id: 9, conn: 'garden', pri: 2, text: 'Seedling swap at the shed this Saturday, 10am.', time: 'Sun' }
     ]
   });
 
@@ -230,18 +267,21 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
   const owned = () => S.connections.filter((c) => c.owner);
   const subs = (c) => c.audience ? c.audience[1] + c.audience[2] + c.audience[3] + c.audience[4] + c.audience.ai : 0;
   const tag = (p) => `<span class="tag t${p}">${LEVELS[p]}</span>`;
+  const meter = (s) => `<span class="meter s${s}" aria-hidden="true"><i></i><i></i><i></i><i></i></span>`;
   const pings = (p) => { const c = conn(p.conn); return !c.owner && c.on && !S.pullOnly && c.via !== 'My AI only' && p.pri >= c.level; };
+  const myPosts = () => S.posts.filter((p) => conn(p.conn).joined).sort((a, b) => b.id - a.id);
   const scrollTop = () => { $('screen').scrollTop = 0; };
 
+  const svg = (d, extra = '') => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra}>${d}</svg>`;
   const icon = {
-    feed: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16M4 12h16M4 19h10"/></svg>',
-    people: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.8c1.8.7 3 2.4 3.5 5.2"/></svg>',
-    share: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>',
-    ask: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l1-4A8 8 0 1 1 20 12Z"/></svg>',
-    pen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4Z"/></svg>',
-    menu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
-    scan: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3M8 12h8"/></svg>',
-    plug: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3v5M15 3v5M6 8h12v3a6 6 0 0 1-12 0V8ZM12 17v4"/></svg>'
+    menu: svg('<path d="M4 7h16M4 12h16M4 17h16"/>'),
+    people: svg('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.8c1.8.7 3 2.4 3.5 5.2"/>'),
+    plus: svg('<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>'),
+    pen: svg('<path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4Z"/>'),
+    scan: svg('<path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3M8 12h8"/>'),
+    plug: svg('<path d="M9 3v5M15 3v5M6 8h12v3a6 6 0 0 1-12 0V8ZM12 17v4"/>'),
+    radar: svg('<circle cx="12" cy="12" r="9" opacity=".45"/><circle cx="12" cy="12" r="5" opacity=".7"/><path d="M12 12 18.4 5.6"/><circle cx="16" cy="9" r="1.3" fill="currentColor" stroke="none"/>'),
+    sonar: svg('<path d="M12 12h.01"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/><path d="M5.6 5.6a9 9 0 0 0 0 12.8M18.4 5.6a9 9 0 0 1 0 12.8"/>', 'stroke-width="2.4"')
   };
 
   // A QR-like pattern: finder squares in three corners, seeded noise elsewhere. Visual only.
@@ -273,52 +313,82 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
     for (const t of [1, 2, 3, 4]) (t <= pri ? (pinged += a[t]) : (quiet += a[t]));
     return { pinged, quiet, ai: a.ai };
   }
+  const pingCard = (p) => `<article class="card"><div class="meta">${tag(p.pri)}${conn(p.conn).owner ? '<span class="tag you">You</span>' : ''}${p.isNew ? '<span class="tag new">New</span>' : ''}<span>${esc(conn(p.conn).short)} · ${esc(p.time)}</span></div><p class="msg">${esc(p.text)}</p></article>`;
 
-  // ---------- Following ----------
-  function feedHeader() {
-    return `<div class="topline"><button type="button" class="iconbtn" data-act="menu" aria-label="Menu">${icon.menu}</button><h1 style="flex:1;font-size:30px">What's new</h1></div>`;
+  // ---------- Home ----------
+  function home() {
+    const latest = myPosts().find((p) => pings(p) || conn(p.conn).owner);
+    return `<div class="topline"><button type="button" class="iconbtn" data-act="menu" aria-label="Menu">${icon.menu}</button>
+        <span class="wordmark">${icon.sonar}Sub1</span></div>
+      ${latest
+        ? `<button type="button" class="latest" data-act="go" data-arg="feed">
+            <span class="meta">${tag(latest.pri)}${conn(latest.conn).owner ? '<span class="tag you">You</span>' : ''}<span>${esc(conn(latest.conn).short)} · ${esc(latest.time)}</span></span>
+            <span class="msg">${esc(latest.text)}</span>
+            <span class="more">All pings ›</span></button>`
+        : '<button type="button" class="latest" data-act="go" data-arg="feed"><span class="msg">No new pings.</span><span class="more">All pings ›</span></button>'}
+      <div class="home-empty">Room to build</div>`;
   }
 
+  // ---------- Pings (full feed) ----------
   function feed() {
-    const filter = null;
-    const mine = S.posts.filter((p) => conn(p.conn).joined && (!filter || p.conn === filter.id)).sort((a, b) => b.id - a.id);
+    const mine = myPosts();
     const loud = mine.filter((p) => pings(p) || conn(p.conn).owner), quiet = mine.filter((p) => !pings(p) && !conn(p.conn).owner);
-    const card = (p) => `<article class="card"><div class="meta">${tag(p.pri)}${conn(p.conn).owner ? '<span class="tag you">You</span>' : ''}${p.isNew ? '<span class="tag new">New</span>' : ''}<span>${esc(conn(p.conn).short)} · ${esc(p.time)}</span></div><p class="msg">${esc(p.text)}</p></article>`;
-    const head = filter
-      ? `<div class="channel-head"><span class="avatar" ${filter.owner ? 'style="background:var(--ink)"' : ''}>${esc(filter.name[0])}</span><span class="grow"><span class="name">${esc(filter.name)}</span><span class="sub">${filter.owner ? `You run this · ${subs(filter)} subscribers` : LINE[filter.level]}</span></span>
-          <button type="button" class="link-btn" data-act="${filter.owner ? 'open-mine' : 'open-conn'}" data-arg="${filter.id}">${filter.owner ? 'Manage' : 'Settings'}</button></div>`
-      : `<p class="sub">${S.pullOnly ? 'Pull only is on, so nothing pings you. Everything is here when you or your AI look.' : 'These cleared your line and pinged you.'}</p>`;
-    return `${feedHeader()}${head}
-      ${loud.length ? loud.map(card).join('') : '<div class="empty">Nothing important right now.</div>'}
-      ${quiet.length ? `<button type="button" class="quiet-btn" data-act="quiet" aria-expanded="${S.showQuiet}"><span><b>${quiet.length} quiet updates</b> <span class="sub">saved for later</span></span><span aria-hidden="true">${S.showQuiet ? '▴' : '▾'}</span></button>` : ''}
-      ${S.showQuiet ? quiet.map(card).join('') : ''}`;
+    return `<button type="button" class="back" data-act="go" data-arg="home">‹ Home</button><h1>Pings</h1>
+      <p class="sub">${S.pullOnly ? 'Pull only is on, so nothing pings you. Everything is here when you or your AI look.' : 'These cleared your line and pinged you.'}</p>
+      ${loud.length ? loud.map(pingCard).join('') : '<div class="empty">Nothing important right now.</div>'}
+      ${quiet.length ? `<button type="button" class="quiet-btn" data-act="quiet" aria-expanded="${S.showQuiet}"><span><b>${quiet.length} quiet pings</b> <span class="sub">saved for later</span></span><span aria-hidden="true">${S.showQuiet ? '▴' : '▾'}</span></button>` : ''}
+      ${S.showQuiet ? quiet.map(pingCard).join('') : ''}`;
   }
 
-  function floatBar() {
-    return `<form class="fab" data-form="ask">
-      <label for="float-ask" style="position:absolute;left:-9999px">Ask about anything you follow</label>
-      <input class="input" id="float-ask" placeholder="Ask about anything you follow" autocomplete="off">
-      <button class="fab-send" type="submit" aria-label="Ask">↑</button></form>`;
+  // ---------- Radar ----------
+  function radar() {
+    const all = S.connections.filter((c) => !c.owner && c.dist != null);
+    const shown = all.filter((c) => strength(c.verified) > 0 && c.dist <= RANGE).sort((a, b) => a.dist - b.dist);
+    const hidden = all.length - shown.length;
+    const blips = shown.map((c) => {
+      const s = strength(c.verified), r = (c.dist / RANGE) * 46, a = c.bearing * Math.PI / 180;
+      const x = 50 + r * Math.sin(a), y = 50 - r * Math.cos(a), size = [0, 6, 8, 11, 13][s], op = [0, .3, .5, .8, 1][s];
+      return `<button type="button" class="blip s${s} ${c.joined ? 'subd' : ''}" style="left:${x}%;top:${y}%;opacity:${op}" data-act="trove" data-arg="${c.id}" aria-label="${esc(c.name)}, ${STRENGTH[s]}, ${km(c.dist)}"><span style="width:${size}px;height:${size}px"></span></button>`;
+    }).join('');
+    const rows = shown.map((c) => {
+      const s = strength(c.verified);
+      return `<button type="button" class="trove-row" data-act="trove" data-arg="${c.id}">${meter(s)}
+        <span class="grow" style="gap:3px"><span class="name">${esc(c.name)}</span><span class="sub">${STRENGTH[s]} · verified ${ago(c.verified)}</span></span>
+        ${c.joined ? '<span class="tag plain">Subscribed</span>' : ''}<span class="dist">${km(c.dist)}</span></button>`;
+    }).join('');
+    return `<button type="button" class="back" data-act="go" data-arg="home">‹ Home</button>
+      <h1>Radar</h1><p class="sub">Troves near you. Strong pings were confirmed by their owners recently. Weak ones may be out of date.</p>
+      <div class="radar">
+        <svg class="grid" viewBox="0 0 100 100" aria-hidden="true"><g fill="none" stroke="rgba(156,195,222,.22)" stroke-width=".4">
+          <circle cx="50" cy="50" r="15.3"/><circle cx="50" cy="50" r="30.7"/><circle cx="50" cy="50" r="46"/><path d="M50 2v96M2 50h96"/></g>
+          <g fill="rgba(156,195,222,.6)" font-size="3" font-family="Inter, sans-serif"><text x="51" y="34">800 m</text><text x="51" y="18.6">1.7 km</text><text x="51" y="3.4">2.5 km</text></g></svg>
+        <div class="sweep" aria-hidden="true"></div>
+        <span class="you-dot" aria-hidden="true"></span>
+        ${blips}
+      </div>
+      <div class="legend"><span><b></b>Strong</span><span><b style="opacity:.45"></b>Weak</span><span><b style="background:#FFFFFF"></b>Subscribed</span></div>
+      ${rows}
+      ${hidden ? `<p class="sub" style="text-align:center">${hidden} Trove${hidden === 1 ? ' is' : 's are'} too faint to show. Their details haven't been confirmed in over six months.</p>` : ''}
+      <p class="demo-note" style="color:#7F95A4">Your location stays on your phone. Prototype: positions are made up.</p>`;
   }
-
-  function menuSheet() {
-    const item = (act, arg, ic, label, extra = '') => `<button type="button" class="sheet-item" data-act="${act}" data-arg="${arg}"><span class="iconbtn">${ic}</span><span class="grow">${label}</span>${extra}</button>`;
-    const mine = owned().map((c) => item('menu-mine', c.id, `<b style="font-family:var(--display)">${esc(c.name[0])}</b>`, esc(c.name), `<span class="tag you">${subs(c)}</span>`)).join('');
-    return `<div class="backdrop" data-act="menu-close"></div>
-      <div class="sheet" role="dialog" aria-label="Menu"><span class="grabber"></span>
-        ${owned().length ? item('menu-go', 'share', icon.pen, 'Share news') : ''}
-        ${item('menu-go', 'connections', icon.people, 'Connections', `<span class="sub">${S.connections.filter((c) => c.joined && !c.owner).length} following</span>`)}
-        ${mine ? `<p class="section-h" style="padding:0 10px">Your channels</p>${mine}` : ''}
-        ${item('menu-go', 'start', icon.share, 'Start a channel')}
-        ${item('menu-go', 'scan', icon.scan, 'Scan a code')}
-        ${item('menu-go', 'ai', icon.plug, 'Your AI and settings')}
+  function troveSheet(c) {
+    const s = strength(c.verified);
+    return `<div class="backdrop" data-act="sheet-close"></div>
+      <div class="sheet" role="dialog" aria-label="${esc(c.name)}"><span class="grabber"></span>
+        <div class="row" style="flex-wrap:nowrap"><span class="avatar big">${esc(c.name[0])}</span><div class="grow"><h2>${esc(c.name)}</h2><span class="sub">${km(c.dist)} away</span></div></div>
+        <div class="setting" style="background:var(--soft)"><span class="row" style="gap:10px;flex-wrap:nowrap">${meter(s)}<span><b>${STRENGTH[s]}</b><br><span class="sub">Details confirmed by the owner ${ago(c.verified)}</span></span></span></div>
+        ${c.docs.length ? `<p class="label">What's here</p>${c.docs.map((d) => `<details class="doc"><summary>${esc(d.t)}</summary><p>${esc(d.b)}</p></details>`).join('')}` : ''}
+        ${c.joined
+          ? `<button type="button" class="btn" data-act="open-conn" data-arg="${c.id}">Open Trove</button>`
+          : `<button type="button" class="btn" data-act="sub-start" data-arg="${c.id}">Subscribe</button>`}
       </div>`;
   }
 
-  function connections() {
+  // ---------- Troves you subscribe to ----------
+  function troves() {
     const mine = owned().map((c) => `
       <button type="button" class="conn mine" data-act="open-mine" data-arg="${c.id}">
-        <span class="avatar" style="background:var(--ink)">${esc(c.name[0])}</span>
+        <span class="avatar ink">${esc(c.name[0])}</span>
         <span class="grow"><span class="name">${esc(c.name)}</span>
           <span class="row" style="gap:6px"><span class="tag you">You run this</span><span class="tag plain"><span class="stat">${subs(c)}</span> subscribers</span></span></span>
         <span aria-hidden="true" style="color:var(--muted)">›</span></button>`).join('');
@@ -327,21 +397,21 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
         <span class="avatar">${esc(c.name[0])}</span>
         <span class="grow"><span class="name">${esc(c.name)}</span>
           <span class="row" style="gap:6px"><span class="tag t${c.level}">${LINE[c.level]}</span><span class="tag plain">${c.on ? esc(c.via) : 'Paused'}</span></span></span>
-        <span aria-hidden="true" style="color:var(--muted)">›</span></button>`).join('');
-    return `<button type="button" class="back" data-act="go" data-arg="feed">‹ What's new</button><h1>Connections</h1>
+        ${meter(strength(c.verified))}</button>`).join('');
+    return `<button type="button" class="back" data-act="go" data-arg="home">‹ Home</button><h1>Your Troves</h1>
       ${mine ? `<p class="section-h">Yours</p>${mine}` : ''}
-      <p class="section-h">Following</p>${following}
+      <p class="section-h">Subscribed</p>${following || '<div class="empty">No subscriptions yet. Try the radar.</div>'}
       <div class="row" style="margin-top:auto;flex-wrap:nowrap">
         <button type="button" class="btn dashed small" data-act="go" data-arg="scan" style="flex:1">+ Scan a code</button>
-        <button type="button" class="btn dashed small" data-act="go" data-arg="start" style="flex:1">+ Start a channel</button></div>`;
+        <button type="button" class="btn dashed small" data-act="go" data-arg="start" style="flex:1">+ Start a Trove</button></div>`;
   }
 
   function connDetail() {
-    const c = conn(S.connId);
+    const c = conn(S.connId), s = strength(c.verified);
     const recent = S.posts.filter((p) => p.conn === c.id).sort((a, b) => b.id - a.id).slice(0, 3);
-    return `<button type="button" class="back" data-act="go" data-arg="connections">‹ Connections</button>
-      <div class="row"><span class="avatar big">${esc(c.name[0])}</span><div class="grow"><h2>${esc(c.name)}</h2></div></div>
-      <div class="setting"><span><b>Notifications</b><br><span class="sub">${c.on ? 'On' : 'Paused. Updates still land in your feed.'}</span></span>
+    return `<button type="button" class="back" data-act="go" data-arg="troves">‹ Your Troves</button>
+      <div class="row" style="flex-wrap:nowrap"><span class="avatar big">${esc(c.name[0])}</span><div class="grow"><h2>${esc(c.name)}</h2><span class="row" style="gap:8px">${meter(s)}<span class="sub">${s ? STRENGTH[s] : 'Too faint'} · verified ${ago(c.verified)}</span></span></div></div>
+      <div class="setting"><span><b>Notifications</b><br><span class="sub">${c.on ? 'On' : 'Paused. Pings still land in your feed.'}</span></span>
         <button type="button" class="switch" role="switch" aria-checked="${c.on}" aria-label="Notifications" data-act="toggle-conn"><span></span></button></div>
       <p class="label">Ping me for</p>
       <div class="pills">${[4, 3, 2, 1].map((l) => `<button type="button" class="pill" aria-pressed="${c.level === l}" data-act="level" data-arg="${l}">${LINE[l]}</button>`).join('')}</div>
@@ -349,89 +419,95 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
       <div class="pills">${VIA.map((v) => `<button type="button" class="pill" aria-pressed="${c.via === v}" data-act="via" data-arg="${v}">${v === 'SMS' ? 'SMS · Plus' : v}</button>`).join('')}</div>
       <p class="label">Documents</p>
       ${c.docs.map((d) => `<details class="doc"><summary>${esc(d.t)}</summary><p>${esc(d.b)}</p></details>`).join('')}
-      <p class="label">Recent</p>
+      <p class="label">Recent pings</p>
       ${recent.map((p) => `<div class="card"><div class="meta">${tag(p.pri)}<span>${esc(p.time)}</span></div><p class="msg">${esc(p.text)}</p></div>`).join('')}
-      <button type="button" class="link-btn" data-act="leave" style="color:var(--urgent-fg);align-self:flex-start">Leave ${esc(c.short)}</button>`;
+      <button type="button" class="link-btn" data-act="leave" style="color:var(--urgent-fg);align-self:flex-start">Unsubscribe from ${esc(c.short)}</button>`;
   }
 
   function scan() {
     const c = conn('elm');
-    return `<button type="button" class="back" data-act="go" data-arg="connections">‹ Connections</button>
+    return `<button type="button" class="back" data-act="go" data-arg="troves">‹ Your Troves</button>
       <h1>Scan a code</h1>
       <p class="sub">In real life you'd point your camera at a poster. Here, tap the one on the bakery counter.</p>
       <div class="counter"><p style="font-weight:700">On the counter at Elm St Bakehouse</p>
-        <button type="button" data-act="${c.joined ? 'noop' : 'scanned'}" aria-label="Scan the Elm St Bakehouse code" style="border:0;background:var(--primary);border-radius:24px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:12px;color:#FFFFFF">
+        <button type="button" data-act="${c.joined ? 'noop' : 'sub-start'}" data-arg="elm" aria-label="Scan the Elm St Bakehouse code" style="border:0;background:var(--primary);border-radius:24px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:12px;color:#FFFFFF">
           <span class="qr" style="width:140px;height:140px">${qrSvg}</span>
-          <span style="font-family:var(--display);font-weight:800;font-size:22px">Scan for live updates</span></button>
-        <p style="font-size:13px">${c.joined ? "You're already connected to Elm St Bakehouse." : 'Tap the code to scan it'}</p></div>`;
+          <span style="font-family:var(--display);font-weight:800;font-size:22px">Scan for live pings</span></button>
+        <p style="font-size:13px">${c.joined ? "You're already subscribed to Elm St Bakehouse." : 'Tap the code to scan it'}</p></div>`;
   }
 
   function subscribe() {
-    const opts = [[4, 'Just the big stuff', 'Closures and sell-outs'], [3, 'The good stuff', 'Plus weekly specials'], [1, 'Everything', 'Every little update']];
-    return `<div class="hero"><span class="sub">Hello from</span><h1 style="font-size:38px">Elm St Bakehouse</h1><span>Want to hear about specials and changes?</span></div>
+    const c = conn(S.subId);
+    const opts = [[4, 'Just the big stuff', 'Closures, cancellations, big news'], [3, 'The good stuff', 'Plus things worth knowing'], [1, 'Everything', 'Every ping they send']];
+    return `<div class="hero"><span class="sub">Subscribe to</span><h1 style="font-size:36px">${esc(c.name)}</h1><span>Choose how much you want to hear.</span></div>
       <div class="inner">
-        <h2>Tell me about…</h2>
+        <h2>Ping me for…</h2>
         ${opts.map(([l, t, s]) => `<button type="button" class="choice" aria-pressed="${S.scanLevel === l}" data-act="scan-level" data-arg="${l}"><span class="radio"></span><span class="grow" style="gap:2px"><b>${t}</b><span class="sub">${s}</span></span><span class="tag t${l}">${l === 1 ? 'Everything' : LEVELS[l]}</span></button>`).join('')}
         <label class="label" for="sub-email" style="margin-top:4px">Your email</label>
         <input class="input" id="sub-email" type="email" placeholder="you@example.com" autocomplete="off">
-        <button type="button" class="btn" data-act="join" data-arg="Email">Keep me in the loop</button>
-        <button type="button" class="link-btn" data-act="join" data-arg="My AI only">Connect my AI instead</button>
-        <p class="demo-note">Your connections are yours. Leave or export any time.</p></div>`;
+        <button type="button" class="btn" data-act="join" data-arg="Email">Subscribe</button>
+        <button type="button" class="link-btn" data-act="join" data-arg="My AI only">Send pings to my AI instead</button>
+        <button type="button" class="link-btn" data-act="go" data-arg="home" style="color:var(--muted)">Not now</button></div>`;
   }
 
   function joined() {
-    const c = conn('elm');
+    const c = conn(S.subId);
     return `<div style="margin:auto 0;display:flex;flex-direction:column;gap:16px;text-align:center;align-items:center">
-      <span class="avatar big">E</span><h1>You're in</h1>
-      <p class="sub" style="font-size:16px">Elm St Bakehouse will ping you for <b>${LINE[c.level].toLowerCase()}</b>${c.via === 'My AI only' ? ', through your AI only' : ' by email'}. Change it any time in Connections.</p>
-      <button type="button" class="btn" data-act="go" data-arg="feed">See what's new</button>
-      <p class="sub">Got news of your own? <button type="button" class="link-btn" data-act="go" data-arg="start" style="padding:0">Start a channel</button></p></div>`;
+      <span class="avatar big">${esc(c.name[0])}</span><h1>You're subscribed</h1>
+      <p class="sub" style="font-size:16px">${esc(c.name)} will ping you for <b>${LINE[c.level].toLowerCase()}</b>${c.via === 'My AI only' ? ', through your AI only' : ' by email'}. Change it any time in Your Troves.</p>
+      <button type="button" class="btn" data-act="go" data-arg="feed">See your pings</button>
+      <p class="sub">Got something to share? <button type="button" class="link-btn" data-act="go" data-arg="start" style="padding:0">Start a Trove</button></p></div>`;
   }
 
-  // ---------- Your channels ----------
+  // ---------- Troves you run ----------
   function start() {
     const n = S.newCh;
-    return `<button type="button" class="back" data-act="go" data-arg="connections">‹ Connections</button>
-      <h1>Start a channel</h1>
-      <p class="sub" style="font-size:16px;color:var(--body)">Keep people in the loop about your club, street, shop or group. It takes a minute.</p>
+    return `<button type="button" class="back" data-act="go" data-arg="home">‹ Home</button>
+      <h1>Start a Trove</h1>
+      <p class="sub" style="font-size:16px;color:var(--body)">A Trove keeps people in the loop about your club, street, shop or group. It takes a minute.</p>
       <label class="label" for="ch-name">What's it called?</label>
       <input class="input" id="ch-name" placeholder="Lenna St neighbours" value="${esc(n.name)}" autocomplete="off">
       <p class="label">What is it?</p>
       <div class="pills">${KINDS.map((k) => `<button type="button" class="pill" aria-pressed="${n.kind === k}" data-act="ch-kind" data-arg="${k}">${k}</button>`).join('')}</div>
-      <p class="label">Who can join?</p>
+      <p class="label">Who can subscribe?</p>
       <button type="button" class="choice" aria-pressed="${n.access === 'invite'}" data-act="ch-access" data-arg="invite"><span class="radio"></span><span class="grow" style="gap:2px"><b>People I invite</b><span class="sub">By link or QR code. Ready straight away.</span></span></button>
-      <button type="button" class="choice" aria-pressed="${n.access === 'public'}" data-act="ch-access" data-arg="public"><span class="radio"></span><span class="grow" style="gap:2px"><b>Anyone, and findable</b><span class="sub">Shows up when people look for it. We check public channels within a day.</span></span></button>
-      <button type="button" class="btn" id="ch-create" data-act="create" style="margin-top:auto" ${n.name.trim() ? '' : 'disabled'}>Create channel</button>
+      <button type="button" class="choice" aria-pressed="${n.access === 'public'}" data-act="ch-access" data-arg="public"><span class="radio"></span><span class="grow" style="gap:2px"><b>Anyone nearby</b><span class="sub">Shows on the radar. We check public Troves within a day.</span></span></button>
+      <button type="button" class="btn" id="ch-create" data-act="create" style="margin-top:auto" ${n.name.trim() ? '' : 'disabled'}>Create Trove</button>
       <p class="demo-note">Free during the pilot.</p>`;
   }
 
   function mineDetail() {
-    const c = conn(S.connId);
+    const c = conn(S.connId), s = strength(c.verified);
     const posts = S.posts.filter((p) => p.conn === c.id).sort((a, b) => b.id - a.id);
     const n = subs(c);
-    return `<button type="button" class="back" data-act="go" data-arg="connections">‹ Connections</button>
-      <div class="row"><span class="avatar big" style="background:var(--ink)">${esc(c.name[0])}</span>
-        <div class="grow"><h2>${esc(c.name)}</h2><span class="row" style="gap:6px"><span class="tag you">You run this</span><span class="tag t1">${c.access === 'public' ? (c.checked ? 'Public' : 'Public · being checked') : 'Invite only'}</span></span></div></div>
-      <button type="button" class="btn" data-act="share-to" data-arg="${c.id}">Share news</button>
+    return `<button type="button" class="back" data-act="go" data-arg="troves">‹ Your Troves</button>
+      <div class="row" style="flex-wrap:nowrap"><span class="avatar big ink">${esc(c.name[0])}</span>
+        <div class="grow"><h2>${esc(c.name)}</h2><span class="row" style="gap:6px"><span class="tag you">You run this</span><span class="tag t1">${c.access === 'public' ? (c.checked ? 'On the radar' : 'Public · being checked') : 'Invite only'}</span></span></div></div>
+      <button type="button" class="btn" data-act="share-to" data-arg="${c.id}">Send a ping</button>
+      <div class="panel">
+        <span class="row" style="gap:10px;flex-wrap:nowrap">${meter(s)}<span><b>${s ? STRENGTH[s] : 'Too faint to show'}</b><br><span class="sub">You confirmed your details ${ago(c.verified)}</span></span></span>
+        <p class="sub">Your ping weakens as your details get older. Confirm they're still right to keep it strong.</p>
+        <div class="row"><button type="button" class="btn small" data-act="reverify">Everything's still right</button>
+        <button type="button" class="demo-btn" data-act="age">Prototype: 2 months pass</button></div>
+      </div>
       <div class="panel">
         <p class="label"><span class="stat">${n}</span> subscriber${n === 1 ? '' : 's'}</p>
         ${n ? `<p class="sub">${c.audience[4]} want urgent only · ${c.audience[3]} important and up · ${c.audience[2] + c.audience[1]} more · ${c.audience.ai} use their AI</p>` : '<p class="sub">Nobody yet. Invite people with your link or poster.</p>'}
         <div class="minirow"><span class="miniqr">${qrSvg}</span>
-          <div class="grow"><p style="font-weight:600;font-size:14px;word-break:break-all;font-family:var(--mono)">[domain]/j/${esc(c.id)}</p>
+          <div class="grow"><p style="font-weight:600;font-size:14px;word-break:break-all;font-family:var(--mono)">sub1/${esc(c.id)}</p>
             <div class="row" style="gap:8px"><button type="button" class="btn small" data-act="copy-invite" data-arg="${c.id}">Copy invite link</button>
             <button type="button" class="link-btn" data-act="soon" data-arg="Poster downloads">Get the poster</button></div></div></div>
         <button type="button" class="demo-btn" data-act="sim-join">Prototype: 12 people scan your poster</button>
       </div>
       <p class="label">Documents</p>
-      <p class="sub">People can ask questions of these instead of messaging you.</p>
+      <p class="sub">Subscribers can ask questions of these instead of messaging you.</p>
       ${c.docs.map((d) => `<details class="doc"><summary>${esc(d.t)}</summary><p>${esc(d.b)}</p></details>`).join('')}
       ${S.addingDoc ? `<form class="panel" data-form="doc"><label class="label" for="doc-t">Page title</label><input class="input" id="doc-t" placeholder="Wet weather plan" autocomplete="off">
           <label class="label" for="doc-b">What should people know?</label><textarea class="input" id="doc-b" style="height:110px;font-size:15px" placeholder="If it's raining at 7am…"></textarea>
           <div class="row"><button class="btn small" type="submit">Add page</button><button type="button" class="link-btn" data-act="doc-cancel">Cancel</button></div></form>`
         : '<button type="button" class="btn dashed small" data-act="doc-add">+ Add a page</button>'}
-      <p class="label">Past news</p>
-      ${posts.length ? posts.map((p) => `<div class="card"><div class="meta">${tag(p.pri)}<span>${esc(p.time)}</span></div><p class="msg">${esc(p.text)}</p>${p.reach ? `<p class="sub">${esc(p.reach)}</p>` : ''}</div>`).join('') : '<div class="empty">Nothing shared yet.</div>'}
-      <button type="button" class="link-btn" data-act="soon" data-arg="Channel settings" style="align-self:flex-start">Channel settings</button>`;
+      <p class="label">Past pings</p>
+      ${posts.length ? posts.map((p) => `<div class="card"><div class="meta">${tag(p.pri)}<span>${esc(p.time)}</span></div><p class="msg">${esc(p.text)}</p>${p.reach ? `<p class="sub">${esc(p.reach)}</p>` : ''}</div>`).join('') : '<div class="empty">No pings sent yet.</div>'}`;
   }
 
   function compose() {
@@ -440,8 +516,8 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
     const d = S.draft;
     if (!d.ch || !conn(d.ch) || !conn(d.ch).owner) d.ch = mine[0].id;
     const c = conn(d.ch), s = suggest(d.text), r = reachFor(c, d.pri);
-    return `<button type="button" class="back" data-act="go" data-arg="feed">‹ What's new</button>${mine.length > 1
-        ? `<label class="label" for="ch-pick">Posting to</label><select class="input" id="ch-pick">${mine.map((m) => `<option value="${m.id}" ${m.id === c.id ? 'selected' : ''}>${esc(m.name)}</option>`).join('')}</select>`
+    return `<button type="button" class="back" data-act="go" data-arg="home">‹ Home</button>${mine.length > 1
+        ? `<label class="label" for="ch-pick">Pinging from</label><select class="input" id="ch-pick">${mine.map((m) => `<option value="${m.id}" ${m.id === c.id ? 'selected' : ''}>${esc(m.name)}</option>`).join('')}</select>`
         : `<p class="sub" style="font-weight:600">${esc(c.name)}</p>`}
       <h1>What's the news?</h1>
       <label for="draft" style="position:absolute;left:-9999px">Message</label>
@@ -451,47 +527,43 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
       <div class="pills" id="pri-pills">${[1, 2, 3, 4].map((l) => `<button type="button" class="pill" aria-pressed="${d.pri === l}" data-act="pri" data-arg="${l}">${LEVELS[l]}</button>`).join('')}</div>
       <p class="sub" id="why" style="font-size:15px;color:var(--body)">${whyText(s)}</p>
       <div class="reach" id="reach">${reachText(r)}</div>
-      <div class="row" style="margin-top:auto"><button type="button" class="btn" id="share" data-act="share" ${d.text.trim() ? '' : 'disabled'}>Share it</button>
-      <button type="button" class="btn ghost" data-act="soon" data-arg="Scheduling">Later</button></div>
-      <button type="button" class="link-btn" data-act="go" data-arg="start" style="align-self:flex-start">+ Start another channel</button>`;
+      <div class="row" style="margin-top:auto"><button type="button" class="btn" id="share" data-act="share" ${d.text.trim() ? '' : 'disabled'}>Send ping</button>
+      <button type="button" class="btn ghost" data-act="soon" data-arg="Scheduling">Later</button></div>`;
   }
   const whyText = (s) => !s ? "Write something and we'll suggest how big a deal it is."
     : S.draft.manual && S.draft.pri !== s.pri ? `You picked <b>${LEVELS[S.draft.pri]}</b>. We'd have said ${LEVELS[s.pri]}, because ${s.why}.`
     : `We picked <b>${LEVELS[s.pri]}</b> because ${s.why}. Change it if we're wrong.`;
   const reachText = (r) => r.pinged + r.quiet + r.ai === 0
-    ? "Nobody has joined yet, so this will wait in your channel. Invite people from Connections."
+    ? 'Nobody has subscribed yet, so this will wait in your Trove. Invite people from Your Troves.'
     : `<b class="stat">${r.pinged} ${r.pinged === 1 ? 'person' : 'people'}</b> will get a ping. <span class="stat">${r.quiet}</span> more will see it next time they look. <span class="stat">${r.ai}</span> have their AI keeping watch.`;
 
   // ---------- Ask and your AI ----------
   function ask() {
     const msgs = S.chat.map((m) => `<div class="bubble ${m.who}">${m.who === 'ai' ? m.html : esc(m.text)}</div>`).join('');
     const sugg = ["What's on for me this week?", 'What do I need for Saturday?', 'Is school on Friday?', "When's the next working bee?"];
-    return `<div class="topline"><h1>Ask</h1><button type="button" class="btn ghost small" data-act="go" data-arg="feed">Done</button></div>
-      <p class="sub">Answers come from your connections' updates and documents.</p>
+    return `<div class="topline" style="justify-content:space-between"><h1>Ask</h1><button type="button" class="btn ghost small" data-act="go" data-arg="home">Done</button></div>
+      <p class="sub">Answers come from your Troves' pings and documents.</p>
       ${msgs || `<div class="chips">${sugg.map((q) => `<button type="button" class="chip" data-act="ask" data-arg="${esc(q)}">${esc(q)}</button>`).join('')}</div>`}
       <p class="demo-note">Prototype: answers are matched from the sample data, not a real AI.</p>`;
   }
 
   function ai() {
-    return `<button type="button" class="back" data-act="go" data-arg="feed">‹ What's new</button><h1>Connect your AI</h1>
-      <p class="sub" style="font-size:16px;color:var(--body)">Let your own assistant read your updates and documents. It only sees the connections you allow. No tech skills needed.</p>
+    return `<button type="button" class="back" data-act="go" data-arg="home">‹ Home</button><h1>Connect your AI</h1>
+      <p class="sub" style="font-size:16px;color:var(--body)">Let your own assistant read your pings and documents. It only sees the Troves you allow. No tech skills needed.</p>
       <div class="card" style="gap:12px"><p class="label">1. Copy your link</p>
         <div class="row" style="flex-wrap:nowrap"><input class="input" id="mcp-link" readonly value="https://[domain]/mcp" style="font-family:var(--mono);font-size:14px;background:#FFFFFF">
         <button type="button" class="btn small" data-act="copy">Copy</button></div>
-        <p class="label">2. Paste it into your assistant</p><p class="sub">We'll show you exactly where for the one you use. Your AI can post to channels you run, too.</p></div>
+        <p class="label">2. Paste it into your assistant</p><p class="sub">We'll show you exactly where for the one you use. Your AI can send pings from Troves you run, too.</p></div>
       <div class="setting"><span><b>Pull only</b><br><span class="sub">No notifications at all. My AI checks when it wants.</span></span>
         <button type="button" class="switch" role="switch" aria-checked="${S.pullOnly}" aria-label="Pull only" data-act="pull"><span></span></button></div>
-      <div class="card"><p class="label">Daily digest</p><p class="sub">A morning summary of your quiet updates, written your way. Coming later.</p></div>
-      <button type="button" data-act="ask" data-arg="What's on for me this week?" style="margin-top:auto;border:0;text-align:left;padding:20px;border-radius:24px;background:var(--primary);color:#FFFFFF">
-        <span style="font-size:13px;font-weight:700;color:var(--tint-2)">Then just ask</span><br>
-        <span style="font-family:var(--display);font-weight:600;font-size:22px;line-height:1.25">“What's on for me this week?”</span></button>`;
+      <div class="card"><p class="label">Daily digest</p><p class="sub">A morning summary of your quiet pings, written your way. Coming later.</p></div>`;
   }
 
   function answer(q) {
     const t = q.toLowerCase();
     const mine = S.connections.filter((c) => c.joined);
     if (/this week|what's on|whats on|today/.test(t)) {
-      const items = S.posts.filter((p) => conn(p.conn).joined).sort((a, b) => b.id - a.id).slice(0, 4);
+      const items = myPosts().slice(0, 4);
       return 'Here’s what’s coming up:\n' + items.map((p) => `• <b>${esc(conn(p.conn).short)}:</b> ${esc(p.text)}`).join('\n');
     }
     const words = t.replace(/need/g, 'bring').match(/[a-z]{4,}/g) || [];
@@ -499,10 +571,10 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
     const hits = [];
     for (const c of mine) {
       for (const d of c.docs) hits.push({ s: score(d.t + ' ' + d.b), html: `<b>${esc(c.short)} · ${esc(d.t)}:</b> ${esc(d.b)}` });
-      for (const p of S.posts.filter((x) => x.conn === c.id)) { const s = score(p.text); hits.push({ s: s + (s > 0 ? 0.5 : 0), html: `<b>${esc(c.short)} update:</b> ${esc(p.text)}` }); }
+      for (const p of S.posts.filter((x) => x.conn === c.id)) { const s = score(p.text); hits.push({ s: s + (s > 0 ? 0.5 : 0), html: `<b>${esc(c.short)} ping:</b> ${esc(p.text)}` }); }
     }
     const top = hits.filter((h) => h.s > 0).sort((a, b) => b.s - a.s).slice(0, 2);
-    return top.length ? top.map((h) => h.html).join('\n\n') : "I couldn't find that in your connections' updates or documents. Try asking about a club, school or shop you follow.";
+    return top.length ? top.map((h) => h.html).join('\n\n') : "I couldn't find that in your Troves' pings or documents. Try asking about a club, school or shop you subscribe to.";
   }
   function doAsk(q) {
     if (!q.trim()) return;
@@ -510,16 +582,37 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
     S.screen = 'ask'; render();
   }
 
-  // ---------- Render ----------
-  const SCREENS = { feed, connections, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
-  const TAB_OF = { conn: 'connections', mine: 'connections', scan: 'connections', subscribe: 'connections', joined: 'connections', start: 'share' };
+  // ---------- Shell ----------
+  function floatBar() {
+    return `<div class="fab">
+      <button type="button" class="radar-btn" data-act="go" data-arg="radar" aria-label="Radar: Troves near you" ${S.screen === 'radar' ? 'aria-current="page"' : ''}>${icon.radar}</button>
+      <form class="fab-ask" data-form="ask">
+        <label for="float-ask" style="position:absolute;left:-9999px">Ask about anything you subscribe to</label>
+        <input class="input" id="float-ask" placeholder="Ask anything" autocomplete="off">
+        <button class="fab-send" type="submit" aria-label="Ask">↑</button></form></div>`;
+  }
+  function menuSheet() {
+    const item = (act, arg, ic, label, extra = '') => `<button type="button" class="sheet-item" data-act="${act}" data-arg="${arg}"><span class="iconbtn">${ic}</span><span class="grow">${label}</span>${extra}</button>`;
+    const mine = owned().map((c) => item('menu-mine', c.id, `<b style="font-family:var(--display)">${esc(c.name[0])}</b>`, esc(c.name), `<span class="tag you">${subs(c)}</span>`)).join('');
+    return `<div class="backdrop" data-act="sheet-close"></div>
+      <div class="sheet" role="dialog" aria-label="Menu"><span class="grabber"></span>
+        ${owned().length ? item('menu-go', 'share', icon.pen, 'Send a ping') : ''}
+        ${item('menu-go', 'troves', icon.people, 'Your Troves', `<span class="sub">${S.connections.filter((c) => c.joined && !c.owner).length} subscribed</span>`)}
+        ${mine ? `<p class="section-h" style="padding:0 10px">Troves you run</p>${mine}` : ''}
+        ${item('menu-go', 'start', icon.plus, 'Start a Trove')}
+        ${item('menu-go', 'scan', icon.scan, 'Scan a code')}
+        ${item('menu-go', 'ai', icon.plug, 'Your AI and settings')}
+      </div>`;
+  }
+
+  const SCREENS = { home, feed, radar, troves, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
   function render() {
     const el = $('screen');
-    const fab = S.screen === 'feed' || S.screen === 'ask';
-    el.className = 'screen' + (S.screen === 'subscribe' ? ' flush' : '') + (fab ? ' has-fab' : '');
-    el.innerHTML = (SCREENS[S.screen] || feed)();
+    const fab = ['home', 'feed', 'ask', 'radar'].includes(S.screen);
+    el.className = 'screen' + (S.screen === 'subscribe' ? ' flush' : '') + (fab ? ' has-fab' : '') + (S.screen === 'radar' ? ' radar-screen' : '');
+    el.innerHTML = (SCREENS[S.screen] || home)();
     $('float').innerHTML = fab ? floatBar() : '';
-    $('sheet').innerHTML = S.sheet ? menuSheet() : '';
+    $('sheet').innerHTML = S.sheet === 'menu' ? menuSheet() : S.sheet ? troveSheet(conn(S.sheet)) : '';
     if (S.screen === 'ask') el.scrollTop = el.scrollHeight;
   }
   let toastTimer;
@@ -535,42 +628,37 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
   // ---------- Actions ----------
   const act = {
     reset: () => { S = fresh(); render(); toast('Prototype reset'); },
-    tab: (a) => {
-      S.screen = a; S.addingDoc = false;
-      if (a === 'feed') S.unseen = 0;
-      render(); scrollTop();
-      if (a === 'feed') setTimeout(() => S.posts.forEach((p) => { p.isNew = false; }), 0);
-    },
     go: (a) => {
-      S.screen = a; S.addingDoc = false; S.sheet = false; render(); scrollTop();
-      if (a === 'feed') setTimeout(() => S.posts.forEach((p) => { p.isNew = false; }), 0);
+      S.screen = a; S.addingDoc = false; S.sheet = null; render(); scrollTop();
+      if (a === 'feed' || a === 'home') setTimeout(() => S.posts.forEach((p) => { p.isNew = false; }), 0);
     },
-    menu: () => { S.sheet = true; render(); },
-    'menu-close': () => { S.sheet = false; render(); },
+    menu: () => { S.sheet = 'menu'; render(); },
+    'sheet-close': () => { S.sheet = null; render(); },
     'menu-go': (a) => act.go(a),
-    'menu-mine': (a) => { S.sheet = false; act['open-mine'](a); },
+    'menu-mine': (a) => { S.sheet = null; act['open-mine'](a); },
+    trove: (a) => { S.sheet = a; render(); },
     quiet: () => { S.showQuiet = !S.showQuiet; render(); },
-    'open-conn': (a) => { S.connId = a; S.screen = 'conn'; render(); scrollTop(); },
+    'open-conn': (a) => { S.connId = a; S.screen = 'conn'; S.sheet = null; render(); scrollTop(); },
     'open-mine': (a) => { S.connId = a; S.screen = 'mine'; S.addingDoc = false; render(); scrollTop(); },
     'toggle-conn': () => { const c = conn(S.connId); c.on = !c.on; render(); toast(c.on ? `Notifications on for ${c.short}` : `${c.short} paused`); },
     level: (a) => { const c = conn(S.connId); c.level = +a; render(); toast(`${c.short}: ${LINE[a].toLowerCase()}`); },
     via: (a) => { if (a === 'SMS') { toast('SMS is on the Plus plan. Coming later.'); return; } conn(S.connId).via = a; render(); },
-    leave: () => { const c = conn(S.connId); c.joined = false; S.screen = 'connections'; render(); toast(`You left ${c.short}`); },
-    scanned: () => { S.screen = 'subscribe'; render(); scrollTop(); },
+    leave: () => { const c = conn(S.connId); c.joined = false; S.screen = 'troves'; render(); toast(`Unsubscribed from ${c.short}`); },
     noop: () => {},
+    'sub-start': (a) => { S.subId = a; S.scanLevel = 3; S.sheet = null; S.screen = 'subscribe'; render(); scrollTop(); },
     'scan-level': (a) => { S.scanLevel = +a; render(); },
-    join: (a) => { const c = conn('elm'); Object.assign(c, { joined: true, on: true, level: S.scanLevel, via: a }); S.screen = 'joined'; render(); },
+    join: (a) => { const c = conn(S.subId); Object.assign(c, { joined: true, on: true, level: S.scanLevel, via: a }); S.screen = 'joined'; render(); },
     ask: (a) => doAsk(a),
     pull: () => { S.pullOnly = !S.pullOnly; render(); toast(S.pullOnly ? 'Pull only on. Nothing will ping you.' : 'Pull only off'); },
     copy: () => copyText($('mcp-link').value, 'mcp-link'),
-    'copy-invite': (a) => copyText(`https://[domain]/j/${a}`),
+    'copy-invite': (a) => copyText(`https://[domain]/${a}`),
     'ch-kind': (a) => { S.newCh.kind = a; render(); },
     'ch-access': (a) => { S.newCh.access = a; render(); },
     create: () => {
       const n = S.newCh; if (!n.name.trim()) return;
       const name = n.name.trim();
-      const id = (name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'channel') + '-' + (++S.seq);
-      S.connections.unshift({ id, name, short: name.length > 22 ? name.slice(0, 21) + '…' : name, owner: true, joined: true, on: true, level: 1, via: 'Email', kind: n.kind, access: n.access, checked: false, audience: EMPTY_AUD(), docs: [] });
+      const id = (name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'trove') + '-' + (++S.seq);
+      S.connections.unshift({ id, name, short: name.length > 22 ? name.slice(0, 21) + '…' : name, owner: true, joined: true, on: true, level: 1, via: 'Email', kind: n.kind, access: n.access, checked: false, verified: 0, audience: EMPTY_AUD(), docs: [] });
       S.newCh = { name: '', kind: 'Club or team', access: 'invite' };
       S.connId = id; S.screen = 'mine'; S.draft.ch = id;
       render(); scrollTop(); toast(`${name} is ready. Invite some people.`);
@@ -579,8 +667,10 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
       const c = conn(S.connId);
       [[4, 2], [3, 5], [2, 3], [1, 1], ['ai', 1]].forEach(([k, v]) => { c.audience[k] += v; });
       if (c.access === 'public') c.checked = true;
-      render(); toast('12 people joined from your poster');
+      render(); toast('12 people subscribed from your poster');
     },
+    reverify: () => { const c = conn(S.connId); c.verified = 0; render(); toast('Confirmed. Your ping is strong again.'); },
+    age: () => { const c = conn(S.connId); c.verified += 60; const s = strength(c.verified); render(); toast(`Two months later: ${s ? STRENGTH[s].toLowerCase() : 'too faint to show'}`); },
     'doc-add': () => { S.addingDoc = true; render(); const i = $('doc-t'); if (i) i.focus(); },
     'doc-cancel': () => { S.addingDoc = false; render(); },
     'share-to': (a) => { S.draft.ch = a; S.screen = 'share'; render(); scrollTop(); },
@@ -591,8 +681,9 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
       const c = conn(d.ch), r = reachFor(c, d.pri);
       S.posts.push({ id: ++S.seq, conn: c.id, pri: d.pri, text: d.text.trim(), time: 'Just now', isNew: true, reach: `${r.pinged} pinged · ${r.quiet} in feed · ${r.ai} AI` });
       Object.assign(S.draft, { text: '', pri: 2, manual: false });
-      S.screen = 'feed';
-      render(); scrollTop(); toast(r.pinged + r.quiet + r.ai ? `Shared. ${r.pinged} pinged.` : 'Shared. It will be waiting when people join.');
+      c.verified = 0;
+      S.screen = 'home';
+      render(); scrollTop(); toast(r.pinged + r.quiet + r.ai ? `Ping sent. ${r.pinged} pinged.` : 'Ping sent. It will be waiting when people subscribe.');
     },
     soon: (a) => toast(`${a}: coming later`)
   };
@@ -612,6 +703,7 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
     const f = act[b.dataset.act];
     if (f) f(b.dataset.arg);
   });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && S.sheet) { S.sheet = null; render(); } });
   document.addEventListener('input', (e) => {
     if (e.target.id === 'draft') { S.draft.text = e.target.value; if (!e.target.value.trim()) S.draft.manual = false; updateCompose(); }
     if (e.target.id === 'ch-name') { S.newCh.name = e.target.value; $('ch-create').disabled = !e.target.value.trim(); }
@@ -626,13 +718,13 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
     if (f === 'doc') {
       const t = $('doc-t').value.trim(), b = $('doc-b').value.trim();
       if (!t || !b) { toast('Add a title and some text first'); return; }
-      conn(S.connId).docs.push({ t, b }); S.addingDoc = false; render(); toast('Page added. People can ask about it now.');
+      const c = conn(S.connId); c.docs.push({ t, b }); c.verified = 0; S.addingDoc = false; render(); toast('Page added. Subscribers can ask about it now.');
     }
   });
 
   const hot = window.claude && window.claude.hot;
   if (hot && hot.snapshot) hot.snapshot(() => S);
-  const boot = (data) => { if (data && data.connections && data.newCh) S = Object.assign(fresh(), data, { sheet: false }); render(); };
+  const boot = (data) => { if (data && data.v === 3) S = Object.assign(fresh(), data, { sheet: null }); render(); };
   if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>

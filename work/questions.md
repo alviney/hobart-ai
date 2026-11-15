@@ -9,7 +9,8 @@ Accounts, keys, domains, payments, store listings: things no session can do.
 Listed as soon as they are foreseen, because they take the longest. Keys go
 in the cloud environment's settings, never in the repository.
 
-- [ ] Register a domain (and decide the name, Q-001) — unblocks email sending (DNS verification) and the public site. Tell a session the domain; DNS records come later.
+- [ ] Check the Sub1 name: domain availability and a basic Australian trademark search (IP Australia) before registering anything (D-008)
+- [ ] Register a domain once the name check passes — unblocks email sending (DNS verification) and the public site. Tell a session the domain; DNS records come later.
 - [ ] Create an email-sending account (e.g. Resend or Postmark free tier) and verify the domain — unblocks invites and email delivery in notify-core. Save the API key in the cloud environment's settings, never in the repository.
 - [ ] Create a hosting account once the stack decision is written (free tier) — unblocks a live pilot. A session will say which one.
 - [ ] Set up an ad account (e.g. Meta) and decide a test budget — unblocks finding publishers (D-004). Sessions draft the creative; only you can run and pay for ads.
@@ -34,7 +35,7 @@ or to `withdrawn` with a reason; it is never deleted.
 
 ## Q-001: What is the product called?
 
-- **Status:** open
+- **Status:** answered → D-008 (working name Sub1, pending domain and trademark checks)
 - **Asked:** 2026-11-15, by brainstorm session
 - **Blocks:** the domain, email sending, marketing copy ([notify-core](projects/notify-core.md))
 - **Options:** A: a Hobart-specific name (local pride, but harder to grow beyond Hobart) / B: a general name with "Hobart" as the first city (room to grow)
@@ -63,3 +64,11 @@ or to `withdrawn` with a reason; it is never deleted.
 - **Blocks:** [notify-core](projects/notify-core.md) (channel creation)
 - **Options:** A: invite-only channels are instant; public, findable ones get a quick check first / B: every channel is instant / C: every channel is checked
 - **Recommendation:** A, and free during the pilot, because private channels carry little risk while public ones are where duplicates and impersonation happen. The prototype already works this way.
+
+## Q-005: How should the radar handle location?
+
+- **Status:** open
+- **Asked:** 2026-11-15, by brainstorm session
+- **Blocks:** [notify-core](projects/notify-core.md) (radar)
+- **Options:** A: distances worked out on the phone; we never store where people are / B: store an approximate suburb to improve results / C: store precise location history
+- **Recommendation:** A, because it's the strongest privacy promise and the radar doesn't need anything more. It also fits "your connections are yours" in the marketing.

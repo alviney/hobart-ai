@@ -3,7 +3,7 @@
 - **Status:** shipped
 - **Size guess:** M
 - **Touches:** design files or clickable HTML prototypes only, no product code
-- **Related decisions:** [D-004](../decisions/D-004-mockups-first-and-ads.md), [D-003](../decisions/D-003-marketing-sells-the-dream.md), [D-005](../decisions/D-005-visual-direction.md), [D-007](../decisions/D-007-feed-first-menu-sheet.md)
+- **Related decisions:** [D-008](../decisions/D-008-sub1-troves-pings.md), [D-009](../decisions/D-009-ping-strength-and-radar.md), [D-004](../decisions/D-004-mockups-first-and-ads.md), [D-003](../decisions/D-003-marketing-sells-the-dream.md), [D-005](../decisions/D-005-visual-direction.md), [D-007](../decisions/D-007-feed-first-menu-sheet.md)
 
 ## Why
 
@@ -56,3 +56,4 @@ screens, from which the owner picks one (recorded as a decision).
 - 2026-11-15: prototype reworked for D-006: Share tab, Start a channel, Yours in Connections
 - 2026-11-15: tab bar removed; feed is home with a floating Ask bar; three navigation options to compare (header icons, channel chips, menu sheet)
 - 2026-11-15: menu sheet chosen (D-007); other navigation options and the switcher removed
+- 2026-11-15: prototype rebuilt as Sub1 (D-008): Troves and Pings, home shows only the latest ping, radar of nearby Troves with ping strength (D-009)

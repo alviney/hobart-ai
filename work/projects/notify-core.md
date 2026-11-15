@@ -3,7 +3,7 @@
 - **Status:** scoping
 - **Size guess:** L (split into milestones before building)
 - **Touches:** the web app, database schema, auth, email delivery
-- **Related decisions:** [D-002](../decisions/D-002-start-with-notifications.md), [D-004](../decisions/D-004-mockups-first-and-ads.md), [D-005](../decisions/D-005-visual-direction.md), [D-006](../decisions/D-006-everyone-can-publish.md)
+- **Related decisions:** [D-008](../decisions/D-008-sub1-troves-pings.md), [D-009](../decisions/D-009-ping-strength-and-radar.md), [D-002](../decisions/D-002-start-with-notifications.md), [D-004](../decisions/D-004-mockups-first-and-ads.md), [D-005](../decisions/D-005-visual-direction.md), [D-006](../decisions/D-006-everyone-can-publish.md)
 
 ## Why
 
@@ -29,7 +29,8 @@ posting weekly (see `work/signals.md`).
 
 ## Open questions
 
-- [ ] Product name (owner): [Q-001](../questions.md)
+- [x] Product name: Sub1 for now ([D-008](../decisions/D-008-sub1-troves-pings.md))
+- [ ] Radar location handling (owner): [Q-005](../questions.md)
 - [ ] Instant and free channel creation (owner): [Q-004](../questions.md)
 - [ ] Rating scale: 1–5 with an AI-suggested default? (implementation; record as a decision)
 - [x] Visual direction picked ([D-005](../decisions/D-005-visual-direction.md))
@@ -58,3 +59,4 @@ posting weekly (see `work/signals.md`).
 - 2026-11-15: no stack choice until the mockups are picked (D-004)
 - 2026-11-15: visual direction chosen (D-005)
 - 2026-11-15: one account, anyone can publish (D-006)
+- 2026-11-15: name and vocabulary (D-008), ping strength and radar (D-009); location question Q-005

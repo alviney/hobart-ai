@@ -1,7 +1,7 @@
-# Hobart AI (working name, see Q-001)
+# Sub1 (working name, D-008)
 
-An intelligent notification system for Hobart: publishers (clubs, schools,
-cafés, community groups) invite people to channels and post rated updates,
+An intelligent notification system for Hobart: anyone can start a Trove (a
+club, school, café, community group) and send rated Pings to subscribers,
 and subscribers decide what is important enough to reach them by email,
 webhook or SMS, or pull everything through their own AI via an MCP server.
 It's the first step towards a live, AI-ready hub of Hobart data
