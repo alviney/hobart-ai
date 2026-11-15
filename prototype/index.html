@@ -146,9 +146,8 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
 .fab-ask { flex: 1; min-width: 0; display: flex; gap: 6px; align-items: center; padding: 5px; border-radius: 99px; background: var(--surface); border: 2px solid var(--line); box-shadow: 0 10px 30px rgba(20,33,43,.14); }
 .fab-ask .input { border: 0; background: transparent; height: 44px; padding: 0 14px; }
 .fab-send { width: 44px; height: 44px; flex-shrink: 0; border-radius: 22px; border: 0; background: var(--primary); color: #FFFFFF; font-weight: 800; font-size: 20px; }
-.radar-btn { width: 58px; height: 58px; flex-shrink: 0; border-radius: 29px; border: 0; background: var(--sonar); color: var(--sonar-glow); display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(20,33,43,.25); }
-.radar-btn svg { width: 30px; height: 30px; }
-.radar-btn[aria-current="page"] { outline: 3px solid var(--sonar-glow); outline-offset: 2px; }
+.radar-btn { width: 48px; height: 48px; flex-shrink: 0; border-radius: 24px; border: 0; background: var(--sonar); color: var(--sonar-glow); display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 18px rgba(20,33,43,.22); }
+.radar-btn svg { width: 26px; height: 26px; }
 
 /* Strength meter */
 .meter { display: inline-flex; gap: 2px; align-items: flex-end; height: 14px; flex-shrink: 0; }
@@ -319,7 +318,8 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
   function home() {
     const latest = myPosts().find((p) => pings(p) || conn(p.conn).owner);
     return `<div class="topline"><button type="button" class="iconbtn" data-act="menu" aria-label="Menu">${icon.menu}</button>
-        <span class="wordmark">${icon.sonar}Sub1</span></div>
+        <span class="wordmark" style="flex:1">${icon.sonar}Sub1</span>
+        <button type="button" class="radar-btn" data-act="go" data-arg="radar" aria-label="Radar: Troves near you">${icon.radar}</button></div>
       ${latest
         ? `<button type="button" class="latest" data-act="go" data-arg="feed">
             <span class="meta">${tag(latest.pri)}${conn(latest.conn).owner ? '<span class="tag you">You</span>' : ''}<span>${esc(conn(latest.conn).short)} · ${esc(latest.time)}</span></span>
@@ -585,7 +585,6 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
   // ---------- Shell ----------
   function floatBar() {
     return `<div class="fab">
-      <button type="button" class="radar-btn" data-act="go" data-arg="radar" aria-label="Radar: Troves near you" ${S.screen === 'radar' ? 'aria-current="page"' : ''}>${icon.radar}</button>
       <form class="fab-ask" data-form="ask">
         <label for="float-ask" style="position:absolute;left:-9999px">Ask about anything you subscribe to</label>
         <input class="input" id="float-ask" placeholder="Ask anything" autocomplete="off">
