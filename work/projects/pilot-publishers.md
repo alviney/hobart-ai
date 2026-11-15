@@ -1,14 +1,17 @@
-# Pilot publishers: 3–5 real Hobart publishers
+# Pilot publishers: first Hobart publishers, found through ads
 
 - **Status:** scoping
-- **Size guess:** M (mostly the owner's time)
-- **Touches:** `marketing/`, onboarding docs, `work/signals.md`
-- **Related decisions:** [D-002](../decisions/D-002-start-with-notifications.md), [D-003](../decisions/D-003-marketing-sells-the-dream.md)
+- **Size guess:** M
+- **Touches:** `marketing/`, landing page, onboarding docs, `work/signals.md`
+- **Related decisions:** [D-002](../decisions/D-002-start-with-notifications.md), [D-003](../decisions/D-003-marketing-sells-the-dream.md), [D-004](../decisions/D-004-mockups-first-and-ads.md)
 
 ## Why
 
 The publisher is the real customer: subscribers only arrive by invitation.
-Whether 3–5 real publishers keep posting matters more than any feature.
+Whether real publishers keep posting matters more than any feature. They
+come from ads pointing at a landing page with a waitlist
+([D-004](../decisions/D-004-mockups-first-and-ads.md)), which also measures
+demand before anything is built.
 
 ## Outcome
 
@@ -17,12 +20,12 @@ for a month without being nagged.
 
 ## Not doing
 
-- Paid acquisition or ads (D-001: no spending)
+- Sessions running or paying for ads (D-001); the owner runs the ad account
 - Chasing organisations already locked into Compass or PlayHQ
 
 ## Open questions
 
-- [ ] Who are the first publishers? (owner): [Q-002](../questions.md)
+- [x] Who are the first publishers? Found through ads to a waitlist ([D-004](../decisions/D-004-mockups-first-and-ads.md))
 - [ ] Free during the pilot? (owner): [Q-003](../questions.md)
 - [ ] The owner approves the founding-publisher pitch in [marketing/messages.md](../../marketing/messages.md)
 
@@ -33,11 +36,14 @@ for a month without being nagged.
 
 ## Done when
 
-- [ ] Publisher list agreed with the owner
+- [ ] Landing page with waitlist built (from the chosen [ui-mockups](ui-mockups.md) direction)
+- [ ] Ad creative and targeting drafts in `marketing/` (Hobart small businesses and community groups)
+- [ ] Waitlist sign-ups measured per ad (see `work/signals.md`)
 - [ ] Founding-publisher pitch and onboarding guide approved
-- [ ] Each pilot publisher onboarded with at least 10 subscribers
+- [ ] First 3–5 publishers from the waitlist onboarded with at least 10 subscribers
 - [ ] Four weeks of feedback written up as a spike in `work/spikes/`
 
 ## Log
 
 - 2026-11-15: created
+- 2026-11-15: switched from hand-recruiting to ads plus a waitlist (D-004)

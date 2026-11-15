@@ -12,7 +12,8 @@ in the cloud environment's settings, never in the repository.
 - [ ] Register a domain (and decide the name, Q-001) — unblocks email sending (DNS verification) and the public site. Tell a session the domain; DNS records come later.
 - [ ] Create an email-sending account (e.g. Resend or Postmark free tier) and verify the domain — unblocks invites and email delivery in notify-core. Save the API key in the cloud environment's settings, never in the repository.
 - [ ] Create a hosting account once the stack decision is written (free tier) — unblocks a live pilot. A session will say which one.
-- [ ] Line up the pilot publishers (Q-002) — talk to them before the build finishes; this takes the longest.
+- [ ] Set up an ad account (e.g. Meta) and decide a test budget — unblocks finding publishers (D-004). Sessions draft the creative; only you can run and pay for ads.
+- [ ] Publish the landing page once one is chosen (hosting plus domain) — ads need somewhere to point.
 - [ ] Later, for the paid tier: an SMS provider account and payments (ABN, Stripe). Not needed for the pilot.
 
 ## Questions
@@ -41,7 +42,7 @@ or to `withdrawn` with a reason; it is never deleted.
 
 ## Q-002: Who are the first 3–5 pilot publishers?
 
-- **Status:** open
+- **Status:** answered → D-004 (find publishers through ads to a waitlist, not personally)
 - **Asked:** 2026-11-15, by brainstorm session
 - **Blocks:** [pilot-publishers](projects/pilot-publishers.md)
 - **Options:** A: community and volunteer groups / B: small businesses with regulars / C: a mix of people you already know personally

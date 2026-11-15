@@ -24,9 +24,10 @@ Update this table whenever a project changes status. Every file in
 
 | Project | Status | Next step |
 | --- | --- | --- |
-| [Notify core](projects/notify-core.md) | scoping | Pick the stack, split into milestones |
+| [UI mockups](projects/ui-mockups.md) | ready | Build 2–3 directions for the key screens and the landing page |
+| [Notify core](projects/notify-core.md) | scoping | Waits on the chosen mockup direction (D-004), then pick the stack |
 | [Agent access](projects/agent-access.md) | scoping | Settle MCP auth; waits on the notify-core data model |
-| [Pilot publishers](projects/pilot-publishers.md) | scoping | Owner names the first publishers (Q-002) |
+| [Pilot publishers](projects/pilot-publishers.md) | scoping | Landing page and ad drafts, after mockups |
 
 ## Lifecycle
 
