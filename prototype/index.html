@@ -165,15 +165,7 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
 
 <div class="bar">
   <div class="brand">Hobart AI<small>clickable prototype</small></div>
-  <div class="row">
-    <span class="seg-label" id="nav-label">Navigation</span>
-    <div class="seg" role="group" aria-labelledby="nav-label">
-      <button type="button" data-act="nav" data-arg="icons" id="nav-icons">1 · Header icons</button>
-      <button type="button" data-act="nav" data-arg="chips" id="nav-chips">2 · Channel chips</button>
-      <button type="button" data-act="nav" data-arg="drawer" id="nav-drawer">3 · Menu sheet</button>
-    </div>
-    <button type="button" class="link-btn" data-act="reset">Reset</button>
-  </div>
+  <button type="button" class="link-btn" data-act="reset">Reset</button>
 </div>
 <div class="phone">
   <main class="screen" id="screen" aria-live="polite"></main>
@@ -191,7 +183,7 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
   const EMPTY_AUD = () => ({ 4: 0, 3: 0, 2: 0, 1: 0, ai: 0 });
 
   const fresh = () => ({
-    screen: 'feed', connId: null, showQuiet: false, unseen: 0, pullOnly: false, nav: 'icons', chip: 'all', sheet: false,
+    screen: 'feed', connId: null, showQuiet: false, unseen: 0, pullOnly: false, sheet: false,
     draft: { text: '', pri: 2, manual: false, ch: null }, scanLevel: 3, seq: 100,
     newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false,
     chat: [],
@@ -283,21 +275,11 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
 
   // ---------- Following ----------
   function feedHeader() {
-    const me = '<button type="button" class="iconbtn me" data-act="go" data-arg="ai" aria-label="You and your AI">Y</button>';
-    const plus = `<button type="button" class="iconbtn" data-act="go" data-arg="share" aria-label="Share news">${icon.share}</button>`;
-    const people = `<button type="button" class="iconbtn" data-act="go" data-arg="connections" aria-label="Connections">${icon.people}</button>`;
-    if (S.nav === 'icons') return `<div class="topline"><h1>What's new</h1><div class="row" style="gap:6px;flex-wrap:nowrap">${people}${plus}${me}</div></div>`;
-    if (S.nav === 'drawer') return `<div class="topline">${`<button type="button" class="iconbtn" data-act="menu" aria-label="Menu">${icon.menu}</button>`}<h1 style="flex:1;font-size:30px">What's new</h1>${me}</div>`;
-    const joined = S.connections.filter((c) => c.joined).sort((a, b) => (b.owner ? 1 : 0) - (a.owner ? 1 : 0));
-    const chips = [`<button type="button" class="chip" aria-pressed="${S.chip === 'all'}" data-act="chip" data-arg="all">All</button>`]
-      .concat(joined.map((c) => `<button type="button" class="chip" aria-pressed="${S.chip === c.id}" data-act="chip" data-arg="${c.id}">${c.owner ? 'You · ' : ''}${esc(c.short)}</button>`))
-      .concat([`<button type="button" class="chip" data-act="go" data-arg="connections">Manage</button>`]).join('');
-    return `<div class="topline"><span class="brand-sm">Hobart AI</span><div class="row" style="gap:6px;flex-wrap:nowrap">${plus}${me}</div></div>
-      <div class="chipsrow" role="group" aria-label="Filter by connection">${chips}</div>`;
+    return `<div class="topline"><button type="button" class="iconbtn" data-act="menu" aria-label="Menu">${icon.menu}</button><h1 style="flex:1;font-size:30px">What's new</h1><button type="button" class="iconbtn me" data-act="go" data-arg="ai" aria-label="You and your AI">Y</button></div>`;
   }
 
   function feed() {
-    const filter = S.nav === 'chips' && S.chip !== 'all' && conn(S.chip) && conn(S.chip).joined ? conn(S.chip) : null;
+    const filter = null;
     const mine = S.posts.filter((p) => conn(p.conn).joined && (!filter || p.conn === filter.id)).sort((a, b) => b.id - a.id);
     const loud = mine.filter((p) => pings(p) || conn(p.conn).owner), quiet = mine.filter((p) => !pings(p) && !conn(p.conn).owner);
     const card = (p) => `<article class="card"><div class="meta">${tag(p.pri)}${conn(p.conn).owner ? '<span class="tag you">You</span>' : ''}${p.isNew ? '<span class="tag new">New</span>' : ''}<span>${esc(conn(p.conn).short)} · ${esc(p.time)}</span></div><p class="msg">${esc(p.text)}</p></article>`;
@@ -313,7 +295,7 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
 
   function floatBar() {
     return `<form class="fab" data-form="ask">
-      ${S.nav === 'drawer' ? '<button type="button" class="fab-plus" data-act="go" data-arg="share" aria-label="Share news">+</button>' : ''}
+      <button type="button" class="fab-plus" data-act="go" data-arg="share" aria-label="Share news">+</button>
       <label for="float-ask" style="position:absolute;left:-9999px">Ask about anything you follow</label>
       <input class="input" id="float-ask" placeholder="Ask about anything you follow" autocomplete="off">
       <button class="fab-send" type="submit" aria-label="Ask">↑</button></form>`;
@@ -531,7 +513,6 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
   const SCREENS = { feed, connections, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
   const TAB_OF = { conn: 'connections', mine: 'connections', scan: 'connections', subscribe: 'connections', joined: 'connections', start: 'share' };
   function render() {
-    ['icons', 'chips', 'drawer'].forEach((n) => $('nav-' + n).setAttribute('aria-pressed', S.nav === n));
     const el = $('screen');
     const fab = S.screen === 'feed' || S.screen === 'ask';
     el.className = 'screen' + (S.screen === 'subscribe' ? ' flush' : '') + (fab ? ' has-fab' : '');
@@ -563,8 +544,6 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
       S.screen = a; S.addingDoc = false; S.sheet = false; render(); scrollTop();
       if (a === 'feed') setTimeout(() => S.posts.forEach((p) => { p.isNew = false; }), 0);
     },
-    nav: (a) => { S.nav = a; S.sheet = false; S.screen = 'feed'; render(); scrollTop(); },
-    chip: (a) => { S.chip = a; S.showQuiet = false; render(); },
     menu: () => { S.sheet = true; render(); },
     'menu-close': () => { S.sheet = false; render(); },
     'menu-go': (a) => act.go(a),
@@ -611,7 +590,7 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
       const c = conn(d.ch), r = reachFor(c, d.pri);
       S.posts.push({ id: ++S.seq, conn: c.id, pri: d.pri, text: d.text.trim(), time: 'Just now', isNew: true, reach: `${r.pinged} pinged · ${r.quiet} in feed · ${r.ai} AI` });
       Object.assign(S.draft, { text: '', pri: 2, manual: false });
-      S.screen = 'feed'; S.chip = 'all';
+      S.screen = 'feed';
       render(); scrollTop(); toast(r.pinged + r.quiet + r.ai ? `Shared. ${r.pinged} pinged.` : 'Shared. It will be waiting when people join.');
     },
     soon: (a) => toast(`${a}: coming later`)
