@@ -3,7 +3,7 @@
 - **Status:** scoping
 - **Size guess:** L (split into milestones before building)
 - **Touches:** the web app, database schema, auth, email delivery
-- **Related decisions:** [D-002](../decisions/D-002-start-with-notifications.md), [D-004](../decisions/D-004-mockups-first-and-ads.md)
+- **Related decisions:** [D-002](../decisions/D-002-start-with-notifications.md), [D-004](../decisions/D-004-mockups-first-and-ads.md), [D-005](../decisions/D-005-visual-direction.md)
 
 ## Why
 
@@ -31,7 +31,7 @@ posting weekly (see `work/signals.md`).
 
 - [ ] Product name (owner): [Q-001](../questions.md)
 - [ ] Rating scale: 1–5 with an AI-suggested default? (implementation; record as a decision)
-- [ ] Waits on the owner picking a [ui-mockups](ui-mockups.md) direction (D-004)
+- [x] Visual direction picked ([D-005](../decisions/D-005-visual-direction.md))
 - [ ] Stack and hosting (implementation; record as a decision before building, keeping costs at $0 until the owner approves spend)
 - [ ] Data model uses stable IDs and schema.org-compatible fields so channels can become hub entities later (implementation)
 - [ ] Privacy: minimum data, export and delete from v1 (implementation; the privacy policy wording is the owner's)
@@ -55,3 +55,4 @@ posting weekly (see `work/signals.md`).
 
 - 2026-11-15: created from the brainstorm that produced D-002
 - 2026-11-15: no stack choice until the mockups are picked (D-004)
+- 2026-11-15: visual direction chosen (D-005)

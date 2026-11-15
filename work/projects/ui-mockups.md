@@ -1,9 +1,9 @@
 # UI mockups: options for the key screens and the landing page
 
-- **Status:** building
+- **Status:** shipped
 - **Size guess:** M
 - **Touches:** design files or clickable HTML prototypes only, no product code
-- **Related decisions:** [D-004](../decisions/D-004-mockups-first-and-ads.md), [D-003](../decisions/D-003-marketing-sells-the-dream.md)
+- **Related decisions:** [D-004](../decisions/D-004-mockups-first-and-ads.md), [D-003](../decisions/D-003-marketing-sells-the-dream.md), [D-005](../decisions/D-005-visual-direction.md)
 
 ## Why
 
@@ -45,9 +45,10 @@ screens, from which the owner picks one (recorded as a decision).
 
 - [x] 2–3 directions, each covering screens 1–7 (three: A Harbour, B Signal, C Market day; the channel page is folded into the publisher screen)
 - [x] Shared with the owner as links they can open on a phone
-- [ ] The owner's pick written up as a decision
+- [x] The owner's pick written up as a decision ([D-005](../decisions/D-005-visual-direction.md))
 
 ## Log
 
 - 2026-11-15: created, marked ready (needs nothing from the owner)
 - 2026-11-15: three directions published to the design canvas; waiting on the owner's pick
+- 2026-11-15: the owner picked A's colours with C's shapes and tone (D-005); applied across all of A; B and C removed from the canvas
