@@ -52,3 +52,4 @@ screens, from which the owner picks one (recorded as a decision).
 - 2026-11-15: created, marked ready (needs nothing from the owner)
 - 2026-11-15: three directions published to the design canvas; waiting on the owner's pick
 - 2026-11-15: the owner picked A's colours with C's shapes and tone (D-005); applied across all of A; B and C removed from the canvas
+- 2026-11-15: clickable prototype in `prototype/index.html`, published at https://claude.ai/artifact/V3Esqanzj3rnjsBLhbLiq1 (simulated data, no backend)

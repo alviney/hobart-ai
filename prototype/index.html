@@ -1,0 +1,512 @@
+<title>Hobart AI Prototype</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
+<style>
+/* Layout: one phone-sized app column, centred on desktop, filling the width on a phone. Single light look by choice (D-005). */
+:root {
+  color-scheme: light;
+  --bg: #E9EEF1;
+  --surface: #FFFFFF;
+  --soft: #F4F7F9;
+  --ink: #14212B;
+  --muted: #56636D;
+  --body: #3A4852;
+  --line: #D3DBE0;
+  --primary: #1D5C86;
+  --primary-ink: #123E5C;
+  --tint: #EEF5FA;
+  --tint-2: #DCEBF5;
+  --urgent-bg: #FDE3D3; --urgent-fg: #9A3412;
+  --imp-bg: #DCEBF5; --imp-fg: #123E5C;
+  --good-bg: #E3F0EA; --good-fg: #1F5137;
+  --fyi-bg: #E9EEF1; --fyi-fg: #3A4852;
+  --display: 'Bricolage Grotesque', 'Inter', system-ui, sans-serif;
+  --text: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: ui-monospace, 'SF Mono', Menlo, monospace;
+}
+html, body { height: 100%; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--text); font-size: 15px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  box-sizing: border-box; display: flex; flex-direction: column; align-items: center;
+}
+* { box-sizing: border-box; }
+button, input, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+.bar { width: 100%; max-width: 760px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; padding-block: 14px; }
+.brand { font-family: var(--display); font-weight: 800; font-size: 20px; }
+.brand small { font-family: var(--text); font-weight: 500; font-size: 13px; color: var(--muted); margin-left: 6px; }
+.seg { display: flex; background: var(--surface); border-radius: 99px; padding: 4px; border: 1px solid var(--line); }
+.seg button { border: 0; background: transparent; padding: 8px 14px; border-radius: 99px; font-weight: 600; font-size: 14px; color: var(--body); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: #FFFFFF; }
+.link-btn { border: 0; background: none; color: var(--primary); font-weight: 600; font-size: 14px; padding: 8px 4px; }
+
+.phone { position: relative; width: min(390px, 100%); height: min(844px, calc(100% - 76px)); min-height: 560px; background: var(--surface); border-radius: 40px; border: 1px solid var(--line); overflow: hidden; display: flex; flex-direction: column; margin-bottom: 16px; }
+@media (max-width: 480px) { .phone { border-radius: 24px; height: calc(100% - 70px); } }
+.screen { flex: 1; overflow-y: auto; padding: 28px 20px 24px; display: flex; flex-direction: column; gap: 14px; }
+.screen.flush { padding: 0 0 24px; }
+.tabbar { display: flex; border-top: 1px solid #E4E9EC; background: var(--surface); padding: 6px 6px 8px; }
+.tabbar button { flex: 1; border: 0; background: none; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 0; font-size: 11px; font-weight: 600; color: var(--muted); position: relative; min-height: 48px; }
+.tabbar button[aria-current="page"] { color: var(--primary); }
+.tabbar svg { width: 22px; height: 22px; }
+.dot { position: absolute; top: 4px; left: calc(50% + 8px); min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px; background: var(--urgent-fg); color: #FFFFFF; font-size: 10px; line-height: 16px; }
+
+h1, h2 { font-family: var(--display); font-weight: 800; margin: 0; line-height: 1.02; text-wrap: balance; }
+h1 { font-size: 34px; }
+h2 { font-size: 22px; font-weight: 600; }
+p { margin: 0; }
+.sub { color: var(--muted); font-size: 14px; line-height: 1.45; }
+.label { font-weight: 700; font-size: 14px; }
+
+.card { padding: 16px 18px; border-radius: 24px; background: var(--soft); display: flex; flex-direction: column; gap: 8px; }
+.card p.msg { font-size: 16px; line-height: 1.45; }
+.meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
+.tag { padding: 4px 10px; border-radius: 99px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.t4 { background: var(--urgent-bg); color: var(--urgent-fg); }
+.t3 { background: var(--imp-bg); color: var(--imp-fg); }
+.t2 { background: var(--good-bg); color: var(--good-fg); }
+.t1 { background: var(--fyi-bg); color: var(--fyi-fg); }
+.tag.plain { background: var(--surface); color: var(--body); font-weight: 600; }
+.new { background: var(--primary); color: #FFFFFF; }
+
+.btn { height: 54px; border-radius: 99px; border: 0; background: var(--primary); color: #FFFFFF; font-weight: 700; font-size: 16px; padding: 0 26px; }
+.btn:hover { background: var(--primary-ink); }
+.btn[disabled] { background: #A9B8C2; cursor: not-allowed; }
+.btn.ghost { background: transparent; color: var(--ink); border: 2px solid var(--ink); }
+.btn.dashed { background: transparent; color: var(--ink); border: 2px dashed #A9B8C2; }
+.btn.small { height: 44px; font-size: 15px; padding: 0 18px; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.pill { min-height: 44px; padding: 0 16px; border-radius: 99px; border: 2px solid var(--line); background: transparent; font-weight: 700; color: var(--body); font-size: 14px; }
+.pill[aria-pressed="true"] { border-color: var(--primary); background: var(--tint); color: var(--primary-ink); }
+
+.input { height: 50px; border-radius: 99px; border: 2px solid var(--line); background: #F8FAFB; padding: 0 18px; width: 100%; }
+textarea.input { height: 150px; border-radius: 22px; padding: 16px; resize: none; line-height: 1.5; font-size: 17px; }
+.input:focus { border-color: var(--primary); outline: none; }
+
+.conn { padding: 14px 16px; border-radius: 24px; background: var(--soft); display: flex; align-items: center; gap: 12px; width: 100%; border: 0; text-align: left; }
+.conn.off { opacity: 0.6; }
+.avatar { width: 40px; height: 40px; flex-shrink: 0; border-radius: 20px; background: var(--primary); color: #FFFFFF; font-family: var(--display); font-weight: 800; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+.avatar.big { width: 56px; height: 56px; border-radius: 28px; font-size: 24px; }
+.grow { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.name { font-weight: 700; font-size: 15px; line-height: 1.25; }
+
+.switch { width: 50px; height: 30px; flex-shrink: 0; border-radius: 15px; border: 0; background: #C9D3D9; padding: 4px; display: flex; justify-content: flex-start; transition: background .15s; }
+.switch[aria-checked="true"] { background: var(--primary); justify-content: flex-end; }
+.switch span { width: 22px; height: 22px; border-radius: 11px; background: #FFFFFF; }
+.setting { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 16px 18px; border-radius: 24px; background: var(--tint); }
+
+.hero { background: var(--primary); color: #FFFFFF; padding: 32px 22px 24px; display: flex; flex-direction: column; gap: 8px; }
+.hero .sub { color: var(--tint-2); }
+.inner { padding: 20px 20px 0; display: flex; flex-direction: column; gap: 12px; }
+.choice { display: flex; gap: 12px; align-items: center; padding: 14px 16px; border-radius: 22px; border: 2px solid var(--line); background: var(--surface); width: 100%; text-align: left; }
+.choice[aria-pressed="true"] { border-color: var(--primary); background: var(--tint); }
+.radio { width: 20px; height: 20px; border-radius: 10px; border: 2px solid #8FA1AD; flex-shrink: 0; }
+.choice[aria-pressed="true"] .radio { border: 6px solid var(--primary); }
+
+.back { border: 0; background: none; color: var(--primary); font-weight: 600; padding: 4px 0; align-self: flex-start; min-height: 44px; }
+.quiet-btn { padding: 16px 18px; border-radius: 24px; border: 2px solid #E1E7EB; background: var(--surface); text-align: left; display: flex; justify-content: space-between; align-items: center; }
+.askbox { padding: 14px 16px; border-radius: 24px; background: var(--ink); color: #FFFFFF; display: flex; flex-direction: column; gap: 8px; }
+.askbox label { font-size: 13px; font-weight: 700; color: #C9D6DF; }
+.askbox .input { background: #FFFFFF; border: 0; height: 44px; color: var(--ink); }
+.bubble { padding: 14px 16px; border-radius: 22px; line-height: 1.5; font-size: 15px; max-width: 92%; white-space: pre-line; }
+.bubble.me { align-self: flex-end; background: var(--primary); color: #FFFFFF; border-bottom-right-radius: 8px; }
+.bubble.ai { align-self: flex-start; background: var(--soft); border-bottom-left-radius: 8px; }
+.bubble.ai b { font-weight: 700; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip { border: 2px solid var(--line); background: var(--surface); border-radius: 99px; padding: 8px 14px; font-size: 14px; font-weight: 600; color: var(--body); min-height: 40px; }
+.reach { padding: 16px 18px; border-radius: 22px; background: var(--tint); color: var(--primary-ink); font-size: 16px; line-height: 1.45; }
+details.doc { border-radius: 18px; background: var(--soft); padding: 14px 16px; }
+details.doc summary { font-weight: 600; cursor: pointer; }
+details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size: 14px; }
+.qrcard { border-radius: 28px; background: var(--primary); color: #FFFFFF; padding: 26px; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; }
+.qr { width: 168px; height: 168px; background: #FFFFFF; border-radius: 16px; padding: 10px; }
+.qrcard .title { font-family: var(--display); font-weight: 800; font-size: 26px; line-height: 1.05; }
+.counter { border-radius: 28px; background: #F2E9DC; padding: 22px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; color: #3B2F25; }
+.toast { position: absolute; left: 16px; right: 16px; bottom: 78px; background: var(--ink); color: #FFFFFF; padding: 14px 18px; border-radius: 18px; font-weight: 600; font-size: 14px; box-shadow: 0 8px 24px rgba(20,33,43,.25); }
+.empty { padding: 24px; border-radius: 24px; border: 2px dashed var(--line); text-align: center; color: var(--muted); line-height: 1.5; }
+.demo-note { font-size: 12px; color: var(--muted); text-align: center; }
+.stat { font-variant-numeric: tabular-nums; }
+</style>
+
+<div class="bar">
+  <div class="brand">Hobart AI<small>clickable prototype</small></div>
+  <div class="row">
+    <div class="seg" role="group" aria-label="View as">
+      <button type="button" data-act="role" data-arg="sub" id="role-sub">Subscriber</button>
+      <button type="button" data-act="role" data-arg="pub" id="role-pub">Publisher</button>
+    </div>
+    <button type="button" class="link-btn" data-act="reset">Reset</button>
+  </div>
+</div>
+<div class="phone">
+  <main class="screen" id="screen" aria-live="polite"></main>
+  <nav class="tabbar" id="tabbar" aria-label="Main"></nav>
+  <div class="toast" id="toast" hidden></div>
+</div>
+
+<script>
+(() => {
+  const LEVELS = { 4: 'Urgent', 3: 'Important', 2: 'Good to know', 1: 'FYI' };
+  const LINE = { 4: 'Urgent only', 3: 'Important and up', 2: 'Good to know and up', 1: 'Everything' };
+  const VIA = ['Email', 'My AI only', 'Webhook', 'SMS'];
+  // Simulated audience for the publisher's channel: how many members set each threshold, plus pull-only agents.
+  const AUDIENCE = { 4: 7, 3: 20, 2: 8, 1: 3, ai: 4 };
+
+  const fresh = () => ({
+    role: 'sub', screen: 'feed', connId: null, showQuiet: false, unseen: 0, pullOnly: false,
+    pubScreen: 'compose', draft: { text: '', pri: 2, manual: false }, scanLevel: 3, seq: 100,
+    chat: [],
+    connections: [
+      { id: 'netball', name: 'South Hobart Netball U12s', short: 'Netball U12s', level: 3, via: 'Email', on: true, joined: true,
+        docs: [
+          { t: 'Season overview', b: 'Games are on Saturday mornings at the Domain courts. Arrive 20 minutes before your game. Bring a water bottle and your bib.' },
+          { t: 'Wet weather plan', b: "If it's raining at 7am, check for an Urgent update by 7:30am. No update means we play." },
+          { t: 'Uniforms and canteen', b: 'Navy skirt or shorts with the club top. Two families run the canteen each week; canteen families arrive at 8:30am.' }
+        ] },
+      { id: 'pf', name: 'Lansdowne Primary P&F', short: 'Lansdowne P&F', level: 4, via: 'Email', on: true, joined: true,
+        docs: [
+          { t: 'Term dates', b: 'Term 4 runs until Friday 18 December. Pupil-free day on Friday 20 November.' },
+          { t: 'Before and after care', b: 'Runs 7:30–8:45am and 3:00–6:00pm in the hall, including pupil-free days. Book through the office.' }
+        ] },
+      { id: 'elm', name: 'Elm St Bakehouse', short: 'Elm St Bakehouse', level: 3, via: 'Email', on: true, joined: false,
+        docs: [
+          { t: 'Opening hours', b: 'Tuesday to Sunday, 7am to 3pm. Closed Mondays and public holidays.' },
+          { t: 'Pre-orders', b: 'Order whole loaves and hot cross buns by 2pm the day before. Pick up from 7am.' }
+        ] },
+      { id: 'landcare', name: 'Mt Stuart Landcare', short: 'Mt Stuart Landcare', level: 1, via: 'My AI only', on: true, joined: true,
+        docs: [
+          { t: 'Working bees', b: 'Second Sunday of every month, 9am at the Mt Stuart Rd gate. Bring gloves, water and sturdy shoes. Tools and morning tea provided.' }
+        ] },
+      { id: 'bodycorp', name: 'Waterside Body Corporate', short: 'Waterside Body Corp', level: 4, via: 'Email', on: false, joined: true,
+        docs: [ { t: 'Bin days', b: 'General waste Tuesday night, recycling every second Thursday.' } ] }
+    ],
+    posts: [
+      { id: 1, conn: 'netball', pri: 3, text: 'Saturday games move to 9am at the Domain courts. Same team sheet.', time: '7:40am', reach: '31 pinged · 7 in feed · 4 AI' },
+      { id: 2, conn: 'pf', pri: 4, text: 'School closed Friday for the power upgrade. Before-care is still running.', time: 'Yesterday' },
+      { id: 3, conn: 'elm', pri: 2, text: 'Hot cross buns are back from Monday. Pre-orders open now.', time: 'Yesterday' },
+      { id: 4, conn: 'landcare', pri: 2, text: 'Working bee this Sunday at 9am. We are planting 200 natives along the creek.', time: 'Yesterday' },
+      { id: 5, conn: 'netball', pri: 1, text: 'Photos from last week are up in the club gallery.', time: 'Mon', reach: '3 pinged · 35 in feed · 4 AI' },
+      { id: 6, conn: 'pf', pri: 2, text: 'Second-hand uniform sale next Wednesday after school.', time: 'Mon' },
+      { id: 7, conn: 'bodycorp', pri: 1, text: 'Gardeners are in on Thursday morning.', time: 'Mon' },
+      { id: 8, conn: 'elm', pri: 1, text: 'New sourdough rye on the shelves this week.', time: 'Sun' }
+    ]
+  });
+
+  let S = fresh();
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const conn = (id) => S.connections.find((c) => c.id === id);
+  const tag = (p) => `<span class="tag t${p}">${LEVELS[p]}</span>`;
+  const pings = (p) => { const c = conn(p.conn); return c.on && !S.pullOnly && c.via !== 'My AI only' && p.pri >= c.level; };
+
+  const icon = {
+    feed: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16M4 12h16M4 19h10"/></svg>',
+    people: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.8c1.8.7 3 2.4 3.5 5.2"/></svg>',
+    ask: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l1-4A8 8 0 1 1 20 12Z"/></svg>',
+    plug: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3v5M15 3v5M6 8h12v3a6 6 0 0 1-12 0V8ZM12 17v4"/></svg>',
+    pen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4Z"/></svg>',
+    list: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg>',
+    doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>',
+    qr: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 18h2v2h-2zM14 18h2M18 14h2"/></svg>'
+  };
+
+  // A QR-like pattern: finder squares in three corners, seeded noise elsewhere. Visual only.
+  const qrSvg = (() => {
+    const n = 25; let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+    const finder = (x, y) => x < 7 && y < 7 || x >= n - 7 && y < 7 || x < 7 && y >= n - 7;
+    let r = '';
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      let on;
+      if (finder(x, y)) { const fx = x >= n - 7 ? x - (n - 7) : x; const fy = y >= n - 7 ? y - (n - 7) : y; on = fx === 0 || fx === 6 || fy === 0 || fy === 6 || (fx >= 2 && fx <= 4 && fy >= 2 && fy <= 4); }
+      else if (x === 7 || y === 7 || (x === n - 8 && y < 8) || (y === n - 8 && x < 8)) on = false;
+      else on = rnd() > 0.52;
+      if (on) r += `<rect x="${x}" y="${y}" width="1" height="1"/>`;
+    }
+    return `<svg viewBox="0 0 ${n} ${n}" width="100%" height="100%" fill="#14212B" role="img" aria-label="QR code">${r}</svg>`;
+  })();
+
+  function suggest(text) {
+    const t = text.toLowerCase();
+    if (!t.trim()) return null;
+    if (/(cancel|closed|close |emergency|urgent|today only|evacuat|not on)/.test(t)) return { pri: 4, why: 'it cancels or closes something people were counting on' };
+    if (/(move|moved|change|changed|time|reschedul|postpon|instead|now at|new venue)/.test(t)) return { pri: 3, why: 'it changes plans for every family this weekend' };
+    if (/(special|back|new|sale|open|offer|reminder|this week)/.test(t)) return { pri: 2, why: "it's useful, but nobody's plans change if they miss it" };
+    return { pri: 1, why: 'it reads like general news' };
+  }
+  function reachFor(pri) {
+    let pinged = 0, quiet = 0;
+    for (const t of [1, 2, 3, 4]) (t <= pri ? (pinged += AUDIENCE[t]) : (quiet += AUDIENCE[t]));
+    return { pinged, quiet, ai: AUDIENCE.ai };
+  }
+
+  // ---------- Subscriber screens ----------
+  function feed() {
+    const mine = S.posts.filter((p) => conn(p.conn).joined).sort((a, b) => b.id - a.id);
+    const loud = mine.filter(pings), quiet = mine.filter((p) => !pings(p));
+    const card = (p) => `<article class="card"><div class="meta">${tag(p.pri)}${p.isNew ? '<span class="tag new">New</span>' : ''}<span>${esc(conn(p.conn).short)} · ${esc(p.time)}</span></div><p class="msg">${esc(p.text)}</p></article>`;
+    return `<h1>What's new</h1>
+      <p class="sub">${S.pullOnly ? "Pull only is on, so nothing pings you. Everything is here when you or your AI look." : "These cleared your line and pinged you."}</p>
+      ${loud.length ? loud.map(card).join('') : '<div class="empty">Nothing important right now.</div>'}
+      <button type="button" class="quiet-btn" data-act="quiet" aria-expanded="${S.showQuiet}"><span><b>${quiet.length} quiet updates</b> <span class="sub">saved for later</span></span><span aria-hidden="true">${S.showQuiet ? '▴' : '▾'}</span></button>
+      ${S.showQuiet ? quiet.map(card).join('') : ''}
+      <form class="askbox" data-form="ask-from-feed"><label for="feed-ask">Ask about anything you follow</label><input class="input" id="feed-ask" placeholder="What do I need for Saturday?" autocomplete="off"></form>`;
+  }
+
+  function connections() {
+    const rows = S.connections.filter((c) => c.joined).map((c) => `
+      <button type="button" class="conn ${c.on ? '' : 'off'}" data-act="open-conn" data-arg="${c.id}">
+        <span class="avatar">${c.name[0]}</span>
+        <span class="grow"><span class="name">${esc(c.name)}</span>
+          <span class="row" style="gap:6px"><span class="tag t${c.level}">${LINE[c.level]}</span><span class="tag plain">${c.on ? esc(c.via) : 'Paused'}</span></span></span>
+        <span aria-hidden="true" style="color:var(--muted)">›</span>
+      </button>`).join('');
+    return `<h1>Connections</h1><p class="sub">Tap one to change how much you hear, or pause it.</p>${rows}
+      <button type="button" class="btn dashed" data-act="go" data-arg="scan" style="margin-top:auto">+ Scan a code</button>`;
+  }
+
+  function connDetail() {
+    const c = conn(S.connId);
+    const recent = S.posts.filter((p) => p.conn === c.id).sort((a, b) => b.id - a.id).slice(0, 3);
+    return `<button type="button" class="back" data-act="go" data-arg="connections">‹ Connections</button>
+      <div class="row"><span class="avatar big">${c.name[0]}</span><div class="grow"><h2>${esc(c.name)}</h2></div></div>
+      <div class="setting"><span><b>Notifications</b><br><span class="sub">${c.on ? 'On' : 'Paused. Updates still land in your feed.'}</span></span>
+        <button type="button" class="switch" role="switch" aria-checked="${c.on}" aria-label="Notifications" data-act="toggle-conn"><span></span></button></div>
+      <p class="label">Ping me for</p>
+      <div class="pills">${[4, 3, 2, 1].map((l) => `<button type="button" class="pill" aria-pressed="${c.level === l}" data-act="level" data-arg="${l}">${LINE[l]}</button>`).join('')}</div>
+      <p class="label">How it reaches you</p>
+      <div class="pills">${VIA.map((v) => `<button type="button" class="pill" aria-pressed="${c.via === v}" data-act="via" data-arg="${v}">${v === 'SMS' ? 'SMS · Plus' : v}</button>`).join('')}</div>
+      <p class="label">Documents</p>
+      ${c.docs.map((d) => `<details class="doc"><summary>${esc(d.t)}</summary><p>${esc(d.b)}</p></details>`).join('')}
+      <p class="label">Recent</p>
+      ${recent.map((p) => `<div class="card"><div class="meta">${tag(p.pri)}<span>${esc(p.time)}</span></div><p class="msg">${esc(p.text)}</p></div>`).join('')}
+      <button type="button" class="link-btn" data-act="leave" style="color:var(--urgent-fg);align-self:flex-start">Leave ${esc(c.short)}</button>`;
+  }
+
+  function scan() {
+    const c = conn('elm');
+    return `<button type="button" class="back" data-act="go" data-arg="connections">‹ Connections</button>
+      <h1>Scan a code</h1>
+      <p class="sub">In real life you'd point your camera at a poster. Here, tap the one on the bakery counter.</p>
+      <div class="counter"><p style="font-weight:700">On the counter at Elm St Bakehouse</p>
+        <button type="button" data-act="${c.joined ? 'noop' : 'scanned'}" aria-label="Scan the Elm St Bakehouse code" style="border:0;background:var(--primary);border-radius:24px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:12px;color:#FFFFFF">
+          <span class="qr" style="width:140px;height:140px">${qrSvg}</span>
+          <span style="font-family:var(--display);font-weight:800;font-size:22px">Scan for live updates</span>
+        </button>
+        <p style="font-size:13px">${c.joined ? "You're already connected to Elm St Bakehouse." : 'Tap the code to scan it'}</p>
+      </div>`;
+  }
+
+  function subscribe() {
+    const opts = [[4, 'Just the big stuff', 'Closures and sell-outs'], [3, 'The good stuff', 'Plus weekly specials'], [1, 'Everything', 'Every little update']];
+    return `<div class="hero"><span class="sub">Hello from</span><h1 style="font-size:38px">Elm St Bakehouse</h1><span>Want to hear about specials and changes?</span></div>
+      <div class="inner">
+        <h2>Tell me about…</h2>
+        ${opts.map(([l, t, s]) => `<button type="button" class="choice" aria-pressed="${S.scanLevel === l}" data-act="scan-level" data-arg="${l}"><span class="radio"></span><span class="grow" style="gap:2px"><b>${t}</b><span class="sub">${s}</span></span><span class="tag t${l}">${l === 1 ? 'Everything' : LEVELS[l]}</span></button>`).join('')}
+        <label class="label" for="sub-email" style="margin-top:4px">Your email</label>
+        <input class="input" id="sub-email" type="email" placeholder="you@example.com" autocomplete="off">
+        <button type="button" class="btn" data-act="join" data-arg="Email">Keep me in the loop</button>
+        <button type="button" class="link-btn" data-act="join" data-arg="My AI only">Connect my AI instead</button>
+        <p class="demo-note">Your connections are yours. Leave or export any time.</p>
+      </div>`;
+  }
+
+  function joined() {
+    const c = conn('elm');
+    return `<div style="margin:auto 0;display:flex;flex-direction:column;gap:16px;text-align:center;align-items:center">
+      <span class="avatar big">E</span><h1>You're in</h1>
+      <p class="sub" style="font-size:16px">Elm St Bakehouse will ping you for <b>${LINE[c.level].toLowerCase()}</b>${c.via === 'My AI only' ? ', through your AI only' : ' by email'}. Change it any time in Connections.</p>
+      <button type="button" class="btn" data-act="go" data-arg="feed">See what's new</button></div>`;
+  }
+
+  function ask() {
+    const msgs = S.chat.map((m) => `<div class="bubble ${m.who}">${m.who === 'ai' ? m.html : esc(m.text)}</div>`).join('');
+    const sugg = ["What's on for me this week?", 'What do I need for Saturday?', 'Is school on Friday?', "When's the next working bee?"];
+    return `<h1>Ask</h1><p class="sub">Answers come from your connections' updates and documents.</p>
+      ${msgs || `<div class="chips">${sugg.map((q) => `<button type="button" class="chip" data-act="ask" data-arg="${esc(q)}">${esc(q)}</button>`).join('')}</div>`}
+      <form data-form="ask" style="margin-top:auto;display:flex;gap:8px">
+        <label for="ask-in" style="position:absolute;left:-9999px">Your question</label>
+        <input class="input" id="ask-in" placeholder="Ask about anything you follow" autocomplete="off">
+        <button class="btn small" type="submit">Ask</button></form>
+      <p class="demo-note">Prototype: answers are matched from the sample data, not a real AI.</p>`;
+  }
+
+  function ai() {
+    return `<h1>Connect your AI</h1>
+      <p class="sub" style="font-size:16px;color:var(--body)">Let your own assistant read your updates and documents. It only sees the connections you allow. No tech skills needed.</p>
+      <div class="card" style="gap:12px"><p class="label">1. Copy your link</p>
+        <div class="row" style="flex-wrap:nowrap"><input class="input" id="mcp-link" readonly value="https://[domain]/mcp" style="font-family:var(--mono);font-size:14px;background:#FFFFFF">
+        <button type="button" class="btn small" data-act="copy">Copy</button></div>
+        <p class="label">2. Paste it into your assistant</p><p class="sub">We'll show you exactly where for the one you use.</p></div>
+      <div class="setting"><span><b>Pull only</b><br><span class="sub">No notifications at all. My AI checks when it wants.</span></span>
+        <button type="button" class="switch" role="switch" aria-checked="${S.pullOnly}" aria-label="Pull only" data-act="pull"><span></span></button></div>
+      <div class="card" style="background:var(--soft)"><p class="label">Daily digest</p><p class="sub">A morning summary of your quiet updates, written your way. Coming later.</p></div>
+      <button type="button" data-act="ask-go" style="margin-top:auto;border:0;text-align:left;padding:20px;border-radius:24px;background:var(--primary);color:#FFFFFF">
+        <span style="font-size:13px;font-weight:700;color:var(--tint-2)">Then just ask</span><br>
+        <span style="font-family:var(--display);font-weight:600;font-size:22px;line-height:1.25">“What's on for me this week?”</span></button>`;
+  }
+
+  // ---------- Publisher screens ----------
+  function compose() {
+    const d = S.draft, s = suggest(d.text), r = reachFor(d.pri);
+    return `<p class="sub" style="font-weight:600">South Hobart Netball U12s</p>
+      <h1>What's the news?</h1>
+      <label for="draft" style="position:absolute;left:-9999px">Message</label>
+      <textarea class="input" id="draft" placeholder="Saturday games move to 9am at the Domain courts…">${esc(d.text)}</textarea>
+      <button type="button" class="link-btn" data-act="example" style="align-self:flex-start;padding:0">Use an example</button>
+      <p class="label">How big a deal is it?</p>
+      <div class="pills" id="pri-pills">${[1, 2, 3, 4].map((l) => `<button type="button" class="pill" aria-pressed="${d.pri === l}" data-act="pri" data-arg="${l}">${LEVELS[l]}</button>`).join('')}</div>
+      <p class="sub" id="why" style="font-size:15px;color:var(--body)">${whyText(s)}</p>
+      <div class="reach" id="reach">${reachText(r)}</div>
+      <div class="row" style="margin-top:auto"><button type="button" class="btn" id="share" data-act="share" ${d.text.trim() ? '' : 'disabled'}>Share it</button>
+      <button type="button" class="btn ghost" data-act="later">Later</button></div>`;
+  }
+  const whyText = (s) => !s ? "Write something and we'll suggest how big a deal it is."
+    : S.draft.manual && S.draft.pri !== s.pri ? `You picked <b>${LEVELS[S.draft.pri]}</b>. We'd have said ${LEVELS[s.pri]}, because ${s.why}.`
+    : `We picked <b>${LEVELS[s.pri]}</b> because ${s.why}. Change it if we're wrong.`;
+  const reachText = (r) => `<b class="stat">${r.pinged} families</b> will get a ping. <span class="stat">${r.quiet}</span> more will see it next time they look. <span class="stat">${r.ai}</span> have their AI keeping watch.`;
+
+  function past() {
+    const mine = S.posts.filter((p) => p.conn === 'netball').sort((a, b) => b.id - a.id);
+    return `<h1>Past news</h1>${mine.map((p) => `<div class="card"><div class="meta">${tag(p.pri)}<span>${esc(p.time)}</span></div><p class="msg">${esc(p.text)}</p>${p.reach ? `<p class="sub">${esc(p.reach)}</p>` : ''}</div>`).join('')}`;
+  }
+  function docs() {
+    return `<h1>Documents</h1><p class="sub">Families can ask questions of these instead of messaging you.</p>
+      ${conn('netball').docs.map((d) => `<details class="doc"><summary>${esc(d.t)}</summary><p>${esc(d.b)}</p></details>`).join('')}
+      <button type="button" class="btn dashed" data-act="soon" data-arg="Adding pages">+ Add a page</button>`;
+  }
+  function poster() {
+    return `<h1>QR poster</h1><p class="sub">Put it on the noticeboard or the canteen window. Anyone who scans can join in seconds.</p>
+      <div class="qrcard"><div class="qr">${qrSvg}</div><div class="title">Scan for live updates</div>
+        <p>South Hobart Netball U12s</p><span class="tag plain" style="color:var(--primary-ink)">A founding Hobart publisher</span></div>
+      <button type="button" class="btn" data-act="soon" data-arg="Poster downloads">Get the A4 poster</button>
+      <p class="sub" style="text-align:center"><span class="stat">42</span> people follow this channel.</p>`;
+  }
+
+  // ---------- Ask (simulated) ----------
+  function answer(q) {
+    const t = q.toLowerCase();
+    const mine = S.connections.filter((c) => c.joined);
+    if (/this week|what's on|whats on|today/.test(t)) {
+      const items = S.posts.filter((p) => conn(p.conn).joined).sort((a, b) => b.id - a.id).slice(0, 4);
+      return 'Here’s what’s coming up:\n' + items.map((p) => `• <b>${esc(conn(p.conn).short)}:</b> ${esc(p.text)}`).join('\n');
+    }
+    const words = t.replace(/need/g, 'bring').match(/[a-z]{4,}/g) || [];
+    const score = (s) => words.reduce((n, w) => n + (s.toLowerCase().includes(w.slice(0, 5)) ? 1 : 0), 0);
+    const hits = [];
+    for (const c of mine) {
+      for (const d of c.docs) hits.push({ s: score(d.t + ' ' + d.b), html: `<b>${esc(c.short)} · ${esc(d.t)}:</b> ${esc(d.b)}` });
+      for (const p of S.posts.filter((x) => x.conn === c.id)) hits.push({ s: score(p.text) + 0.5 * (score(p.text) > 0), html: `<b>${esc(c.short)} update:</b> ${esc(p.text)}` });
+    }
+    const top = hits.filter((h) => h.s > 0).sort((a, b) => b.s - a.s).slice(0, 2);
+    return top.length ? top.map((h) => h.html).join('\n\n') : "I couldn't find that in your connections' updates or documents. Try asking about a club, school or shop you follow.";
+  }
+  function doAsk(q) {
+    if (!q.trim()) return;
+    S.chat.push({ who: 'me', text: q }, { who: 'ai', html: answer(q) });
+    S.screen = 'ask'; render();
+  }
+
+  // ---------- Render ----------
+  function tabs() {
+    const t = S.role === 'sub'
+      ? [['feed', 'What\'s new', icon.feed], ['connections', 'Connections', icon.people], ['ask', 'Ask', icon.ask], ['ai', 'Your AI', icon.plug]]
+      : [['compose', 'Share news', icon.pen], ['past', 'Past news', icon.list], ['docs', 'Documents', icon.doc], ['poster', 'Poster', icon.qr]];
+    const cur = S.role === 'sub' ? ({ conn: 'connections', scan: 'connections', subscribe: 'connections', joined: 'connections' }[S.screen] || S.screen) : S.pubScreen;
+    $('tabbar').innerHTML = t.map(([id, label, ic]) => `<button type="button" data-act="tab" data-arg="${id}" ${cur === id ? 'aria-current="page"' : ''}>${ic}${label}${id === 'feed' && S.unseen ? `<span class="dot">${S.unseen}</span>` : ''}</button>`).join('');
+  }
+  function render() {
+    $('role-sub').setAttribute('aria-pressed', S.role === 'sub');
+    $('role-pub').setAttribute('aria-pressed', S.role === 'pub');
+    const v = S.role === 'sub'
+      ? ({ feed, connections, conn: connDetail, scan, subscribe, joined, ask, ai }[S.screen] || feed)()
+      : ({ compose, past, docs, poster }[S.pubScreen] || compose)();
+    const el = $('screen');
+    el.className = 'screen' + (S.role === 'sub' && S.screen === 'subscribe' ? ' flush' : '');
+    el.innerHTML = v;
+    tabs();
+    if (S.screen === 'ask' && S.role === 'sub') el.scrollTop = el.scrollHeight;
+  }
+  let toastTimer;
+  function toast(msg) {
+    const t = $('toast'); t.textContent = msg; t.hidden = false;
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.hidden = true; }, 2600);
+  }
+
+  // ---------- Actions ----------
+  const act = {
+    role: (a) => { S.role = a; render(); $('screen').scrollTop = 0; },
+    reset: () => { S = fresh(); render(); toast('Prototype reset'); },
+    tab: (a) => {
+      if (S.role === 'sub') { S.screen = a; if (a === 'feed') { S.unseen = 0; } } else S.pubScreen = a;
+      render(); $('screen').scrollTop = 0;
+      if (a === 'feed' && S.role === 'sub') setTimeout(() => S.posts.forEach((p) => { p.isNew = false; }), 0);
+    },
+    go: (a) => { S.screen = a; render(); $('screen').scrollTop = 0; },
+    quiet: () => { S.showQuiet = !S.showQuiet; render(); },
+    'open-conn': (a) => { S.connId = a; S.screen = 'conn'; render(); $('screen').scrollTop = 0; },
+    'toggle-conn': () => { const c = conn(S.connId); c.on = !c.on; render(); toast(c.on ? `Notifications on for ${c.short}` : `${c.short} paused`); },
+    level: (a) => { const c = conn(S.connId); c.level = +a; render(); toast(`${c.short}: ${LINE[a].toLowerCase()}`); },
+    via: (a) => { if (a === 'SMS') { toast('SMS is on the Plus plan. Coming later.'); return; } const c = conn(S.connId); c.via = a; render(); },
+    leave: () => { const c = conn(S.connId); c.joined = false; S.screen = 'connections'; render(); toast(`You left ${c.short}`); },
+    scanned: () => { S.screen = 'subscribe'; render(); $('screen').scrollTop = 0; },
+    noop: () => {},
+    'scan-level': (a) => { S.scanLevel = +a; render(); },
+    join: (a) => { const c = conn('elm'); c.joined = true; c.on = true; c.level = S.scanLevel; c.via = a; S.screen = 'joined'; render(); },
+    ask: (a) => doAsk(a),
+    'ask-go': () => doAsk("What's on for me this week?"),
+    pull: () => { S.pullOnly = !S.pullOnly; render(); toast(S.pullOnly ? 'Pull only on. Nothing will ping you.' : 'Pull only off'); },
+    copy: () => {
+      const v = $('mcp-link').value;
+      const fallback = () => { $('mcp-link').select(); toast('Link selected. Copy it from here.'); };
+      try { navigator.clipboard.writeText(v).then(() => toast('Link copied'), fallback); } catch (e) { fallback(); }
+    },
+    pri: (a) => { S.draft.pri = +a; S.draft.manual = true; updateCompose(); },
+    example: () => { S.draft = { text: 'Training is cancelled tonight because of the storm warning. Stay safe and see you Saturday.', pri: 4, manual: false }; render(); },
+    share: () => {
+      const d = S.draft; if (!d.text.trim()) return;
+      const r = reachFor(d.pri);
+      S.posts.push({ id: ++S.seq, conn: 'netball', pri: d.pri, text: d.text.trim(), time: 'Just now', isNew: true, reach: `${r.pinged} pinged · ${r.quiet} in feed · ${r.ai} AI` });
+      S.draft = { text: '', pri: 2, manual: false };
+      if (conn('netball').joined) S.unseen += 1;
+      render(); toast(`Shared. ${r.pinged} families pinged.`);
+    },
+    later: () => toast('Scheduling is coming later'),
+    soon: (a) => toast(`${a}: coming later`)
+  };
+
+  function updateCompose() {
+    const s = suggest(S.draft.text);
+    if (s && !S.draft.manual) S.draft.pri = s.pri;
+    document.querySelectorAll('#pri-pills .pill').forEach((b) => b.setAttribute('aria-pressed', +b.dataset.arg === S.draft.pri));
+    $('why').innerHTML = whyText(s);
+    $('reach').innerHTML = reachText(reachFor(S.draft.pri));
+    $('share').disabled = !S.draft.text.trim();
+  }
+
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-act]');
+    if (!b) return;
+    const f = act[b.dataset.act];
+    if (f) f(b.dataset.arg);
+  });
+  document.addEventListener('input', (e) => {
+    if (e.target.id === 'draft') { S.draft.text = e.target.value; if (!e.target.value.trim()) S.draft.manual = false; updateCompose(); }
+  });
+  document.addEventListener('submit', (e) => {
+    const f = e.target.dataset.form; if (!f) return;
+    e.preventDefault();
+    const input = e.target.querySelector('input');
+    doAsk(input.value);
+  });
+
+  const hot = window.claude && window.claude.hot;
+  if (hot && hot.snapshot) hot.snapshot(() => S);
+  const start = (data) => { if (data && data.connections) S = data; render(); };
+  if (hot && hot.ready) hot.ready(start); else start((hot && hot.data) || {});
+})();
+</script>
