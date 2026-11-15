@@ -54,3 +54,4 @@ screens, from which the owner picks one (recorded as a decision).
 - 2026-11-15: the owner picked A's colours with C's shapes and tone (D-005); applied across all of A; B and C removed from the canvas
 - 2026-11-15: clickable prototype in `prototype/index.html`, published at https://claude.ai/artifact/V3Esqanzj3rnjsBLhbLiq1 (simulated data, no backend)
 - 2026-11-15: prototype reworked for D-006: Share tab, Start a channel, Yours in Connections
+- 2026-11-15: tab bar removed; feed is home with a floating Ask bar; three navigation options to compare (header icons, channel chips, menu sheet)

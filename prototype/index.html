@@ -135,16 +135,50 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
 .panel { padding: 18px; border-radius: 24px; border: 2px solid #E1E7EB; display: flex; flex-direction: column; gap: 12px; }
 .minirow { display: flex; gap: 14px; align-items: center; }
 .miniqr { width: 76px; height: 76px; flex-shrink: 0; background: #FFFFFF; border-radius: 12px; padding: 6px; border: 2px solid var(--line); }
+.seg { display: flex; background: var(--surface); border-radius: 99px; padding: 4px; border: 1px solid var(--line); flex-wrap: wrap; }
+.seg button { border: 0; background: transparent; padding: 8px 12px; border-radius: 99px; font-weight: 600; font-size: 13px; color: var(--body); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: #FFFFFF; }
+.seg-label { font-size: 13px; font-weight: 600; color: var(--muted); }
+.screen.has-fab { padding-bottom: 96px; }
+.topline { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.iconbtn { width: 44px; height: 44px; flex-shrink: 0; border-radius: 22px; border: 0; background: var(--soft); color: var(--ink); display: flex; align-items: center; justify-content: center; }
+.iconbtn svg { width: 22px; height: 22px; }
+.iconbtn.me { background: var(--primary); color: #FFFFFF; font-family: var(--display); font-weight: 800; font-size: 18px; }
+.brand-sm { font-family: var(--display); font-weight: 800; font-size: 20px; }
+.chipsrow { display: flex; gap: 8px; overflow-x: auto; margin: 0 -20px; padding: 2px 20px 4px; scrollbar-width: none; }
+.chipsrow::-webkit-scrollbar { display: none; }
+.chipsrow .chip { flex-shrink: 0; }
+.chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #FFFFFF; }
+.fab { position: absolute; left: 14px; right: 14px; bottom: 14px; display: flex; gap: 8px; align-items: center; padding: 6px; border-radius: 99px; background: var(--surface); border: 2px solid var(--line); box-shadow: 0 10px 30px rgba(20,33,43,.16); }
+.fab .input { border: 0; background: transparent; height: 44px; padding: 0 12px; }
+.fab-send, .fab-plus { width: 44px; height: 44px; flex-shrink: 0; border-radius: 22px; border: 0; background: var(--primary); color: #FFFFFF; font-weight: 800; font-size: 20px; }
+.fab-plus { background: var(--ink); }
+.backdrop { position: absolute; inset: 0; background: rgba(20,33,43,.35); }
+.sheet { position: absolute; left: 0; right: 0; bottom: 0; background: var(--surface); border-radius: 28px 28px 0 0; padding: 12px 18px 22px; display: flex; flex-direction: column; gap: 4px; max-height: 85%; overflow-y: auto; }
+.grabber { width: 40px; height: 5px; border-radius: 3px; background: var(--line); align-self: center; margin-bottom: 8px; }
+.sheet-item { display: flex; align-items: center; gap: 12px; padding: 12px 10px; border: 0; background: none; border-radius: 16px; text-align: left; font-weight: 600; font-size: 16px; min-height: 52px; }
+.sheet-item:hover { background: var(--soft); }
+.sheet-item .iconbtn { width: 40px; height: 40px; }
+.channel-head { padding: 14px 16px; border-radius: 22px; background: var(--tint); display: flex; align-items: center; gap: 12px; }
 .demo-btn { border: 2px dashed #C9A27A; background: #FBF4EA; color: #6B4510; border-radius: 99px; min-height: 44px; padding: 0 16px; font-weight: 700; font-size: 14px; }
 </style>
 
 <div class="bar">
   <div class="brand">Hobart AI<small>clickable prototype</small></div>
-  <button type="button" class="link-btn" data-act="reset">Reset</button>
+  <div class="row">
+    <span class="seg-label" id="nav-label">Navigation</span>
+    <div class="seg" role="group" aria-labelledby="nav-label">
+      <button type="button" data-act="nav" data-arg="icons" id="nav-icons">1 · Header icons</button>
+      <button type="button" data-act="nav" data-arg="chips" id="nav-chips">2 · Channel chips</button>
+      <button type="button" data-act="nav" data-arg="drawer" id="nav-drawer">3 · Menu sheet</button>
+    </div>
+    <button type="button" class="link-btn" data-act="reset">Reset</button>
+  </div>
 </div>
 <div class="phone">
   <main class="screen" id="screen" aria-live="polite"></main>
-  <nav class="tabbar" id="tabbar" aria-label="Main"></nav>
+  <div id="float"></div>
+  <div id="sheet"></div>
   <div class="toast" id="toast" hidden></div>
 </div>
 
@@ -157,7 +191,7 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
   const EMPTY_AUD = () => ({ 4: 0, 3: 0, 2: 0, 1: 0, ai: 0 });
 
   const fresh = () => ({
-    screen: 'feed', connId: null, showQuiet: false, unseen: 0, pullOnly: false,
+    screen: 'feed', connId: null, showQuiet: false, unseen: 0, pullOnly: false, nav: 'icons', chip: 'all', sheet: false,
     draft: { text: '', pri: 2, manual: false, ch: null }, scanLevel: 3, seq: 100,
     newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false,
     chat: [],
@@ -212,6 +246,8 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
     people: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.8c1.8.7 3 2.4 3.5 5.2"/></svg>',
     share: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>',
     ask: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l1-4A8 8 0 1 1 20 12Z"/></svg>',
+    menu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
+    scan: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3M8 12h8"/></svg>',
     plug: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3v5M15 3v5M6 8h12v3a6 6 0 0 1-12 0V8ZM12 17v4"/></svg>'
   };
 
@@ -246,16 +282,54 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
   }
 
   // ---------- Following ----------
+  function feedHeader() {
+    const me = '<button type="button" class="iconbtn me" data-act="go" data-arg="ai" aria-label="You and your AI">Y</button>';
+    const plus = `<button type="button" class="iconbtn" data-act="go" data-arg="share" aria-label="Share news">${icon.share}</button>`;
+    const people = `<button type="button" class="iconbtn" data-act="go" data-arg="connections" aria-label="Connections">${icon.people}</button>`;
+    if (S.nav === 'icons') return `<div class="topline"><h1>What's new</h1><div class="row" style="gap:6px;flex-wrap:nowrap">${people}${plus}${me}</div></div>`;
+    if (S.nav === 'drawer') return `<div class="topline">${`<button type="button" class="iconbtn" data-act="menu" aria-label="Menu">${icon.menu}</button>`}<h1 style="flex:1;font-size:30px">What's new</h1>${me}</div>`;
+    const joined = S.connections.filter((c) => c.joined).sort((a, b) => (b.owner ? 1 : 0) - (a.owner ? 1 : 0));
+    const chips = [`<button type="button" class="chip" aria-pressed="${S.chip === 'all'}" data-act="chip" data-arg="all">All</button>`]
+      .concat(joined.map((c) => `<button type="button" class="chip" aria-pressed="${S.chip === c.id}" data-act="chip" data-arg="${c.id}">${c.owner ? 'You · ' : ''}${esc(c.short)}</button>`))
+      .concat([`<button type="button" class="chip" data-act="go" data-arg="connections">Manage</button>`]).join('');
+    return `<div class="topline"><span class="brand-sm">Hobart AI</span><div class="row" style="gap:6px;flex-wrap:nowrap">${plus}${me}</div></div>
+      <div class="chipsrow" role="group" aria-label="Filter by connection">${chips}</div>`;
+  }
+
   function feed() {
-    const mine = S.posts.filter((p) => conn(p.conn).joined).sort((a, b) => b.id - a.id);
+    const filter = S.nav === 'chips' && S.chip !== 'all' && conn(S.chip) && conn(S.chip).joined ? conn(S.chip) : null;
+    const mine = S.posts.filter((p) => conn(p.conn).joined && (!filter || p.conn === filter.id)).sort((a, b) => b.id - a.id);
     const loud = mine.filter((p) => pings(p) || conn(p.conn).owner), quiet = mine.filter((p) => !pings(p) && !conn(p.conn).owner);
     const card = (p) => `<article class="card"><div class="meta">${tag(p.pri)}${conn(p.conn).owner ? '<span class="tag you">You</span>' : ''}${p.isNew ? '<span class="tag new">New</span>' : ''}<span>${esc(conn(p.conn).short)} · ${esc(p.time)}</span></div><p class="msg">${esc(p.text)}</p></article>`;
-    return `<h1>What's new</h1>
-      <p class="sub">${S.pullOnly ? 'Pull only is on, so nothing pings you. Everything is here when you or your AI look.' : 'These cleared your line and pinged you.'}</p>
+    const head = filter
+      ? `<div class="channel-head"><span class="avatar" ${filter.owner ? 'style="background:var(--ink)"' : ''}>${esc(filter.name[0])}</span><span class="grow"><span class="name">${esc(filter.name)}</span><span class="sub">${filter.owner ? `You run this · ${subs(filter)} subscribers` : LINE[filter.level]}</span></span>
+          <button type="button" class="link-btn" data-act="${filter.owner ? 'open-mine' : 'open-conn'}" data-arg="${filter.id}">${filter.owner ? 'Manage' : 'Settings'}</button></div>`
+      : `<p class="sub">${S.pullOnly ? 'Pull only is on, so nothing pings you. Everything is here when you or your AI look.' : 'These cleared your line and pinged you.'}</p>`;
+    return `${feedHeader()}${head}
       ${loud.length ? loud.map(card).join('') : '<div class="empty">Nothing important right now.</div>'}
-      <button type="button" class="quiet-btn" data-act="quiet" aria-expanded="${S.showQuiet}"><span><b>${quiet.length} quiet updates</b> <span class="sub">saved for later</span></span><span aria-hidden="true">${S.showQuiet ? '▴' : '▾'}</span></button>
-      ${S.showQuiet ? quiet.map(card).join('') : ''}
-      <form class="askbox" data-form="ask"><label for="feed-ask">Ask about anything you follow</label><input class="input" id="feed-ask" placeholder="What do I need for Saturday?" autocomplete="off"></form>`;
+      ${quiet.length ? `<button type="button" class="quiet-btn" data-act="quiet" aria-expanded="${S.showQuiet}"><span><b>${quiet.length} quiet updates</b> <span class="sub">saved for later</span></span><span aria-hidden="true">${S.showQuiet ? '▴' : '▾'}</span></button>` : ''}
+      ${S.showQuiet ? quiet.map(card).join('') : ''}`;
+  }
+
+  function floatBar() {
+    return `<form class="fab" data-form="ask">
+      ${S.nav === 'drawer' ? '<button type="button" class="fab-plus" data-act="go" data-arg="share" aria-label="Share news">+</button>' : ''}
+      <label for="float-ask" style="position:absolute;left:-9999px">Ask about anything you follow</label>
+      <input class="input" id="float-ask" placeholder="Ask about anything you follow" autocomplete="off">
+      <button class="fab-send" type="submit" aria-label="Ask">↑</button></form>`;
+  }
+
+  function menuSheet() {
+    const item = (act, arg, ic, label, extra = '') => `<button type="button" class="sheet-item" data-act="${act}" data-arg="${arg}"><span class="iconbtn">${ic}</span><span class="grow">${label}</span>${extra}</button>`;
+    const mine = owned().map((c) => item('menu-mine', c.id, `<b style="font-family:var(--display)">${esc(c.name[0])}</b>`, esc(c.name), `<span class="tag you">${subs(c)}</span>`)).join('');
+    return `<div class="backdrop" data-act="menu-close"></div>
+      <div class="sheet" role="dialog" aria-label="Menu"><span class="grabber"></span>
+        ${item('menu-go', 'connections', icon.people, 'Connections', `<span class="sub">${S.connections.filter((c) => c.joined && !c.owner).length} following</span>`)}
+        ${mine ? `<p class="section-h" style="padding:0 10px">Your channels</p>${mine}` : ''}
+        ${item('menu-go', 'start', icon.share, 'Start a channel')}
+        ${item('menu-go', 'scan', icon.scan, 'Scan a code')}
+        ${item('menu-go', 'ai', icon.plug, 'Your AI and settings')}
+      </div>`;
   }
 
   function connections() {
@@ -271,7 +345,7 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
         <span class="grow"><span class="name">${esc(c.name)}</span>
           <span class="row" style="gap:6px"><span class="tag t${c.level}">${LINE[c.level]}</span><span class="tag plain">${c.on ? esc(c.via) : 'Paused'}</span></span></span>
         <span aria-hidden="true" style="color:var(--muted)">›</span></button>`).join('');
-    return `<h1>Connections</h1>
+    return `<button type="button" class="back" data-act="go" data-arg="feed">‹ What's new</button><h1>Connections</h1>
       ${mine ? `<p class="section-h">Yours</p>${mine}` : ''}
       <p class="section-h">Following</p>${following}
       <div class="row" style="margin-top:auto;flex-wrap:nowrap">
@@ -383,7 +457,7 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
     const d = S.draft;
     if (!d.ch || !conn(d.ch) || !conn(d.ch).owner) d.ch = mine[0].id;
     const c = conn(d.ch), s = suggest(d.text), r = reachFor(c, d.pri);
-    return `${mine.length > 1
+    return `<button type="button" class="back" data-act="go" data-arg="feed">‹ What's new</button>${mine.length > 1
         ? `<label class="label" for="ch-pick">Posting to</label><select class="input" id="ch-pick">${mine.map((m) => `<option value="${m.id}" ${m.id === c.id ? 'selected' : ''}>${esc(m.name)}</option>`).join('')}</select>`
         : `<p class="sub" style="font-weight:600">${esc(c.name)}</p>`}
       <h1>What's the news?</h1>
@@ -409,17 +483,14 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
   function ask() {
     const msgs = S.chat.map((m) => `<div class="bubble ${m.who}">${m.who === 'ai' ? m.html : esc(m.text)}</div>`).join('');
     const sugg = ["What's on for me this week?", 'What do I need for Saturday?', 'Is school on Friday?', "When's the next working bee?"];
-    return `<h1>Ask</h1><p class="sub">Answers come from your connections' updates and documents.</p>
+    return `<div class="topline"><h1>Ask</h1><button type="button" class="btn ghost small" data-act="go" data-arg="feed">Done</button></div>
+      <p class="sub">Answers come from your connections' updates and documents.</p>
       ${msgs || `<div class="chips">${sugg.map((q) => `<button type="button" class="chip" data-act="ask" data-arg="${esc(q)}">${esc(q)}</button>`).join('')}</div>`}
-      <form data-form="ask" style="margin-top:auto;display:flex;gap:8px">
-        <label for="ask-in" style="position:absolute;left:-9999px">Your question</label>
-        <input class="input" id="ask-in" placeholder="Ask about anything you follow" autocomplete="off">
-        <button class="btn small" type="submit">Ask</button></form>
       <p class="demo-note">Prototype: answers are matched from the sample data, not a real AI.</p>`;
   }
 
   function ai() {
-    return `<h1>Connect your AI</h1>
+    return `<button type="button" class="back" data-act="go" data-arg="feed">‹ What's new</button><h1>Connect your AI</h1>
       <p class="sub" style="font-size:16px;color:var(--body)">Let your own assistant read your updates and documents. It only sees the connections you allow. No tech skills needed.</p>
       <div class="card" style="gap:12px"><p class="label">1. Copy your link</p>
         <div class="row" style="flex-wrap:nowrap"><input class="input" id="mcp-link" readonly value="https://[domain]/mcp" style="font-family:var(--mono);font-size:14px;background:#FFFFFF">
@@ -459,16 +530,14 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
   // ---------- Render ----------
   const SCREENS = { feed, connections, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
   const TAB_OF = { conn: 'connections', mine: 'connections', scan: 'connections', subscribe: 'connections', joined: 'connections', start: 'share' };
-  function tabs() {
-    const t = [['feed', "What's new", icon.feed], ['connections', 'Connections', icon.people], ['share', 'Share', icon.share], ['ask', 'Ask', icon.ask], ['ai', 'Your AI', icon.plug]];
-    const cur = TAB_OF[S.screen] || S.screen;
-    $('tabbar').innerHTML = t.map(([id, label, ic]) => `<button type="button" data-act="tab" data-arg="${id}" ${cur === id ? 'aria-current="page"' : ''}>${ic}${label}${id === 'feed' && S.unseen ? `<span class="dot">${S.unseen}</span>` : ''}</button>`).join('');
-  }
   function render() {
+    ['icons', 'chips', 'drawer'].forEach((n) => $('nav-' + n).setAttribute('aria-pressed', S.nav === n));
     const el = $('screen');
-    el.className = 'screen' + (S.screen === 'subscribe' ? ' flush' : '');
+    const fab = S.screen === 'feed' || S.screen === 'ask';
+    el.className = 'screen' + (S.screen === 'subscribe' ? ' flush' : '') + (fab ? ' has-fab' : '');
     el.innerHTML = (SCREENS[S.screen] || feed)();
-    tabs();
+    $('float').innerHTML = fab ? floatBar() : '';
+    $('sheet').innerHTML = S.sheet ? menuSheet() : '';
     if (S.screen === 'ask') el.scrollTop = el.scrollHeight;
   }
   let toastTimer;
@@ -490,7 +559,16 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
       render(); scrollTop();
       if (a === 'feed') setTimeout(() => S.posts.forEach((p) => { p.isNew = false; }), 0);
     },
-    go: (a) => { S.screen = a; S.addingDoc = false; render(); scrollTop(); },
+    go: (a) => {
+      S.screen = a; S.addingDoc = false; S.sheet = false; render(); scrollTop();
+      if (a === 'feed') setTimeout(() => S.posts.forEach((p) => { p.isNew = false; }), 0);
+    },
+    nav: (a) => { S.nav = a; S.sheet = false; S.screen = 'feed'; render(); scrollTop(); },
+    chip: (a) => { S.chip = a; S.showQuiet = false; render(); },
+    menu: () => { S.sheet = true; render(); },
+    'menu-close': () => { S.sheet = false; render(); },
+    'menu-go': (a) => act.go(a),
+    'menu-mine': (a) => { S.sheet = false; act['open-mine'](a); },
     quiet: () => { S.showQuiet = !S.showQuiet; render(); },
     'open-conn': (a) => { S.connId = a; S.screen = 'conn'; render(); scrollTop(); },
     'open-mine': (a) => { S.connId = a; S.screen = 'mine'; S.addingDoc = false; render(); scrollTop(); },
@@ -533,8 +611,8 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
       const c = conn(d.ch), r = reachFor(c, d.pri);
       S.posts.push({ id: ++S.seq, conn: c.id, pri: d.pri, text: d.text.trim(), time: 'Just now', isNew: true, reach: `${r.pinged} pinged · ${r.quiet} in feed · ${r.ai} AI` });
       Object.assign(S.draft, { text: '', pri: 2, manual: false });
-      S.unseen += 1;
-      render(); toast(r.pinged + r.quiet + r.ai ? `Shared. ${r.pinged} pinged.` : 'Shared. It will be waiting when people join.');
+      S.screen = 'feed'; S.chip = 'all';
+      render(); scrollTop(); toast(r.pinged + r.quiet + r.ai ? `Shared. ${r.pinged} pinged.` : 'Shared. It will be waiting when people join.');
     },
     soon: (a) => toast(`${a}: coming later`)
   };
@@ -574,7 +652,7 @@ select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3C
 
   const hot = window.claude && window.claude.hot;
   if (hot && hot.snapshot) hot.snapshot(() => S);
-  const boot = (data) => { if (data && data.connections && data.newCh) S = data; render(); };
+  const boot = (data) => { if (data && data.connections && data.newCh) S = Object.assign(fresh(), data, { sheet: false }); render(); };
   if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>
