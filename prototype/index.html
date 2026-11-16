@@ -540,9 +540,10 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 /* Radar range: a pressable segmented control */
 .range { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
 .range-l { font-size: 14px; font-weight: 700; color: var(--body); }
-.range-seg { flex: 1; display: flex; gap: 4px; background: #E6E2F0; border-radius: 99px; padding: 4px; box-shadow: inset 0 2px 4px rgba(42,35,64,.15); }
-.range-seg button { flex: 1; min-height: 38px; border: 0; background: none; border-radius: 99px; font-weight: 700; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; padding: 0 4px; }
-.range-seg button[aria-pressed="true"] { background: var(--brass, #FFD23F); color: #2A2340; box-shadow: 0 3px 0 var(--brass-edge, #C99A00); }
+.range-v { flex: 1; text-align: center; font-family: var(--display); font-weight: 600; font-size: 20px; color: var(--ink); font-variant-numeric: tabular-nums; }
+.step { width: 46px; height: 42px; flex-shrink: 0; border-radius: 23px; border: 0; background: var(--brass, #FFD23F); color: #2A2340; font-size: 24px; font-weight: 700; line-height: 1; box-shadow: 0 4px 0 var(--brass-edge, #C99A00); transition: transform .06s, box-shadow .06s; }
+.step:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--brass-edge, #C99A00); }
+.step[disabled] { background: #E6E2F0; color: #A7A1BA; box-shadow: 0 4px 0 #D3CEE2; cursor: not-allowed; }
 /* The ripple: sending, arriving and scanning all use it */
 .ripple-fx { position: absolute; inset: 0; pointer-events: none; z-index: 6; overflow: hidden; }
 .ripple-fx span { position: absolute; left: 50%; top: 42%; width: 70px; height: 70px; margin: -35px; border-radius: 50%; border: 1px solid var(--brass, #FFD23F); opacity: 0; animation: rip-big 1.5s ease-out forwards; }
@@ -576,7 +577,8 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const VIA = ['Email', 'My AI only', 'Webhook', 'SMS'];
   const KINDS = ['Club or team', 'School group', 'Business', 'Neighbours', 'Something else'];
   const STRENGTH = { 4: 'Strong ping', 3: 'Good ping', 2: 'Weak ping', 1: 'Faint ping' };
-  const RANGES = [250, 500, 1000, 2500];
+  const RANGES = [250, 500, 1000, 2500, 5000, 10000, 99999];
+  const rangeLabel = (r) => r >= 99999 ? 'All of Hobart' : km(r).replace('.0 km', ' km');
   const RANGE = 2500; // metres shown at the radar's edge
   const EMPTY_AUD = () => ({ 4: 0, 1: 0, ai: 0 });
 
@@ -586,7 +588,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const km = (m) => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
 
   const fresh = () => ({
-    v: 19, range: 1000, theme: 'friendly', concept: 'timeline', shelfSel: 'all', tab: 'now', radarOn: false, rstyle: 'a', win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
+    v: 20, range: 1000, theme: 'friendly', concept: 'timeline', shelfSel: 'all', tab: 'now', radarOn: false, rstyle: 'a', win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
     draft: { text: '', pri: 1, manual: false, ch: null }, subId: 'elm', scanLevel: 1, seq: 100,
     newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false, chat: [],
     connections: [
@@ -622,6 +624,10 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
         docs: [ { t: 'Menu', b: 'Boiled and baked every morning: plain, sesame, everything, rye and cinnamon raisin. Vegan cream cheese available.' }, { t: 'Hours', b: 'Every day 7am to 2pm, or until the bagels run out.' } ] },
       { id: 'coffee', name: 'Kunanyi Coffee Cart', short: 'Kunanyi Coffee', level: 1, via: 'Email', on: true, joined: false, verified: 9, dist: 230, bearing: 290,
         docs: [ { t: 'Where we park', b: 'Weekdays outside the Lenna Ave shops from 6:30am. Weekends at the rivulet track entrance.' } ] },
+      { id: 'swim', name: 'Long Beach Swim Group', short: 'Long Beach Swim', cat: 'sport', level: 1, via: 'Email', on: true, joined: false, verified: 5, dist: 3900, bearing: 150,
+        docs: [ { t: 'When we swim', b: 'Every morning at 6:30am from the pontoon. All paces welcome; bring a bright cap.' } ] },
+      { id: 'shed', name: 'Northside Community Shed', short: 'Northside Shed', cat: 'group', level: 1, via: 'Email', on: true, joined: false, verified: 10, dist: 7400, bearing: 340,
+        docs: [ { t: 'Open days', b: 'Tuesday and Thursday, 9am to 1pm. Tools and tea provided.' } ] },
       { id: 'pantry', name: 'Corner Pantry', short: 'Corner Pantry', level: 1, via: 'Email', on: true, joined: false, verified: 230, dist: 400, bearing: 140, docs: [] }
     ],
     posts: [
@@ -642,6 +648,8 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
       { id: 16, read: true, conn: 'records', pri: 1, text: 'Closed this Saturday for stocktake.', time: '14 Nov', age: 13 },
       { id: 17, read: true, conn: 'rivulet', pri: 1, text: 'Thanks to the 23 people who came to the clean-up. 14 bags of rubbish out of the rivulet.', time: '1 Nov', age: 26 },
       { id: 18, read: true, conn: 'coffee', pri: 1, text: 'New winter hours: from 7am until the end of August.', time: '29 Oct', age: 29 },
+      { id: 19, read: true, conn: 'swim', pri: 1, text: 'Water is 14 degrees this morning. Sunrise swim and coffee on Saturday.', time: 'Today', age: 0 },
+      { id: 20, read: true, conn: 'shed', pri: 1, text: 'Free bike repair morning this Thursday. Bring your bike and we will show you how.', time: 'Yesterday', age: 1 },
       { id: 10, conn: 'netball', pri: 1, title: 'Finals day: everything you need to know', text: "We made the grand final! It's on Saturday 29 November at the Domain courts, court 3, at 10:20am. Please have players there by 9:50 for warm-up.\n\nUniforms: full club kit, including the navy socks. If your child has lost theirs, we have spares at the canteen.\n\nParking fills up fast on finals day. The Queens Walk car park is the best bet, or the 9:30 bus from the city stops right outside.\n\nAfter the game we're doing a team breakfast at Elm St Bakehouse. The club is covering the players; parents pay their own. Let me know by Thursday if you're coming so I can give them numbers.\n\nWin or lose, it's been a brilliant season. Thanks for every early morning, every lift and every orange quarter.", time: '8:15am', age: 0 }
     ]
   });
@@ -981,7 +989,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     if (S.nearQ.trim()) return results();
     const ids = nearby().map((c) => c.id);
     const list = S.posts.filter((p) => ids.includes(p.conn) && p.age <= 30).sort((a, b) => a.age - b.age || b.id - a.id);
-    return `${hereMin()}${list.length ? grouped(list, true) : `<p class="sub">No pings within ${km(S.range)} in the last month. Try a wider range.</p>`}`;
+    return `${hereMin()}${list.length ? grouped(list, true) : `<p class="sub">No pings within ${rangeLabel(S.range)} in the last month. Try looking further.</p>`}`;
   }
 
   function radar() {
@@ -1000,7 +1008,9 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     return `<div class="${S.rlayout === 'scan' ? 'reveal' : ''}" style="display:flex;flex-direction:column;gap:10px;flex:1">
       <div class="range" role="group" aria-label="How far to look">
         <span class="range-l">Within</span>
-        <div class="range-seg">${RANGES.map((r) => `<button type="button" data-act="range" data-arg="${r}" aria-pressed="${S.range === r}">${km(r)}</button>`).join('')}</div>
+        <button type="button" class="step" data-act="range-step" data-arg="-1" aria-label="Look closer" ${RANGES.indexOf(S.range) === 0 ? 'disabled' : ''}>−</button>
+        <span class="range-v" aria-live="polite">${rangeLabel(S.range)}</span>
+        <button type="button" class="step" data-act="range-step" data-arg="1" aria-label="Look further" ${RANGES.indexOf(S.range) === RANGES.length - 1 ? 'disabled' : ''}>+</button>
       </div>
       <div id="near-results" style="display:flex;flex-direction:column;gap:0;flex:1">${radarBody()}</div></div>`;
   }
@@ -1293,7 +1303,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     'menu-go': (a) => act.go(a),
     'menu-mine': (a) => { S.sheet = null; act['open-mine'](a); },
     trove: (a) => { S.sheet = a; render(); },
-    range: (a) => { S.range = +a; render(); },
+    'range-step': (a) => { const i = Math.min(RANGES.length - 1, Math.max(0, RANGES.indexOf(S.range) + +a)); S.range = RANGES[i]; const y = $('screen').scrollTop; render(); $('screen').scrollTop = y; },
     shelf: (a) => { S.shelfSel = a; render(); },
     tab: (a) => { S.tab = a; S.nearQ = ''; S.radarOn = a === 'nearby'; if (a === 'nearby') startScan(); render(); scrollTop(); },
     'radar-toggle': () => { S.radarOn = !S.radarOn; S.nearQ = ''; if (S.radarOn) startScan(); else { clearTimeout(scanTimer); S.scanning = false; } render(); scrollTop(); },
@@ -1373,7 +1383,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   document.addEventListener('click', (e) => {
     const b = e.target.closest('[data-act]');
     if (!b || b.disabled) return;
-    if (b.matches('.btn, .pillbtn, .radar-btn, .switch, .fab-send') && navigator.vibrate) { try { navigator.vibrate(8); } catch (err) {} }
+    if (b.matches('.btn, .pillbtn, .radar-btn, .switch, .fab-send, .step') && navigator.vibrate) { try { navigator.vibrate(8); } catch (err) {} }
     const f = act[b.dataset.act];
     if (f) f(b.dataset.arg);
   });
@@ -1412,7 +1422,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const hot = window.claude && window.claude.hot;
   if (hot && hot.snapshot) hot.snapshot(() => S);
-  const boot = (data) => { if (data && data.v === 19) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
+  const boot = (data) => { if (data && data.v === 20) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
   if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>

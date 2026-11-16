@@ -32,9 +32,10 @@ space on the screen.
 
 ## Update 2026-11-16: range
 
-The radar has a **"Within" control** at the top: 250 m, 500 m, 1 km or
-2.5 km (default 1 km). It limits the list, the "You're here" check and
-nearby search to Troves inside that distance.
+The radar has a **"Within" control** at the top: minus and plus buttons
+either side of the current range. It steps through 250 m, 500 m, 1 km
+(default), 2.5 km, 5 km, 10 km and All of Hobart, so people can narrow or
+widen it. It limits the list, the "You're here" check and nearby search.
 
 ## Options considered
 
