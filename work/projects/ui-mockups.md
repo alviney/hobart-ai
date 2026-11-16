@@ -85,3 +85,4 @@ screens, from which the owner picks one (recorded as a decision).
 - 2026-11-16: yellow kept to highlights; neutral background and white summary card (D-015 updated)
 - 2026-11-16: thematic layer: depth is time, portholes, pressable controls, the ripple (D-016)
 - 2026-11-16: portholes dropped; back to pastel letter avatars with unread dots (D-016 updated)
+- 2026-11-16: avatar circles removed; timeline rows fade after the first two (D-016 updated)

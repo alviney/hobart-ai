@@ -19,14 +19,16 @@ Three ideas, used with restraint (a fourth, portholes, was dropped):
   light background, and each older day band (Yesterday, Earlier this week,
   Older) sits on a deeper blue, down to navy. Cards dim with depth. This
   replaces fading rows as the way to show that old pings lose signal.
-- ~~Portholes~~ (tried and dropped the same day: the owner didn't like
-  them). Troves keep soft pastel letter avatars, and unread pings keep a
-  dot, orange for urgent.
+- ~~Portholes~~ (tried and dropped the same day). Rows have no avatar at
+  all: just the Trove's name with an unread dot, orange for urgent.
+- **Rows fade after the first two.** The newest two pings are at full
+  strength and each one after is fainter (down to about a third); hovering
+  or focusing a row brings it back to full.
 - **Controls you can press.** Buttons have a solid lower edge and sink when
   pressed, with a short vibration where the phone allows. The radar is a
   two-position switch with a yellow knob. "Urgent" is a flip switch.
 - **The ripple.** One motion everywhere: sending a ping sends rings out
-  across the screen, a new ping's avatar ripples, and the radar scan is
+  across the screen, a new ping's card ripples, and the radar scan is
   the same rings. People who ask for reduced motion don't get it.
 
 Not doing: paper message slips, mascots or other decoration (too cute).

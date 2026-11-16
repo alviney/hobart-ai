@@ -505,10 +505,13 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 .phone[data-theme="friendly"] .band.d3 .rp .tm { color: #A9BFD8; }
 .phone[data-theme="friendly"] .band.d3 .utag { color: #FFB08A; }
 
-/* Trove avatars: soft letter circles; unread pings keep a dot */
-.phone[data-theme="friendly"] .rp .rav { position: relative; }
-.phone[data-theme="friendly"] .band.d3 .rp .rav { opacity: .85; }
-.rav.arrive::after { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 3px solid var(--brass); animation: rip-small 1.2s ease-out 3; }
+/* No avatars. Rows past the first two fade; hover or focus brings one back */
+.phone[data-theme="friendly"] .rp { grid-template-columns: minmax(0, 1fr) auto; padding: 14px 16px; transition: opacity .15s; }
+.phone[data-theme="friendly"] .rp .tx { grid-column: 1 / -1; }
+.phone[data-theme="friendly"] .rp:hover, .phone[data-theme="friendly"] .rp:focus-visible { opacity: 1 !important; }
+.rp.arrive { animation: rip-card 1.2s ease-out 2; }
+@keyframes rip-card { from { box-shadow: 0 0 0 0 rgba(255,210,63,.9); } to { box-shadow: 0 0 0 16px rgba(255,210,63,0); } }
+@media (prefers-reduced-motion: reduce) { .rp.arrive { animation: none; } }
 @keyframes rip-small { from { transform: scale(1); opacity: .9; } to { transform: scale(2.2); opacity: 0; } }
 
 /* Controls you can press */
@@ -739,10 +742,10 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const hashId = (id) => [...id].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) >>> 0, 7);
   const recentPings = () => myPosts().slice().sort((a, b) => a.age - b.age || b.id - a.id);
   const dayLabel = (age) => age === 0 ? 'Today' : age === 1 ? 'Yesterday' : age <= 7 ? 'Earlier this week' : 'Older';
-  function rpRow(p, near) {
+  function rpRow(p, near, idx) {
     const c = conn(p.conn), unread = !p.read;
-    return `<button type="button" class="rp ${unread ? '' : 'read'}" data-act="open-ping" data-arg="${p.id}">
-      <span class="rav ${p.isNew ? 'arrive' : ''}" aria-hidden="true" style="--ravbg:${RAV[hashId(c.id) % RAV.length][0]};--ravfg:${RAV[hashId(c.id) % RAV.length][1]}">${esc(c.name[0])}</span>
+    const fade = idx == null || idx < 2 ? 1 : Math.max(0.34, 1 - (idx - 1) * 0.17);
+    return `<button type="button" class="rp ${unread ? '' : 'read'} ${p.isNew ? 'arrive' : ''}" data-act="open-ping" data-arg="${p.id}" ${fade < 1 ? `style="opacity:${fade.toFixed(2)}"` : ''}>
       <span class="who">${unread ? `<span class="udot ${p.pri === 4 ? 'urgent' : ''}" aria-label="Unread"></span>` : ''}<span class="nm">${c.owner ? 'You · ' : ''}${esc(c.name)}</span>${p.pri === 4 ? '<span class="utag">Urgent</span>' : ''}</span>
       <span class="tm">${near ? km(c.dist) + ' · ' : ''}${esc(p.time)}</span>
       <span class="tx">${p.title ? `<b style="color:var(--ink);font-weight:600">${esc(p.title)}.</b> ` : ''}${esc(p.text)}</span></button>`;
@@ -753,7 +756,8 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     for (const p of list) { const d = dayLabel(p.age); let b = bands[bands.length - 1]; if (!b || b.d !== d) bands.push(b = { d, rows: [] }); b.rows.push(p); }
     if (!bands.length) return '<div class="empty">No pings yet. Turn on the radar to find Troves nearby.</div>';
     const depth = { Today: 0, Yesterday: 1, 'Earlier this week': 2, Older: 3 };
-    return `<div class="dive">${bands.map((b) => `<section class="band d${depth[b.d]}"><h2 class="dayh">${b.d}</h2>${b.rows.map((p) => rpRow(p, near)).join('')}</section>`).join('')}</div>`;
+    let n = 0;
+    return `<div class="dive">${bands.map((b) => `<section class="band d${depth[b.d]}"><h2 class="dayh">${b.d}</h2>${b.rows.map((p) => rpRow(p, near, n++)).join('')}</section>`).join('')}</div>`;
   }
   function summaryLine() {
     const all = briefingItems(); if (!all.length) return '';
