@@ -412,15 +412,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
 <div class="bar">
   <div class="brand">Sub1<small>clickable prototype</small></div>
-  <div class="row">
-    <span class="sub" id="hc-label" style="font-weight:600">Home concept</span>
-    <div class="seg" role="group" aria-labelledby="hc-label">
-      <button type="button" data-act="concept" data-arg="timeline" id="hc-timeline">1 · Timeline</button>
-      <button type="button" data-act="concept" data-arg="shelf" id="hc-shelf">2 · Trove shelf</button>
-      <button type="button" data-act="concept" data-arg="tabs" id="hc-tabs">3 · Now / Nearby / Yours</button>
-    </div>
-    <button type="button" class="link-btn" data-act="reset">Reset</button>
-  </div>
+  <button type="button" class="link-btn" data-act="reset">Reset</button>
 </div>
 <div class="phone" id="phone">
   <div id="bgfx" aria-hidden="true"></div>
@@ -1076,7 +1068,6 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const SCREENS = { home, feed: feedPage, ping: pingView, trove: troveFeed, troves, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
   function render() {
-    ['timeline', 'shelf', 'tabs'].forEach((n) => $('hc-' + n).setAttribute('aria-pressed', S.concept === n));
     const el = $('screen');
     const fab = S.screen === 'home' || S.screen === 'ask';
     el.className = 'screen' + (S.screen === 'subscribe' ? ' flush' : '') + (fab ? ' has-fab' : '') + '';
@@ -1118,7 +1109,6 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     'menu-go': (a) => act.go(a),
     'menu-mine': (a) => { S.sheet = null; act['open-mine'](a); },
     trove: (a) => { S.sheet = a; render(); },
-    concept: (a) => { S.concept = a; S.screen = 'home'; S.sheet = null; S.radarOn = false; S.nearQ = ''; S.tab = 'now'; render(); scrollTop(); },
     shelf: (a) => { S.shelfSel = a; render(); },
     tab: (a) => { S.tab = a; S.nearQ = ''; S.radarOn = a === 'nearby'; if (a === 'nearby') startScan(); render(); scrollTop(); },
     'radar-toggle': () => { S.radarOn = !S.radarOn; S.nearQ = ''; if (S.radarOn) startScan(); else { clearTimeout(scanTimer); S.scanning = false; } render(); scrollTop(); },

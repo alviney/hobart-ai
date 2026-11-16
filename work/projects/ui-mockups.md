@@ -3,7 +3,7 @@
 - **Status:** shipped
 - **Size guess:** M
 - **Touches:** design files or clickable HTML prototypes only, no product code
-- **Related decisions:** [D-013](../decisions/D-013-ping-signal-fades.md), [D-012](../decisions/D-012-radar-screen.md), [D-011](../decisions/D-011-urgent-or-not.md), [D-010](../decisions/D-010-deep-sonar.md), [D-008](../decisions/D-008-sub1-troves-pings.md), [D-009](../decisions/D-009-ping-strength-and-radar.md), [D-004](../decisions/D-004-mockups-first-and-ads.md), [D-003](../decisions/D-003-marketing-sells-the-dream.md), [D-005](../decisions/D-005-visual-direction.md), [D-007](../decisions/D-007-feed-first-menu-sheet.md)
+- **Related decisions:** [D-014](../decisions/D-014-home-timeline.md), [D-013](../decisions/D-013-ping-signal-fades.md), [D-012](../decisions/D-012-radar-screen.md), [D-011](../decisions/D-011-urgent-or-not.md), [D-010](../decisions/D-010-deep-sonar.md), [D-008](../decisions/D-008-sub1-troves-pings.md), [D-009](../decisions/D-009-ping-strength-and-radar.md), [D-004](../decisions/D-004-mockups-first-and-ads.md), [D-003](../decisions/D-003-marketing-sells-the-dream.md), [D-005](../decisions/D-005-visual-direction.md), [D-007](../decisions/D-007-feed-first-menu-sheet.md)
 
 ## Why
 
@@ -78,3 +78,4 @@ screens, from which the owner picks one (recorded as a decision).
 - 2026-11-16: bottom bar always says 'Ask anything'; with the radar on it searches nearby Troves
 - 2026-11-16: radar scan made small and inline so the toggle swaps content in place
 - 2026-11-16: back to the drawing board: three home concepts centred on recent pings (Timeline, Trove shelf, Now / Nearby / Yours); fixed the Ask bar rendering behind content
+- 2026-11-16: home is a timeline of recent pings (D-014)
