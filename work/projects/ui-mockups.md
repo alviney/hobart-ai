@@ -111,3 +111,4 @@ screens, from which the owner picks one (recorded as a decision).
 - 2026-11-16: sonar rings chosen for ping strength, small and top right on cards (D-009 updated)
 - 2026-11-16: ping strength now on the icon circle: strong = rich yellow rim, good = normal, weak = faded (D-009 updated)
 - 2026-11-16: strong-ping border now sits over the edge of the icon circle
+- 2026-11-16: back to sonar rings for ping strength (D-009 updated)
