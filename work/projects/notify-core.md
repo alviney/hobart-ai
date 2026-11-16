@@ -3,7 +3,7 @@
 - **Status:** scoping
 - **Size guess:** L (split into milestones before building)
 - **Touches:** the web app, database schema, auth, email delivery
-- **Related decisions:** [D-010](../decisions/D-010-deep-sonar.md), [D-008](../decisions/D-008-sub1-troves-pings.md), [D-009](../decisions/D-009-ping-strength-and-radar.md), [D-002](../decisions/D-002-start-with-notifications.md), [D-004](../decisions/D-004-mockups-first-and-ads.md), [D-005](../decisions/D-005-visual-direction.md), [D-006](../decisions/D-006-everyone-can-publish.md)
+- **Related decisions:** [D-011](../decisions/D-011-urgent-or-not.md), [D-010](../decisions/D-010-deep-sonar.md), [D-008](../decisions/D-008-sub1-troves-pings.md), [D-009](../decisions/D-009-ping-strength-and-radar.md), [D-002](../decisions/D-002-start-with-notifications.md), [D-004](../decisions/D-004-mockups-first-and-ads.md), [D-005](../decisions/D-005-visual-direction.md), [D-006](../decisions/D-006-everyone-can-publish.md)
 
 ## Why
 
@@ -32,7 +32,7 @@ posting weekly (see `work/signals.md`).
 - [x] Product name: Sub1 for now ([D-008](../decisions/D-008-sub1-troves-pings.md))
 - [ ] Radar location handling (owner): [Q-005](../questions.md)
 - [ ] Instant and free channel creation (owner): [Q-004](../questions.md)
-- [ ] Rating scale: 1–5 with an AI-suggested default? (implementation; record as a decision)
+- [x] Rating scale: urgent or not ([D-011](../decisions/D-011-urgent-or-not.md))
 - [x] Visual direction picked ([D-005](../decisions/D-005-visual-direction.md))
 - [ ] Stack and hosting (implementation; record as a decision before building, keeping costs at $0 until the owner approves spend)
 - [ ] Data model uses stable IDs and schema.org-compatible fields so channels can become hub entities later (implementation)
@@ -61,3 +61,4 @@ posting weekly (see `work/signals.md`).
 - 2026-11-15: one account, anyone can publish (D-006)
 - 2026-11-15: name and vocabulary (D-008), ping strength and radar (D-009); location question Q-005
 - 2026-11-16: Deep Sonar look; one feed row per Trove with unread counts; rating filter menu (D-010)
+- 2026-11-16: two levels only, urgent or not; only urgent is marked (D-011)

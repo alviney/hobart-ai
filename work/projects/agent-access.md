@@ -3,7 +3,7 @@
 - **Status:** scoping
 - **Size guess:** M
 - **Touches:** public API, MCP server, webhook delivery, API tokens
-- **Related decisions:** [D-002](../decisions/D-002-start-with-notifications.md)
+- **Related decisions:** [D-011](../decisions/D-011-urgent-or-not.md), [D-002](../decisions/D-002-start-with-notifications.md)
 
 ## Why
 
@@ -45,3 +45,4 @@ works in any MCP client before we build in-app chat.
 ## Log
 
 - 2026-11-15: created from the brainstorm that produced D-002
+- 2026-11-16: priority is now urgent or not (D-011); the API takes `urgent: true`

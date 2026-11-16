@@ -256,13 +256,13 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
 
 <script>
 (() => {
-  const LEVELS = { 4: 'Urgent', 3: 'Important', 2: 'Good to know', 1: 'FYI' };
-  const LINE = { 4: 'Urgent only', 3: 'Important and up', 2: 'Good to know and up', 1: 'Everything' };
+  const LEVELS = { 4: 'Urgent', 1: 'Not urgent' };
+  const LINE = { 4: 'Urgent only', 1: 'Everything' };
   const VIA = ['Email', 'My AI only', 'Webhook', 'SMS'];
   const KINDS = ['Club or team', 'School group', 'Business', 'Neighbours', 'Something else'];
   const STRENGTH = { 4: 'Strong ping', 3: 'Good ping', 2: 'Weak ping', 1: 'Faint ping' };
   const RANGE = 2500; // metres shown at the radar's edge
-  const EMPTY_AUD = () => ({ 4: 0, 3: 0, 2: 0, 1: 0, ai: 0 });
+  const EMPTY_AUD = () => ({ 4: 0, 1: 0, ai: 0 });
 
   // Ping strength comes from how recently the Trove's owner confirmed its details.
   const strength = (days) => days <= 7 ? 4 : days <= 30 ? 3 : days <= 90 ? 2 : days <= 180 ? 1 : 0;
@@ -270,11 +270,11 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
   const km = (m) => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
 
   const fresh = () => ({
-    v: 8, fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
-    draft: { text: '', pri: 2, manual: false, ch: null }, subId: 'elm', scanLevel: 3, seq: 100,
+    v: 9, fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
+    draft: { text: '', pri: 1, manual: false, ch: null }, subId: 'elm', scanLevel: 1, seq: 100,
     newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false, chat: [],
     connections: [
-      { id: 'netball', name: 'South Hobart Netball U12s', short: 'Netball U12s', level: 3, via: 'Email', on: true, joined: true, verified: 3, dist: 1200, bearing: 165,
+      { id: 'netball', name: 'South Hobart Netball U12s', short: 'Netball U12s', level: 1, via: 'Email', on: true, joined: true, verified: 3, dist: 1200, bearing: 165,
         docs: [
           { t: 'Season overview', b: 'Games are on Saturday mornings at the Domain courts. Arrive 20 minutes before your game. Bring a water bottle and your bib.' },
           { t: 'Wet weather plan', b: "If it's raining at 7am, check for an Urgent ping by 7:30am. No ping means we play." },
@@ -285,7 +285,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
           { t: 'Term dates', b: 'Term 4 runs until Friday 18 December. Pupil-free day on Friday 20 November.' },
           { t: 'Before and after care', b: 'Runs 7:30–8:45am and 3:00–6:00pm in the hall, including pupil-free days. Book through the office.' }
         ] },
-      { id: 'elm', name: 'Elm St Bakehouse', short: 'Elm St Bakehouse', level: 3, via: 'Email', on: true, joined: false, verified: 2, dist: 350, bearing: 35,
+      { id: 'elm', name: 'Elm St Bakehouse', short: 'Elm St Bakehouse', level: 1, via: 'Email', on: true, joined: false, verified: 2, dist: 350, bearing: 35,
         docs: [
           { t: 'Opening hours', b: 'Tuesday to Sunday, 7am to 3pm. Closed Mondays and public holidays.' },
           { t: 'Pre-orders', b: 'Order whole loaves and hot cross buns by 2pm the day before. Pick up from 7am.' }
@@ -294,25 +294,25 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
         docs: [ { t: 'Working bees', b: 'Second Sunday of every month, 9am at the Mt Stuart Rd gate. Bring gloves, water and sturdy shoes. Tools and morning tea provided.' } ] },
       { id: 'bodycorp', name: 'Waterside Body Corporate', short: 'Waterside Body Corp', level: 4, via: 'Email', on: false, joined: true, verified: 140, dist: 120, bearing: 320,
         docs: [ { t: 'Bin days', b: 'General waste Tuesday night, recycling every second Thursday.' } ] },
-      { id: 'garden', name: 'Lenna Ave Community Garden', short: 'Lenna Ave Garden', level: 3, via: 'Email', on: true, joined: false, verified: 12, dist: 620, bearing: 205,
+      { id: 'garden', name: 'Lenna Ave Community Garden', short: 'Lenna Ave Garden', level: 1, via: 'Email', on: true, joined: false, verified: 12, dist: 620, bearing: 205,
         docs: [ { t: 'Plots and watering', b: 'Plots are $20 a year. The watering roster is on the shed door; take one evening a fortnight.' } ] },
-      { id: 'records', name: 'Back Alley Records', short: 'Back Alley Records', level: 3, via: 'Email', on: true, joined: false, verified: 45, dist: 950, bearing: 300,
+      { id: 'records', name: 'Back Alley Records', short: 'Back Alley Records', level: 1, via: 'Email', on: true, joined: false, verified: 45, dist: 950, bearing: 300,
         docs: [ { t: 'Opening hours', b: 'Thursday to Saturday, 11am to 5pm.' } ] },
-      { id: 'rivulet', name: 'Rivulet Track Friends', short: 'Rivulet Track Friends', level: 3, via: 'Email', on: true, joined: false, verified: 120, dist: 1500, bearing: 120,
+      { id: 'rivulet', name: 'Rivulet Track Friends', short: 'Rivulet Track Friends', level: 1, via: 'Email', on: true, joined: false, verified: 120, dist: 1500, bearing: 120,
         docs: [ { t: 'Clean-up days', b: 'We meet at the Molle St end, first Saturday of the month.' } ] },
-      { id: 'pantry', name: 'Corner Pantry', short: 'Corner Pantry', level: 3, via: 'Email', on: true, joined: false, verified: 230, dist: 400, bearing: 140, docs: [] }
+      { id: 'pantry', name: 'Corner Pantry', short: 'Corner Pantry', level: 1, via: 'Email', on: true, joined: false, verified: 230, dist: 400, bearing: 140, docs: [] }
     ],
     posts: [
-      { id: 1, conn: 'netball', pri: 3, text: 'Saturday games move to 9am at the Domain courts. Same team sheet.', time: '7:40am' },
+      { id: 1, conn: 'netball', pri: 1, text: 'Saturday games move to 9am at the Domain courts. Same team sheet.', time: '7:40am' },
       { id: 2, conn: 'pf', pri: 4, title: "Friday closure: what's open and what isn't", text: "School is closed this Friday while Aurora upgrades the power to the new building. The upgrade can't happen with students on site, so it's a full closure, not a pupil-free day.\n\nBefore-care and after-care are still running in the hall from 7:30am to 6pm. Book through the office by Thursday at 3pm so we have enough staff.\n\nThe canteen is closed, so pack lunch if your child is in care. The uniform shop will open on Monday instead.\n\nIf you can't find care, reply to this ping and we'll try to match you with another family. Thanks for your patience; the new building opens in Term 1.", time: 'Yesterday' },
-      { id: 3, read: true, conn: 'elm', pri: 2, text: 'Hot cross buns are back from Monday. Pre-orders open now.', time: 'Yesterday' },
-      { id: 4, conn: 'landcare', pri: 2, title: 'The creek, one year on', text: "A year ago the bank along Mt Stuart Rd was blackberry and broken glass. Since then 41 of you have planted 1,860 natives over eleven working bees.\n\nThe survival rate is 82%, well above the 60% we hoped for. The wattles are head height and the tussocks have closed the gaps that were washing out in every storm. Last month someone spotted a platypus below the footbridge for the first time in years.\n\nNext up is the steep section near the gate. It needs jute matting before we plant, so this Sunday is a matting day: gloves and sturdy shoes, and we'll have the stakes and mallets. 9am at the gate, morning tea at 11.", time: 'Yesterday' },
+      { id: 3, read: true, conn: 'elm', pri: 1, text: 'Hot cross buns are back from Monday. Pre-orders open now.', time: 'Yesterday' },
+      { id: 4, conn: 'landcare', pri: 1, title: 'The creek, one year on', text: "A year ago the bank along Mt Stuart Rd was blackberry and broken glass. Since then 41 of you have planted 1,860 natives over eleven working bees.\n\nThe survival rate is 82%, well above the 60% we hoped for. The wattles are head height and the tussocks have closed the gaps that were washing out in every storm. Last month someone spotted a platypus below the footbridge for the first time in years.\n\nNext up is the steep section near the gate. It needs jute matting before we plant, so this Sunday is a matting day: gloves and sturdy shoes, and we'll have the stakes and mallets. 9am at the gate, morning tea at 11.", time: 'Yesterday' },
       { id: 5, read: true, conn: 'netball', pri: 1, text: 'Photos from last week are up in the club gallery.', time: 'Mon' },
-      { id: 6, conn: 'pf', pri: 2, text: 'Second-hand uniform sale next Wednesday after school.', time: 'Mon' },
+      { id: 6, conn: 'pf', pri: 1, text: 'Second-hand uniform sale next Wednesday after school.', time: 'Mon' },
       { id: 7, read: true, conn: 'bodycorp', pri: 1, text: 'Gardeners are in on Thursday morning.', time: 'Mon' },
       { id: 8, read: true, conn: 'elm', pri: 1, text: 'New sourdough rye on the shelves this week.', time: 'Sun' },
-      { id: 9, read: true, conn: 'garden', pri: 2, text: 'Seedling swap at the shed this Saturday, 10am.', time: 'Sun' },
-      { id: 10, conn: 'netball', pri: 3, title: 'Finals day: everything you need to know', text: "We made the grand final! It's on Saturday 29 November at the Domain courts, court 3, at 10:20am. Please have players there by 9:50 for warm-up.\n\nUniforms: full club kit, including the navy socks. If your child has lost theirs, we have spares at the canteen.\n\nParking fills up fast on finals day. The Queens Walk car park is the best bet, or the 9:30 bus from the city stops right outside.\n\nAfter the game we're doing a team breakfast at Elm St Bakehouse. The club is covering the players; parents pay their own. Let me know by Thursday if you're coming so I can give them numbers.\n\nWin or lose, it's been a brilliant season. Thanks for every early morning, every lift and every orange quarter.", time: '8:15am' }
+      { id: 9, read: true, conn: 'garden', pri: 1, text: 'Seedling swap at the shed this Saturday, 10am.', time: 'Sun' },
+      { id: 10, conn: 'netball', pri: 1, title: 'Finals day: everything you need to know', text: "We made the grand final! It's on Saturday 29 November at the Domain courts, court 3, at 10:20am. Please have players there by 9:50 for warm-up.\n\nUniforms: full club kit, including the navy socks. If your child has lost theirs, we have spares at the canteen.\n\nParking fills up fast on finals day. The Queens Walk car park is the best bet, or the 9:30 bus from the city stops right outside.\n\nAfter the game we're doing a team breakfast at Elm St Bakehouse. The club is covering the players; parents pay their own. Let me know by Thursday if you're coming so I can give them numbers.\n\nWin or lose, it's been a brilliant season. Thanks for every early morning, every lift and every orange quarter.", time: '8:15am' }
     ]
   });
 
@@ -321,8 +321,8 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const conn = (id) => S.connections.find((c) => c.id === id);
   const owned = () => S.connections.filter((c) => c.owner);
-  const subs = (c) => c.audience ? c.audience[1] + c.audience[2] + c.audience[3] + c.audience[4] + c.audience.ai : 0;
-  const tag = (p) => `<span class="tag t${p}">${LEVELS[p]}</span>`;
+  const subs = (c) => c.audience ? c.audience[1] + c.audience[4] + c.audience.ai : 0;
+  const tag = (p) => p === 4 ? '<span class="tag t4">Urgent</span>' : '';
   const meter = (s) => `<span class="meter s${s}" aria-hidden="true"><i></i><i></i><i></i><i></i></span>`;
   const pings = (p) => { const c = conn(p.conn); return !c.owner && c.on && !S.pullOnly && c.via !== 'My AI only' && p.pri >= c.level; };
   const myPosts = () => S.posts.filter((p) => conn(p.conn).joined).sort((a, b) => b.id - a.id);
@@ -359,24 +359,22 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
     const t = text.toLowerCase();
     if (!t.trim()) return null;
     if (/(cancel|closed|close |emergency|urgent|today only|evacuat|not on)/.test(t)) return { pri: 4, why: 'it cancels or closes something people were counting on' };
-    if (/(move|moved|change|changed|time|reschedul|postpon|instead|now at|new venue)/.test(t)) return { pri: 3, why: 'it changes plans for people this week' };
-    if (/(special|back|new|sale|open|offer|reminder|this week)/.test(t)) return { pri: 2, why: "it's useful, but nobody's plans change if they miss it" };
-    return { pri: 1, why: 'it reads like general news' };
+    return { pri: 1, why: "people can catch up on it when they next look" };
   }
   function reachFor(c, pri) {
     const a = c.audience || EMPTY_AUD();
     let pinged = 0, quiet = 0;
-    for (const t of [1, 2, 3, 4]) (t <= pri ? (pinged += a[t]) : (quiet += a[t]));
+    for (const t of [1, 4]) (t <= pri ? (pinged += a[t]) : (quiet += a[t]));
     return { pinged, quiet, ai: a.ai };
   }
   const isLong = (p) => !!p.title || p.text.length > 240;
   const pingRow = (p, dim) => `<button type="button" class="prow ${dim ? 'dim' : ''}" data-act="open-ping" data-arg="${p.id}">
-      <span class="rate r${p.pri}"><i></i><i></i><i></i><i></i><span class="sr">${LEVELS[p.pri]}</span></span>
-      <span class="pmain"><span class="ttl">${p.wasUnread ? '<span class="newdot" aria-label="Unread"></span>' : ''}${esc(p.title || p.text)}</span><span class="pmeta">${LEVELS[p.pri]}${!pings(p) && !conn(p.conn).owner ? ' · below your line' : ''}</span></span>
+      <span>${p.pri === 4 ? '<span class="rate r4"><span class="sr">Urgent</span></span>' : ''}</span>
+      <span class="pmain"><span class="ttl">${p.wasUnread ? '<span class="newdot" aria-label="Unread"></span>' : ''}${esc(p.title || p.text)}</span><span class="pmeta">${[p.pri === 4 ? 'Urgent' : '', !pings(p) && !conn(p.conn).owner ? 'Didn’t notify you' : '', p.title ? esc(p.text) : ''].filter(Boolean).join(' · ') || esc(p.time)}</span></span>
       <span class="when">${esc(p.time)}</span></button>`;
   const pingList = (list, dimFn) => `<div class="plist">${list.map((p) => pingRow(p, dimFn && dimFn(p))).join('')}</div>`;
   const pingCard = (p, belowLine) => {
-    const meta = `<div class="meta">${tag(p.pri)}${belowLine ? '<span class="below">Below your line</span>' : ''}${conn(p.conn).owner ? '<span class="tag you">You</span>' : ''}${p.isNew ? '<span class="tag new">New</span>' : ''}<span>${esc(conn(p.conn).short)} · ${esc(p.time)}</span></div>`;
+    const meta = `<div class="meta">${tag(p.pri)}${belowLine ? '<span class="below">Didn’t notify you</span>' : ''}${conn(p.conn).owner ? '<span class="tag you">You</span>' : ''}${p.isNew ? '<span class="tag new">New</span>' : ''}<span>${esc(conn(p.conn).short)} · ${esc(p.time)}</span></div>`;
     if (!isLong(p)) return `<article class="card">${meta}<p class="msg">${esc(p.text)}</p></article>`;
     const open = !!S.open[p.id];
     return `<article class="card">${meta}${p.title ? `<h3 class="ping-title">${esc(p.title)}</h3>` : ''}
@@ -392,13 +390,13 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
     const groups = [];
     for (const p of mine) { let g = groups.find((x) => x.c.id === p.conn); if (!g) groups.push(g = { c: conn(p.conn), list: [] }); g.list.push(p); }
     const sel = (v) => String(f) === String(v);
-    const label = f === 'all' ? 'All ratings' : LEVELS[f];
-    const menu = S.fmenu ? `<div class="fmenu" role="menu"><button type="button" aria-pressed="${sel('all')}" data-act="filter" data-arg="all">All ratings<span class="n">${myPosts().length}</span></button>${[4, 3, 2, 1].map((l) => `<button type="button" aria-pressed="${sel(l)}" data-act="filter" data-arg="${l}"><span class="rate r${l}"></span>${LEVELS[l]}<span class="n">${count(l)}</span></button>`).join('')}</div>` : '';
+    const label = f === 'all' ? 'All' : 'Urgent';
+    const menu = S.fmenu ? `<div class="fmenu" role="menu"><button type="button" aria-pressed="${sel('all')}" data-act="filter" data-arg="all">All pings<span class="n">${myPosts().length}</span></button><button type="button" aria-pressed="${sel(4)}" data-act="filter" data-arg="4"><span class="rate r4"></span>Urgent only<span class="n">${count(4)}</span></button></div>` : '';
     const rows = groups.map(({ c, list }) => {
       const latest = list[0], unread = list.filter((p) => !p.read).length, top = list.filter((p) => !p.read).reduce((m, p) => Math.max(m, p.pri), 0) || latest.pri;
       const muted = !c.owner && (!c.on || c.via === 'My AI only' || S.pullOnly);
       return `<button type="button" class="trow ${unread ? '' : 'read'} ${muted ? 'muted' : ''}" data-act="open-trove" data-arg="${c.id}">
-        <span class="rate r${top}"><span class="sr">${LEVELS[top]}</span></span>
+        <span>${top === 4 && unread ? '<span class="rate r4"><span class="sr">Unread urgent ping</span></span>' : ''}</span>
         <span class="pmain"><span class="tname">${c.owner ? 'You · ' : ''}${esc(c.name)}</span><span class="tlast">${esc(latest.title || latest.text)}</span></span>
         <span class="tside"><span class="when">${esc(latest.time)}</span><span class="unread ${unread ? '' : 'zero'}" aria-label="${unread} unread">${unread}</span></span></button>`;
     }).join('');
@@ -407,8 +405,8 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
         <button type="button" class="radar-btn" data-act="go" data-arg="radar" aria-label="Radar: Troves near you">${icon.radar}</button></div>
       <div class="fhead"><h2>Pings</h2><button type="button" class="fpick" data-act="fmenu" aria-expanded="${!!S.fmenu}">${f === 'all' ? '' : `<span class="rate r${f}"></span>`}${label} <span aria-hidden="true">▾</span></button>${menu}</div>
       ${S.pullOnly ? '<p class="sub">Pull only is on, so nothing pings you. Everything is here when you or your AI look.</p>' : ''}
-      ${rows ? `<div class="plist">${rows}</div>` : `<div class="empty">No ${f === 'all' ? '' : LEVELS[f] + ' '}pings right now.</div>`}
-      <p class="tagline">The circle shows the most important unread ping. Dimmed Troves don't notify you.</p>`;
+      ${rows ? `<div class="plist">${rows}</div>` : `<div class="empty">No ${f === 'all' ? '' : 'urgent '}pings right now.</div>`}
+      <p class="tagline">An orange circle means an unread urgent ping. Dimmed Troves don't notify you.</p>`;
   }
 
   // ---------- One Trove's pings ----------
@@ -428,7 +426,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
   function pingView() {
     const p = S.posts.find((x) => x.id === S.pingId), c = conn(p.conn);
     return `<button type="button" class="back" data-act="${S.back === 'trove' ? 'open-trove' : 'go'}" data-arg="${S.back === 'trove' ? S.troveId : 'home'}">‹ ${S.back === 'trove' ? esc(c.short) : 'Pings'}</button>
-      <div class="meta">${tag(p.pri)}${!pings(p) && !c.owner ? '<span class="below">Below your line</span>' : ''}<span>${esc(p.time)}</span></div>
+      <div class="meta">${tag(p.pri)}${!pings(p) && !c.owner ? '<span class="below">Didn’t notify you</span>' : ''}<span>${esc(p.time)}</span></div>
       ${p.title ? `<h1 style="font-size:30px">${esc(p.title)}</h1>` : ''}
       <p class="ping-body" style="font-size:17px;color:var(--ink)">${esc(p.text)}</p>
       <button type="button" class="conn" data-act="${c.owner ? 'open-mine' : 'open-conn'}" data-arg="${c.id}" style="margin-top:8px">
@@ -492,7 +490,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
       <button type="button" class="conn ${c.on ? '' : 'off'}" data-act="open-conn" data-arg="${c.id}">
         <span class="avatar">${esc(c.name[0])}</span>
         <span class="grow"><span class="name">${esc(c.name)}</span>
-          <span class="row" style="gap:6px"><span class="tag t${c.level}">${LINE[c.level]}</span><span class="tag plain">${c.on ? esc(c.via) : 'Paused'}</span></span></span>
+          <span class="row" style="gap:6px"><span class="tag ${c.level === 4 ? 't4' : 'plain'}">${LINE[c.level]}</span><span class="tag plain">${c.on ? esc(c.via) : 'Paused'}</span></span></span>
         ${meter(strength(c.verified))}</button>`).join('');
     return `<button type="button" class="back" data-act="go" data-arg="home">‹ Home</button><h1>Your Troves</h1>
       ${mine ? `<p class="section-h">Yours</p>${mine}` : ''}
@@ -510,7 +508,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
       <div class="setting"><span><b>Notifications</b><br><span class="sub">${c.on ? 'On' : 'Paused. Pings still land in your feed.'}</span></span>
         <button type="button" class="switch" role="switch" aria-checked="${c.on}" aria-label="Notifications" data-act="toggle-conn"><span></span></button></div>
       <p class="label">Ping me for</p>
-      <div class="pills">${[4, 3, 2, 1].map((l) => `<button type="button" class="pill" aria-pressed="${c.level === l}" data-act="level" data-arg="${l}">${LINE[l]}</button>`).join('')}</div>
+      <div class="pills">${[1, 4].map((l) => `<button type="button" class="pill" aria-pressed="${c.level === l}" data-act="level" data-arg="${l}">${LINE[l]}</button>`).join('')}</div>
       <p class="label">How it reaches you</p>
       <div class="pills">${VIA.map((v) => `<button type="button" class="pill" aria-pressed="${c.via === v}" data-act="via" data-arg="${v}">${v === 'SMS' ? 'SMS · Plus' : v}</button>`).join('')}</div>
       <p class="label">Documents</p>
@@ -534,11 +532,11 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
 
   function subscribe() {
     const c = conn(S.subId);
-    const opts = [[4, 'Just the big stuff', 'Closures, cancellations, big news'], [3, 'The good stuff', 'Plus things worth knowing'], [1, 'Everything', 'Every ping they send']];
+    const opts = [[1, 'Everything', 'Every ping they send'], [4, 'Urgent only', 'Closures, cancellations, things that can’t wait']];
     return `<div class="hero"><span class="sub">Subscribe to</span><h1 style="font-size:36px">${esc(c.name)}</h1><span>Choose how much you want to hear.</span></div>
       <div class="inner">
         <h2>Ping me for…</h2>
-        ${opts.map(([l, t, s]) => `<button type="button" class="choice" aria-pressed="${S.scanLevel === l}" data-act="scan-level" data-arg="${l}"><span class="radio"></span><span class="grow" style="gap:2px"><b>${t}</b><span class="sub">${s}</span></span><span class="tag t${l}">${l === 1 ? 'Everything' : LEVELS[l]}</span></button>`).join('')}
+        ${opts.map(([l, t, s]) => `<button type="button" class="choice" aria-pressed="${S.scanLevel === l}" data-act="scan-level" data-arg="${l}"><span class="radio"></span><span class="grow" style="gap:2px"><b>${t}</b><span class="sub">${s}</span></span>${l === 4 ? '<span class="tag t4">Urgent</span>' : ''}</button>`).join('')}
         <label class="label" for="sub-email" style="margin-top:4px">Your email</label>
         <input class="input" id="sub-email" type="email" placeholder="you@example.com" autocomplete="off">
         <button type="button" class="btn" data-act="join" data-arg="Email">Subscribe</button>
@@ -588,7 +586,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
       </div>
       <div class="panel">
         <p class="label"><span class="stat">${n}</span> subscriber${n === 1 ? '' : 's'}</p>
-        ${n ? `<p class="sub">${c.audience[4]} want urgent only · ${c.audience[3]} important and up · ${c.audience[2] + c.audience[1]} more · ${c.audience.ai} use their AI</p>` : '<p class="sub">Nobody yet. Invite people with your link or poster.</p>'}
+        ${n ? `<p class="sub">${c.audience[4]} want urgent only · ${c.audience[1]} want everything · ${c.audience.ai} use their AI</p>` : '<p class="sub">Nobody yet. Invite people with your link or poster.</p>'}
         <div class="minirow"><span class="miniqr">${qrSvg}</span>
           <div class="grow"><p style="font-weight:600;font-size:14px;word-break:break-all;font-family:var(--mono)">sub1/${esc(c.id)}</p>
             <div class="row" style="gap:8px"><button type="button" class="btn small" data-act="copy-invite" data-arg="${c.id}">Copy invite link</button>
@@ -619,16 +617,16 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
       <label for="draft" style="position:absolute;left:-9999px">Message</label>
       <textarea class="input" id="draft" placeholder="Saturday games move to 9am at the Domain courts…">${esc(d.text)}</textarea>
       <button type="button" class="link-btn" data-act="example" style="align-self:flex-start;padding:0">Use an example</button>
-      <p class="label">How big a deal is it?</p>
-      <div class="pills" id="pri-pills">${[1, 2, 3, 4].map((l) => `<button type="button" class="pill" aria-pressed="${d.pri === l}" data-act="pri" data-arg="${l}">${LEVELS[l]}</button>`).join('')}</div>
+      <p class="label">Is it urgent?</p>
+      <div class="pills" id="pri-pills">${[1, 4].map((l) => `<button type="button" class="pill" aria-pressed="${d.pri === l}" data-act="pri" data-arg="${l}">${l === 4 ? 'Urgent' : 'Not urgent'}</button>`).join('')}</div>
       <p class="sub" id="why" style="font-size:15px;color:var(--body)">${whyText(s)}</p>
       <div class="reach" id="reach">${reachText(r)}</div>
       <div class="row" style="margin-top:auto"><button type="button" class="btn" id="share" data-act="share" ${d.text.trim() ? '' : 'disabled'}>Send ping</button>
       <button type="button" class="btn ghost" data-act="soon" data-arg="Scheduling">Later</button></div>`;
   }
-  const whyText = (s) => !s ? "Write something and we'll suggest how big a deal it is."
-    : S.draft.manual && S.draft.pri !== s.pri ? `You picked <b>${LEVELS[S.draft.pri]}</b>. We'd have said ${LEVELS[s.pri]}, because ${s.why}.`
-    : `We picked <b>${LEVELS[s.pri]}</b> because ${s.why}. Change it if we're wrong.`;
+  const whyText = (s) => !s ? "Write something and we'll suggest whether it's urgent. Urgent pings notify everyone, including people who only want urgent ones."
+    : S.draft.manual && S.draft.pri !== s.pri ? `You picked <b>${LEVELS[S.draft.pri].toLowerCase()}</b>. We'd have said ${LEVELS[s.pri].toLowerCase()}, because ${s.why}.`
+    : `We think it's <b>${LEVELS[s.pri].toLowerCase()}</b>: ${s.why}. Change it if we're wrong.`;
   const reachText = (r) => r.pinged + r.quiet + r.ai === 0
     ? 'Nobody has subscribed yet, so this will wait in your Trove. Invite people from Your Troves.'
     : `<b class="stat">${r.pinged} ${r.pinged === 1 ? 'person' : 'people'}</b> will get a ping. <span class="stat">${r.quiet}</span> more will see it next time they look. <span class="stat">${r.ai}</span> have their AI keeping watch.`;
@@ -749,7 +747,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
     via: (a) => { if (a === 'SMS') { toast('SMS is on the Plus plan. Coming later.'); return; } conn(S.connId).via = a; render(); },
     leave: () => { const c = conn(S.connId); c.joined = false; S.screen = 'troves'; render(); toast(`Unsubscribed from ${c.short}`); },
     noop: () => {},
-    'sub-start': (a) => { S.subId = a; S.scanLevel = 3; S.sheet = null; S.screen = 'subscribe'; render(); scrollTop(); },
+    'sub-start': (a) => { S.subId = a; S.scanLevel = 1; S.sheet = null; S.screen = 'subscribe'; render(); scrollTop(); },
     'scan-level': (a) => { S.scanLevel = +a; render(); },
     join: (a) => { const c = conn(S.subId); Object.assign(c, { joined: true, on: true, level: S.scanLevel, via: a }); S.screen = 'joined'; render(); },
     ask: (a) => doAsk(a),
@@ -769,7 +767,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
     },
     'sim-join': () => {
       const c = conn(S.connId);
-      [[4, 2], [3, 5], [2, 3], [1, 1], ['ai', 1]].forEach(([k, v]) => { c.audience[k] += v; });
+      [[4, 3], [1, 8], ['ai', 1]].forEach(([k, v]) => { c.audience[k] += v; });
       if (c.access === 'public') c.checked = true;
       render(); toast('12 people subscribed from your poster');
     },
@@ -784,7 +782,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
       const d = S.draft; if (!d.text.trim()) return;
       const c = conn(d.ch), r = reachFor(c, d.pri);
       S.posts.push({ id: ++S.seq, read: true, conn: c.id, pri: d.pri, text: d.text.trim(), time: 'Just now', isNew: true, reach: `${r.pinged} pinged · ${r.quiet} in feed · ${r.ai} AI` });
-      Object.assign(S.draft, { text: '', pri: 2, manual: false });
+      Object.assign(S.draft, { text: '', pri: 1, manual: false });
       c.verified = 0;
       S.screen = 'home';
       render(); scrollTop(); toast(r.pinged + r.quiet + r.ai ? `Ping sent. ${r.pinged} pinged.` : 'Ping sent. It will be waiting when people subscribe.');
@@ -828,7 +826,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
 
   const hot = window.claude && window.claude.hot;
   if (hot && hot.snapshot) hot.snapshot(() => S);
-  const boot = (data) => { if (data && data.v === 8) S = Object.assign(fresh(), data, { sheet: null }); render(); };
+  const boot = (data) => { if (data && data.v === 9) S = Object.assign(fresh(), data, { sheet: null }); render(); };
   if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>

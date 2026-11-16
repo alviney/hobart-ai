@@ -3,7 +3,7 @@
 - **Status:** shipped
 - **Size guess:** M
 - **Touches:** design files or clickable HTML prototypes only, no product code
-- **Related decisions:** [D-010](../decisions/D-010-deep-sonar.md), [D-008](../decisions/D-008-sub1-troves-pings.md), [D-009](../decisions/D-009-ping-strength-and-radar.md), [D-004](../decisions/D-004-mockups-first-and-ads.md), [D-003](../decisions/D-003-marketing-sells-the-dream.md), [D-005](../decisions/D-005-visual-direction.md), [D-007](../decisions/D-007-feed-first-menu-sheet.md)
+- **Related decisions:** [D-011](../decisions/D-011-urgent-or-not.md), [D-010](../decisions/D-010-deep-sonar.md), [D-008](../decisions/D-008-sub1-troves-pings.md), [D-009](../decisions/D-009-ping-strength-and-radar.md), [D-004](../decisions/D-004-mockups-first-and-ads.md), [D-003](../decisions/D-003-marketing-sells-the-dream.md), [D-005](../decisions/D-005-visual-direction.md), [D-007](../decisions/D-007-feed-first-menu-sheet.md)
 
 ## Why
 
@@ -61,3 +61,4 @@ screens, from which the owner picks one (recorded as a decision).
 - 2026-11-16: home feed is compact equal-height rows (rating, Trove, time, one-line title); tapping opens the full ping
 - 2026-11-16: three looks to compare (Harbour, Yellow Submarine, Deep Sonar), each with its own feed rows and a compact filter
 - 2026-11-16: Deep Sonar look; one feed row per Trove with unread counts; rating filter menu (D-010)
+- 2026-11-16: two levels only, urgent or not; only urgent is marked (D-011)
