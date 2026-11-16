@@ -38,8 +38,8 @@ The header has two round buttons on the right: **Your subs** (a chest
 icon) and the **radar**. Each swaps the timeline for its own content in
 place and turns into a navy ✕ to close it; only one can be open at a time.
 Your subs lists the Troves you subscribe to, with no "Subscribed" heading (if
-you run Troves, they appear first under "You run", then "You follow"), plus Scan a code
-and Start a Trove. Opening a Trove and pressing back returns to the panel.
+you run Troves, they appear first under "You run", then "You follow"). Scan a code and
+Start a Trove live in the ☰ menu, not in this panel. Opening a Trove and pressing back returns to the panel.
 
 ## Options considered
 

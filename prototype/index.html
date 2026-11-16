@@ -1230,10 +1230,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
         ${meter(strength(c.verified))}</button>`).join('');
     return `<button type="button" class="back" data-act="go" data-arg="home">‹ Home</button><h1>Your subs</h1>
       ${mine ? `<p class="section-h">You run</p>${mine}<p class="section-h">You follow</p>` : ''}
-      ${following || '<div class="empty">No subscriptions yet. Try the radar.</div>'}
-      <div class="row" style="margin-top:auto;flex-wrap:nowrap">
-        <button type="button" class="btn dashed small" data-act="go" data-arg="scan" style="flex:1">+ Scan a code</button>
-        <button type="button" class="btn dashed small" data-act="go" data-arg="start" style="flex:1">+ Start a Trove</button></div>`;
+      ${following || '<div class="empty">No subscriptions yet. Try the radar.</div>'}`;
   }
 
   function connDetail() {
