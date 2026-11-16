@@ -353,17 +353,17 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
   const TODAY = 'Thursday 27 November';
   const DAYS = ['Today', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'This week'];
   const FACTS = {
-    2: [{ day: 'Today', todo: true, urgent: true, text: 'Book before- or after-care for Friday by 3pm.', line: 'Book Friday care by 3pm. School’s closed tomorrow.' }, { day: 'Fri', urgent: true, text: 'School is closed. Care runs 7:30am–6pm in the hall; pack a lunch.' }],
-    10: [{ day: 'Today', todo: true, text: "Tell the coach if you're coming to the finals breakfast.", line: 'Tell the coach if you’re coming to the finals breakfast.' }, { day: 'Sat', text: 'Grand final, court 3 at 10:20am. Players there by 9:50 in full kit, navy socks included.', line: 'Grand final Saturday, 10:20am on court 3.' }],
-    4: [{ day: 'Sun', text: 'Creek matting day, 9am at the Mt Stuart Rd gate. Bring gloves and sturdy shoes.', line: 'Creek matting day Sunday, 9am at the gate.' }],
-    6: [{ day: 'Wed', text: 'Second-hand uniform sale after school.' }],
-    7: [{ day: 'Today', text: 'Gardeners are working in the common areas this morning.' }],
-    3: [{ day: 'Mon', text: 'Hot cross buns are back. Pre-order by 2pm the day before.' }],
-    8: [{ day: 'This week', text: 'New sourdough rye on the shelves.' }],
-    9: [{ day: 'Sat', text: 'Seedling swap at the garden shed, 10am.' }]
+    2: [{ day: 'Today', urgent: true, text: 'Lansdowne Primary is closed tomorrow. Before- and after-care are still running; bookings close at 3pm today.', line: 'Lansdowne Primary is closed tomorrow. Care is still running; bookings close at 3pm today.' }],
+    10: [{ day: 'Sat', text: 'Netball U12s play the grand final at 10:20am on court 3, with warm-up from 9:50.', line: 'Netball U12s play the grand final on Saturday at 10:20am.' }],
+    4: [{ day: 'Sun', text: 'Mt Stuart Landcare has a working bee at 9am at the Mt Stuart Rd gate.', line: 'Mt Stuart Landcare has a working bee on Sunday at 9am.' }],
+    6: [{ day: 'Wed', text: 'There’s a second-hand uniform sale at Lansdowne Primary after school.' }],
+    7: [{ day: 'Today', text: 'Gardeners are working in the Waterside common areas this morning.', line: 'Gardeners are in the Waterside common areas this morning.' }],
+    3: [{ day: 'Mon', text: 'Hot cross buns are back at Elm St Bakehouse.' }],
+    8: [{ day: 'This week', text: 'Elm St Bakehouse has a new sourdough rye.' }],
+    9: [{ day: 'Sat', text: 'Lenna Ave Community Garden has a seedling swap at 10am.' }]
   };
   const DEFAULT_PROMPT = "Give me a quick summary of what's on today, based on my pings.";
-  const PRESETS = [DEFAULT_PROMPT, 'Plan my week, day by day.', 'Only urgent things and anything I need to do.', 'Keep it to three lines.'];
+  const PRESETS = [DEFAULT_PROMPT, 'Summarise my week, day by day.', 'Only urgent news.', 'One line only.'];
 
   let S = fresh();
   const $ = (id) => document.getElementById(id);
@@ -433,20 +433,22 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
   // ---------- Home: the full feed ----------
   function briefingItems() {
     const items = [];
-    for (const p of myPosts()) for (const f of (FACTS[p.id] || [])) items.push(Object.assign({ conn: p.conn }, f));
-    items.sort((a, b) => DAYS.indexOf(a.day) - DAYS.indexOf(b.day) || (b.todo ? 1 : 0) - (a.todo ? 1 : 0));
+    for (const p of myPosts()) if (conn(p.conn).on) for (const f of (FACTS[p.id] || [])) items.push(Object.assign({ conn: p.conn }, f));
+    items.sort((a, b) => DAYS.indexOf(a.day) - DAYS.indexOf(b.day));
     return items;
   }
   function briefing() {
     const q = S.prompt.toLowerCase(), all = briefingItems();
-    const say = (it) => `<p class="bline">${it.urgent ? '<span class="urg">' : ''}${esc(it.line || (it.day === 'Today' || it.day === 'This week' ? '' : it.day + ': ') + it.text)}${it.urgent ? '</span>' : ''}</p>`;
+    const say = (it, text) => `<p class="bline">${it.urgent ? '<span class="urg">' : ''}${esc(text || it.line || it.text)}${it.urgent ? '</span>' : ''}</p>`;
     if (!all.length) return '<p class="bline">Nothing on yet. Subscribe to a few Troves and this will fill up.</p>';
-    let pick;
-    if (/week|day by day|plan/.test(q)) pick = all.filter((it) => it.day !== 'Today').slice(0, 4).map((it) => Object.assign({}, it, { line: `${it.day}: ${it.text}` }));
-    else if (/urgent|need to do|deadline|action/.test(q)) pick = all.filter((it) => it.urgent || it.todo).slice(0, 3);
-    else pick = all.filter((it) => it.todo).concat(all.filter((it) => ['Fri', 'Sat', 'Sun'].includes(it.day) && !it.urgent)).slice(0, 3);
-    return pick.length ? pick.map(say).join('') : '<p class="bline">Nothing needs you today.</p>';
+    if (/week|day by day/.test(q)) return all.slice(0, 4).map((it) => say(it, `${it.day === 'This week' ? 'This week' : it.day}: ${it.text}`)).join('');
+    if (/urgent/.test(q)) { const u = all.filter((it) => it.urgent); return u.length ? u.slice(0, 3).map((it) => say(it)).join('') : '<p class="bline">No urgent news.</p>'; }
+    const soon = all.filter((it) => ['Today', 'Fri', 'Sat', 'Sun'].includes(it.day));
+    const n = /one line|1 line/.test(q) ? 1 : 3;
+    const pick = soon.filter((it) => it.urgent).concat(soon.filter((it) => !it.urgent)).slice(0, n);
+    return pick.length ? pick.map((it) => say(it)).join('') : '<p class="bline">Nothing on in the next few days.</p>';
   }
+
 
   function home() {
     const unread = myPosts().filter((p) => !p.read).length, urgent = myPosts().some((p) => !p.read && p.pri === 4);

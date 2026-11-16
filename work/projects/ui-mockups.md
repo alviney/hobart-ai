@@ -64,3 +64,4 @@ screens, from which the owner picks one (recorded as a decision).
 - 2026-11-16: two levels only, urgent or not; only urgent is marked (D-011)
 - 2026-11-16: home is now a briefing generated from an editable prompt (default: what's on today); the per-Trove list moves to a Pings page (exploration, not yet a decision)
 - 2026-11-16: briefing cut to a few lines of plain text with a small 'Edit prompt' link
+- 2026-11-16: briefing rewritten as neutral summaries of what's on; it doesn't tell people what to do. Paused Troves are left out
