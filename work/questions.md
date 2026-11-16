@@ -15,6 +15,7 @@ in the cloud environment's settings, never in the repository.
 - [ ] Create a hosting account once the stack decision is written (free tier) — unblocks a live pilot. A session will say which one.
 - [ ] Set up an ad account (e.g. Meta) and decide a test budget — unblocks finding publishers (D-004). Sessions draft the creative; only you can run and pay for ads.
 - [ ] Publish the landing page once one is chosen (hosting plus domain) — ads need somewhere to point.
+- [ ] Set up wherever waitlist sign-ups go once Q-007 is answered (e.g. a free form or mailing-list account) — the landing page form does nothing until then.
 - [ ] Later, for the paid tier: an SMS provider account and payments (ABN, Stripe). Not needed for the pilot.
 
 ## Questions
@@ -80,3 +81,11 @@ or to `withdrawn` with a reason; it is never deleted.
 - **Blocks:** nearby search on the radar ([D-012](decisions/D-012-radar-screen.md))
 - **Options:** A: public Troves' pings are public and searchable; invite-only Troves never appear anywhere / B: only a public Trove's name and info pages are searchable, pings are for subscribers / C: each Trove owner chooses
 - **Recommendation:** A, because it makes nearby search useful from day one, and owners who want privacy already have invite-only Troves.
+
+## Q-007: Where should waitlist sign-ups go?
+
+- **Status:** open
+- **Asked:** 2026-11-17, by marketing-page session
+- **Blocks:** [pilot-publishers](projects/pilot-publishers.md) (the landing page form)
+- **Options:** A: a mailing-list service's free tier (sign-ups land in a list you can email from) / B: a simple form service that emails you each sign-up / C: our own small database once the app's backend exists
+- **Recommendation:** A, because the waitlist's job is to email people at launch, and a mailing-list tool also handles consent and unsubscribes. The page only collects an email address and whether they want pings or to run a Station.
