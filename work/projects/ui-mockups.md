@@ -95,3 +95,4 @@ screens, from which the owner picks one (recorded as a decision).
 - 2026-11-16: four cafes (Pressed Coffee, Larder & Co, Tidal Bakery, Beanstalk Espresso) with 35 stock pings added to see the noise; same-day pings now sort by clock time
 - 2026-11-16: per-row fade replaced by a fade at the bottom edge of the screen (D-016 updated)
 - 2026-11-16: category filter chips on the timeline and radar (D-014 updated)
+- 2026-11-16: category filter becomes a small row of on/off icons (D-014 updated)
