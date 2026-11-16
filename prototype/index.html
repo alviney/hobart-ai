@@ -998,7 +998,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const SCREENS = { home, feed: feedPage, ping: pingView, trove: troveFeed, troves, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
   function render() {
     const el = $('screen');
-    const fab = (S.screen === 'home' && !(S.radarOn && S.scanning)) || S.screen === 'ask';
+    const fab = S.screen === 'home' || S.screen === 'ask';
     el.className = 'screen' + (S.screen === 'subscribe' ? ' flush' : '') + (fab ? ' has-fab' : '') + (S.screen === 'home' && S.radarOn ? ' radar-screen' : '');
     el.innerHTML = (SCREENS[S.screen] || home)();
     $('float').innerHTML = fab ? floatBar() : '';
