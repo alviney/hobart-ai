@@ -25,6 +25,14 @@ ones mean possibly out of date.
   and brightness show its strength, and Troves you subscribe to are marked.
   Tapping one shows its details and a Subscribe button.
 
+## Update 2026-11-16: how strength is drawn
+
+Ping strength is shown as **sonar rings**: a small purple dot with up to
+three full rings around it (three rings is strong, a lone grey dot is
+faint, a hollow dot is too faint). In Trove lists it sits small in the
+top-right corner of each card. Chosen over wifi-style bars, a ring on the
+Trove's icon, and a glow.
+
 ## Options considered
 
 - **Freshness as ping strength**: makes data quality something people can

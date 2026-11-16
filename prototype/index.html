@@ -730,7 +730,9 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
 /* ===== Ping strength options ===== */
 /* 1 Sonar rings: a dot with up to three arcs */
-.sig-sonar { width: 24px; height: 24px; flex-shrink: 0; }
+.sig-sonar { width: 17px; height: 17px; flex-shrink: 0; }
+.phone[data-theme="friendly"] .conn { position: relative; padding-right: 34px; }
+.conn .sig-sonar { position: absolute; top: 12px; right: 12px; }
 .sig-sonar circle { fill: none; stroke: #E6E2F0; stroke-width: 1.6; }
 .sig-sonar circle.on { stroke: var(--primary); }
 .sig-sonar circle.on + circle.on { opacity: .75; }
@@ -753,15 +755,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
 <div class="bar">
   <div class="brand">Sub1<small>clickable prototype</small></div>
-  <div class="row">
-    <span class="sub" id="sg-label" style="font-weight:600">Ping strength</span>
-    <div class="seg" role="group" aria-labelledby="sg-label">
-      <button type="button" data-act="sigui" data-arg="sonar" id="sg-sonar">1 · Sonar rings</button>
-      <button type="button" data-act="sigui" data-arg="ring" id="sg-ring">2 · Ring on the icon</button>
-      <button type="button" data-act="sigui" data-arg="glow" id="sg-glow">3 · Glow</button>
-    </div>
-    <button type="button" class="link-btn" data-act="reset">Reset</button>
-  </div>
+  <button type="button" class="link-btn" data-act="reset">Reset</button>
 </div>
 <div class="phone" id="phone">
   <div id="bgfx" aria-hidden="true"></div>
@@ -1538,7 +1532,6 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const SCREENS = { home, feed: feedPage, ping: pingView, trove: troveFeed, troves, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
   function render() {
     $('phone').dataset.sig = S.sigUi;
-    ['sonar', 'ring', 'glow'].forEach((n) => $('sg-' + n).setAttribute('aria-pressed', S.sigUi === n));
     $('phone').dataset.theme = S.theme;
     const el = $('screen');
     const fab = S.screen === 'home' || S.screen === 'ask';
@@ -1639,7 +1632,6 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     'menu-go': (a) => act.go(a),
     'menu-mine': (a) => { S.sheet = null; act['open-mine'](a); },
     trove: (a) => { S.sheet = a; render(); },
-    sigui: (a) => { S.sigUi = a; S.screen = 'home'; S.sheet = null; S.radarOn = false; S.trovesOn = true; clearTimeout(scanTimer); S.scanning = false; render(); scrollTop(); },
     cat: (a) => { S.catOff = S.catOff.includes(a) ? S.catOff.filter((k) => k !== a) : S.catOff.concat(a); const y = $('screen').scrollTop; render(); $('screen').scrollTop = y; },
     'range-set': (a) => { S.range = +a; render(); if (S.rangeUi === 'pull') scrollTop(); },
     'pull-more': () => extendRange(),
