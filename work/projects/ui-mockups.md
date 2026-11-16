@@ -77,3 +77,4 @@ screens, from which the owner picks one (recorded as a decision).
 - 2026-11-16: header and bottom bar stay in place while the radar scans
 - 2026-11-16: bottom bar always says 'Ask anything'; with the radar on it searches nearby Troves
 - 2026-11-16: radar scan made small and inline so the toggle swaps content in place
+- 2026-11-16: back to the drawing board: three home concepts centred on recent pings (Timeline, Trove shelf, Now / Nearby / Yours); fixed the Ask bar rendering behind content

@@ -132,6 +132,34 @@ p { margin: 0; }
 .prompt .ptxt b { display: block; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
 .prompt .pen { width: 36px; height: 36px; flex-shrink: 0; border-radius: 18px; background: var(--tint); color: var(--primary-ink); display: flex; align-items: center; justify-content: center; }
 .prompt .pen svg { width: 18px; height: 18px; }
+/* Home concepts */
+.rp { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 12px; row-gap: 3px; padding: 12px 2px; border: 0; border-bottom: 1px solid var(--line); background: none; color: var(--ink); text-align: left; width: 100%; }
+.rp:hover { background: var(--soft); }
+.rp .who { font-weight: 700; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 7px; min-width: 0; }
+.rp .who .nm { overflow: hidden; text-overflow: ellipsis; }
+.rp .tm { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.rp .tx { grid-column: 1 / -1; font-size: 14px; line-height: 1.4; color: var(--body); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.rp.read .who { font-weight: 600; color: var(--body); }
+.rp.read .tx { color: var(--muted); }
+.udot { width: 8px; height: 8px; border-radius: 4px; background: #6FC3EC; flex-shrink: 0; }
+.udot.urgent { background: #FF8A5B; }
+.utag { font-size: 11px; font-weight: 700; color: #FF8A5B; flex-shrink: 0; }
+.dayh { font-size: 12px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); padding: 14px 2px 2px; }
+.dayh:first-child { padding-top: 2px; }
+.shelf { display: flex; gap: 14px; overflow-x: auto; margin: 0 -20px; padding: 4px 20px 6px; scrollbar-width: none; flex-shrink: 0; }
+.shelf::-webkit-scrollbar { display: none; }
+.shelf button { border: 0; background: none; padding: 0; width: 64px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--body); font-size: 11px; font-weight: 600; }
+.shelf .ring { width: 58px; height: 58px; border-radius: 50%; padding: 3px; background: var(--line); display: flex; }
+.shelf .ring.unread { background: #6FC3EC; } .shelf .ring.urgent { background: #FF8A5B; }
+.shelf .ring b { flex: 1; width: 100%; height: 100%; box-sizing: border-box; border-radius: 50%; background: var(--surface); border: 3px solid var(--app); display: flex; align-items: center; justify-content: center; font-family: var(--display); font-weight: 800; font-size: 20px; color: var(--ink); }
+.shelf button[aria-pressed="true"] .ring b { background: var(--primary); color: #FFFFFF; }
+.shelf .lbl { width: 100%; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.shelf button[aria-pressed="true"] .lbl { color: var(--ink); }
+.tabs { display: flex; gap: 4px; background: var(--soft); border-radius: 99px; padding: 4px; flex: 1; }
+.tabs button { flex: 1; border: 0; background: none; border-radius: 99px; min-height: 36px; font-weight: 700; font-size: 14px; color: var(--muted); }
+.tabs button[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 4px rgba(0,0,0,.35); }
+.sumline { border: 0; background: none; text-align: left; padding: 2px 2px 6px; color: var(--body); font-size: 15px; line-height: 1.45; width: 100%; }
+.sumline b { color: var(--ink); }
 .brief2 { display: flex; flex-direction: column; gap: 10px; padding: 8px 2px 0; flex-shrink: 0; }
 .brief2 .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
 .bline { font-size: 19px; line-height: 1.45; color: var(--ink); margin: 0; }
@@ -235,7 +263,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
 .demo-btn { border: 2px dashed #C9A27A; background: #FBF4EA; color: #6B4510; border-radius: 99px; min-height: 44px; padding: 0 16px; font-weight: 700; font-size: 14px; }
 
 /* Bottom bar: radar button + ask input */
-.fab { position: absolute; left: 14px; right: 14px; bottom: 14px; display: flex; gap: 10px; align-items: center; }
+.fab { position: absolute; left: 14px; right: 14px; bottom: 14px; display: flex; gap: 10px; align-items: center; z-index: 2; }
 .fab-ask { flex: 1; min-width: 0; display: flex; gap: 6px; align-items: center; padding: 5px; border-radius: 99px; background: var(--surface); border: 2px solid var(--line); box-shadow: 0 10px 30px rgba(20,33,43,.14); }
 .fab-ask .input { border: 0; background: transparent; height: 44px; padding: 0 14px; }
 .fab-send { width: 44px; height: 44px; flex-shrink: 0; border-radius: 22px; border: 0; background: var(--primary); color: #FFFFFF; font-weight: 800; font-size: 20px; }
@@ -384,7 +412,15 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
 <div class="bar">
   <div class="brand">Sub1<small>clickable prototype</small></div>
-  <button type="button" class="link-btn" data-act="reset">Reset</button>
+  <div class="row">
+    <span class="sub" id="hc-label" style="font-weight:600">Home concept</span>
+    <div class="seg" role="group" aria-labelledby="hc-label">
+      <button type="button" data-act="concept" data-arg="timeline" id="hc-timeline">1 · Timeline</button>
+      <button type="button" data-act="concept" data-arg="shelf" id="hc-shelf">2 · Trove shelf</button>
+      <button type="button" data-act="concept" data-arg="tabs" id="hc-tabs">3 · Now / Nearby / Yours</button>
+    </div>
+    <button type="button" class="link-btn" data-act="reset">Reset</button>
+  </div>
 </div>
 <div class="phone" id="phone">
   <div id="bgfx" aria-hidden="true"></div>
@@ -410,7 +446,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const km = (m) => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
 
   const fresh = () => ({
-    v: 15, radarOn: false, rstyle: 'a', win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
+    v: 16, concept: 'timeline', shelfSel: 'all', tab: 'now', radarOn: false, rstyle: 'a', win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
     draft: { text: '', pri: 1, manual: false, ch: null }, subId: 'elm', scanLevel: 1, seq: 100,
     newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false, chat: [],
     connections: [
@@ -572,7 +608,50 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   }
 
 
+  const recentPings = () => myPosts().slice().sort((a, b) => a.age - b.age || b.id - a.id);
+  const dayLabel = (age) => age === 0 ? 'Today' : age === 1 ? 'Yesterday' : age <= 7 ? 'Earlier this week' : 'Older';
+  function rpRow(p) {
+    const c = conn(p.conn), unread = !p.read;
+    return `<button type="button" class="rp ${unread ? '' : 'read'}" data-act="open-ping" data-arg="${p.id}">
+      <span class="who">${unread ? `<span class="udot ${p.pri === 4 ? 'urgent' : ''}" aria-label="Unread"></span>` : ''}<span class="nm">${c.owner ? 'You · ' : ''}${esc(c.name)}</span>${p.pri === 4 ? '<span class="utag">Urgent</span>' : ''}</span>
+      <span class="tm">${esc(p.time)}</span>
+      <span class="tx">${p.title ? `<b style="color:var(--ink);font-weight:600">${esc(p.title)}.</b> ` : ''}${esc(p.text)}</span></button>`;
+  }
+  function grouped(list) {
+    let last = null, out = '';
+    for (const p of list) { const d = dayLabel(p.age); if (d !== last) { out += `<div class="dayh">${d}</div>`; last = d; } out += rpRow(p); }
+    return out || '<div class="empty">No pings yet. Turn on the radar to find Troves nearby.</div>';
+  }
+  function summaryLine() {
+    const all = briefingItems(); if (!all.length) return '';
+    const first = all.find((it) => it.urgent) || all[0];
+    return `<button type="button" class="sumline" data-act="edit-prompt"><b>Today:</b> ${esc(first.line || first.text)}</button>`;
+  }
+  function header(extra) {
+    const unread = myPosts().filter((p) => !p.read).length, urgent = myPosts().some((p) => !p.read && p.pri === 4);
+    return `<div class="topline"><button type="button" class="iconbtn" data-act="menu" aria-label="Menu">${icon.menu}</button>
+        ${extra || '<span style="flex:1"></span>'}
+        ${S.concept === 'tabs' ? '' : `<button type="button" class="radar-btn" data-act="radar-toggle" aria-pressed="${!!S.radarOn}" aria-label="Radar: Troves near you">${icon.radar}</button>`}</div>`;
+  }
   function home() {
+    if (S.concept === 'tabs') {
+      const t = S.tab, tab = (id, label) => `<button type="button" role="tab" aria-selected="${t === id}" data-act="tab" data-arg="${id}">${label}</button>`;
+      const unread = myPosts().filter((p) => !p.read).length;
+      const body = t === 'nearby' ? radar() : t === 'yours' ? troves().replace(/^<button type="button" class="back"[^>]*>[^<]*<\/button><h1>Your Troves<\/h1>/, '') : `${summaryLine()}${grouped(recentPings())}`;
+      return `${header(`<div class="tabs" role="tablist" aria-label="Home">${tab('now', `Now${unread ? ` · ${unread}` : ''}`)}${tab('nearby', 'Nearby')}${tab('yours', 'Yours')}</div>`)}${body}`;
+    }
+    if (S.radarOn) return header() + radar();
+    if (S.concept === 'shelf') {
+      const troveList = [];
+      for (const p of recentPings()) if (!troveList.includes(p.conn)) troveList.push(p.conn);
+      const ring = (c) => { const ps = S.posts.filter((p) => p.conn === c.id && !p.read); return ps.some((p) => p.pri === 4) ? 'urgent' : ps.length ? 'unread' : ''; };
+      const shelf = `<div class="shelf" role="group" aria-label="Your Troves"><button type="button" aria-pressed="${S.shelfSel === 'all'}" data-act="shelf" data-arg="all"><span class="ring"><b>All</b></span><span class="lbl">Everything</span></button>${troveList.map((id) => { const c = conn(id); return `<button type="button" aria-pressed="${S.shelfSel === id}" data-act="shelf" data-arg="${id}"><span class="ring ${ring(c)}"><b>${esc(c.name[0])}</b></span><span class="lbl">${esc(c.short)}</span></button>`; }).join('')}</div>`;
+      const list = recentPings().filter((p) => S.shelfSel === 'all' || p.conn === S.shelfSel);
+      return `${header()}${shelf}${S.shelfSel !== 'all' ? `<div class="row" style="justify-content:space-between"><h2>${esc(conn(S.shelfSel).name)}</h2><button type="button" class="link-btn" data-act="open-trove" data-arg="${S.shelfSel}">Open ›</button></div>` : ''}<div>${grouped(list)}</div>`;
+    }
+    return `${header()}${summaryLine()}<div>${grouped(recentPings())}</div>`;
+  }
+  function homeOld() {
     const unread = myPosts().filter((p) => !p.read).length, urgent = myPosts().some((p) => !p.read && p.pri === 4);
     return `<div class="topline"><button type="button" class="iconbtn" data-act="menu" aria-label="Menu">${icon.menu}</button>
         <span style="flex:1"></span>
@@ -631,7 +710,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   // ---------- One ping ----------
   function pingView() {
     const p = S.posts.find((x) => x.id === S.pingId), c = conn(p.conn);
-    return `<button type="button" class="back" data-act="${S.back === 'trove' ? 'open-trove' : 'go'}" data-arg="${S.back === 'trove' ? S.troveId : 'feed'}">‹ ${S.back === 'trove' ? esc(c.short) : 'Pings'}</button>
+    return `<button type="button" class="back" data-act="${S.back === 'trove' ? 'open-trove' : 'go'}" data-arg="${S.back === 'trove' ? S.troveId : S.back}">‹ ${S.back === 'trove' ? esc(c.short) : S.back === 'home' ? 'Home' : 'Pings'}</button>
       <div class="meta">${tag(p.pri)}${!pings(p) && !c.owner ? '<span class="below">Didn’t notify you</span>' : ''}<span>${esc(p.time)}</span></div>
       ${p.title ? `<h1 style="font-size:30px">${esc(p.title)}</h1>` : ''}
       <p class="ping-body" style="font-size:17px;color:var(--ink)">${esc(p.text)}</p>
@@ -969,7 +1048,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   // ---------- Shell ----------
   function floatBar() {
-    if (S.screen === 'home' && S.radarOn) return `<div class="fab">
+    if (S.screen === 'home' && S.radarOn && (S.concept !== 'tabs' || S.tab === 'nearby')) return `<div class="fab">
       <form class="fab-ask" data-form="near">
         <label for="near-q" class="sr">Ask anything. While the radar is on, this also searches nearby Troves and their pings.</label>
         <input class="input" id="near-q" placeholder="Ask anything" autocomplete="off" value="${esc(S.nearQ)}">
@@ -997,6 +1076,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const SCREENS = { home, feed: feedPage, ping: pingView, trove: troveFeed, troves, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
   function render() {
+    ['timeline', 'shelf', 'tabs'].forEach((n) => $('hc-' + n).setAttribute('aria-pressed', S.concept === n));
     const el = $('screen');
     const fab = S.screen === 'home' || S.screen === 'ask';
     el.className = 'screen' + (S.screen === 'subscribe' ? ' flush' : '') + (fab ? ' has-fab' : '') + '';
@@ -1010,7 +1090,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     clearTimeout(scanTimer);
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     S.scanning = S.rlayout === 'scan' && !reduce;
-    if (S.scanning) scanTimer = setTimeout(() => { S.scanning = false; if (S.screen === 'home' && S.radarOn) render(); }, 1700);
+    if (S.scanning) scanTimer = setTimeout(() => { S.scanning = false; if (S.screen === 'home' && (S.radarOn || S.tab === 'nearby')) render(); }, 1700);
   }
   let toastTimer;
   function toast(msg) {
@@ -1038,12 +1118,15 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     'menu-go': (a) => act.go(a),
     'menu-mine': (a) => { S.sheet = null; act['open-mine'](a); },
     trove: (a) => { S.sheet = a; render(); },
+    concept: (a) => { S.concept = a; S.screen = 'home'; S.sheet = null; S.radarOn = false; S.nearQ = ''; S.tab = 'now'; render(); scrollTop(); },
+    shelf: (a) => { S.shelfSel = a; render(); },
+    tab: (a) => { S.tab = a; S.nearQ = ''; S.radarOn = a === 'nearby'; if (a === 'nearby') startScan(); render(); scrollTop(); },
     'radar-toggle': () => { S.radarOn = !S.radarOn; S.nearQ = ''; if (S.radarOn) startScan(); else { clearTimeout(scanTimer); S.scanning = false; } render(); scrollTop(); },
     'win-set': (a) => { S.win = +a; $('near-results').innerHTML = radarBody(); document.querySelectorAll('.tw button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.arg === a)); },
     'near-try': (a) => { S.nearQ = a; render(); },
     'near-clear': () => { S.nearQ = ''; render(); const i = $('near-q'); if (i) i.focus(); },
     quiet: () => { const y = $('screen').scrollTop; S.showQuiet = !S.showQuiet; render(); $('screen').scrollTop = y; },
-    'open-ping': (a) => { S.back = S.screen === 'trove' ? 'trove' : 'feed'; S.pingId = +a; const p = S.posts.find((x) => x.id === +a); if (p) { p.isNew = false; p.read = true; } S.screen = 'ping'; render(); scrollTop(); },
+    'open-ping': (a) => { S.back = S.screen === 'trove' ? 'trove' : S.screen === 'home' ? 'home' : 'feed'; S.pingId = +a; const p = S.posts.find((x) => x.id === +a); if (p) { p.isNew = false; p.read = true; } S.screen = 'ping'; render(); scrollTop(); },
     'open-trove': (a) => {
       S.troveId = a; S.screen = 'trove';
       S.posts.forEach((p) => { if (p.conn === a) { p.wasUnread = !p.read; p.read = true; } });
@@ -1152,7 +1235,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const hot = window.claude && window.claude.hot;
   if (hot && hot.snapshot) hot.snapshot(() => S);
-  const boot = (data) => { if (data && data.v === 15) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
+  const boot = (data) => { if (data && data.v === 16) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
   if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>
