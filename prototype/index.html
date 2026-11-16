@@ -505,12 +505,9 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 .phone[data-theme="friendly"] .band.d3 .rp .tm { color: #A9BFD8; }
 .phone[data-theme="friendly"] .band.d3 .utag { color: #FFB08A; }
 
-/* Portholes: light on means something new */
-.phone[data-theme="friendly"] .rp .rav { position: relative; width: 44px; height: 44px; border: 4px solid var(--brass); background: #1D3D63; color: #9FB6D0; box-shadow: inset 0 0 0 2px rgba(11,37,69,.55), 0 2px 0 var(--brass-edge); }
-.phone[data-theme="friendly"] .rp .rav.lit { background: radial-gradient(circle at 50% 40%, #FFFFFF, #FFF1B0); color: #2A2340; box-shadow: inset 0 0 0 2px rgba(201,154,0,.45), 0 2px 0 var(--brass-edge), 0 0 14px rgba(255,210,63,.75); }
-.phone[data-theme="friendly"] .rp .rav.lit.urgent { background: radial-gradient(circle at 50% 40%, #FFF4EC, #FFB58A); box-shadow: inset 0 0 0 2px rgba(194,65,12,.4), 0 2px 0 var(--brass-edge), 0 0 14px rgba(255,138,91,.8); }
-.phone[data-theme="friendly"] .udot { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-.phone[data-theme="friendly"] .rp.read .who { color: var(--ink); }
+/* Trove avatars: soft letter circles; unread pings keep a dot */
+.phone[data-theme="friendly"] .rp .rav { position: relative; }
+.phone[data-theme="friendly"] .band.d3 .rp .rav { opacity: .85; }
 .rav.arrive::after { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 3px solid var(--brass); animation: rip-small 1.2s ease-out 3; }
 @keyframes rip-small { from { transform: scale(1); opacity: .9; } to { transform: scale(2.2); opacity: 0; } }
 
@@ -745,7 +742,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   function rpRow(p, near) {
     const c = conn(p.conn), unread = !p.read;
     return `<button type="button" class="rp ${unread ? '' : 'read'}" data-act="open-ping" data-arg="${p.id}">
-      <span class="rav ${unread ? (p.pri === 4 ? 'lit urgent' : 'lit') : ''} ${p.isNew ? 'arrive' : ''}" aria-hidden="true">${esc(c.name[0])}</span>
+      <span class="rav ${p.isNew ? 'arrive' : ''}" aria-hidden="true" style="--ravbg:${RAV[hashId(c.id) % RAV.length][0]};--ravfg:${RAV[hashId(c.id) % RAV.length][1]}">${esc(c.name[0])}</span>
       <span class="who">${unread ? `<span class="udot ${p.pri === 4 ? 'urgent' : ''}" aria-label="Unread"></span>` : ''}<span class="nm">${c.owner ? 'You · ' : ''}${esc(c.name)}</span>${p.pri === 4 ? '<span class="utag">Urgent</span>' : ''}</span>
       <span class="tm">${near ? km(c.dist) + ' · ' : ''}${esc(p.time)}</span>
       <span class="tx">${p.title ? `<b style="color:var(--ink);font-weight:600">${esc(p.title)}.</b> ` : ''}${esc(p.text)}</span></button>`;

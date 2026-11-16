@@ -13,20 +13,20 @@ people.
 
 ## Decision
 
-Four ideas, used with restraint:
+Three ideas, used with restraint (a fourth, portholes, was dropped):
 
 - **Depth is time.** The timeline is a dive: today is at the surface on a
   light background, and each older day band (Yesterday, Earlier this week,
   Older) sits on a deeper blue, down to navy. Cards dim with depth. This
   replaces fading rows as the way to show that old pings lose signal.
-- **Portholes.** Each Trove's avatar is a porthole with a yellow rim. The
-  light is on when the ping is unread (orange light for urgent) and the
-  glass is dark once it's read. There is no separate unread dot.
+- ~~Portholes~~ (tried and dropped the same day: the owner didn't like
+  them). Troves keep soft pastel letter avatars, and unread pings keep a
+  dot, orange for urgent.
 - **Controls you can press.** Buttons have a solid lower edge and sink when
   pressed, with a short vibration where the phone allows. The radar is a
   two-position switch with a yellow knob. "Urgent" is a flip switch.
 - **The ripple.** One motion everywhere: sending a ping sends rings out
-  across the screen, a new ping's porthole ripples, and the radar scan is
+  across the screen, a new ping's avatar ripples, and the radar scan is
   the same rings. People who ask for reduced motion don't get it.
 
 Not doing: paper message slips, mascots or other decoration (too cute).
