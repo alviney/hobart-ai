@@ -313,6 +313,22 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 .fab-ask.near { border-color: #2E5266; background: #13242F; }
 .fab-ask.near .input { color: #E6F1F7; }
 .fab-ask.near .fab-send { background: #1E78A8; }
+#bgfx { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+.screen { position: relative; z-index: 1; }
+.screen.radar-screen.bgmode { background: transparent; }
+.bgradar { position: absolute; width: 640px; height: 640px; left: 50%; top: 34%; margin: -320px 0 0 -320px; opacity: .55; }
+.bgradar .radar { max-width: none !important; width: 640px; border: 0; background: radial-gradient(circle, #14334A 0%, #0B1A24 68%); }
+.bgradar .blip { pointer-events: none; }
+.scan { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; text-align: center; min-height: 100%; }
+.scan .radar { max-width: 280px; }
+.scan p { font-family: var(--display); font-weight: 600; font-size: 20px; color: #E6F1F7; }
+.scan .sub { font-family: var(--text); font-weight: 500; font-size: 14px; }
+.reveal { animation: reveal .45s ease-out both; }
+@keyframes reveal { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.arc { position: relative; height: 150px; margin: -6px -20px 0; overflow: hidden; flex-shrink: 0; }
+.arc .radar { position: absolute; width: 340px; max-width: none !important; left: 50%; top: -20px; margin-left: -170px; border-color: rgba(156,195,222,.18); }
+.arc::after { content: ""; position: absolute; inset: auto 0 0 0; height: 40px; background: linear-gradient(transparent, #0F1E29); }
+@media (prefers-reduced-motion: reduce) { .reveal { animation: none; } }
 @media (prefers-reduced-motion: reduce) { .here .eyebrow i, .pulse-head span { animation: none; } .pulse-head span:first-child { opacity: .5; transform: scale(3); } }
 @media (prefers-reduced-motion: reduce) { .sweep, .blip.s4 span::after { animation: none; } .sweep { opacity: .6; } }
 </style>
@@ -320,16 +336,17 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 <div class="bar">
   <div class="brand">Sub1<small>clickable prototype</small></div>
   <div class="row">
-    <span class="sub" id="rl-label" style="font-weight:600">Radar layout</span>
+    <span class="sub" id="rl-label" style="font-weight:600">Radar style</span>
     <div class="seg" role="group" aria-labelledby="rl-label">
-      <button type="button" data-act="rlayout" data-arg="sonar" id="rl-sonar">1 · Sonar</button>
-      <button type="button" data-act="rlayout" data-arg="here" id="rl-here">2 · Here first</button>
-      <button type="button" data-act="rlayout" data-arg="rings" id="rl-rings">3 · Distance rings</button>
+      <button type="button" data-act="rlayout" data-arg="scan" id="rl-scan">1 · Scan first</button>
+      <button type="button" data-act="rlayout" data-arg="bg" id="rl-bg">2 · Background</button>
+      <button type="button" data-act="rlayout" data-arg="accent" id="rl-accent">3 · Header accent</button>
     </div>
     <button type="button" class="link-btn" data-act="reset">Reset</button>
   </div>
 </div>
 <div class="phone" id="phone">
+  <div id="bgfx" aria-hidden="true"></div>
   <main class="screen" id="screen" aria-live="polite"></main>
   <div id="float"></div>
   <div id="sheet"></div>
@@ -352,7 +369,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const km = (m) => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
 
   const fresh = () => ({
-    v: 11, rlayout: 'sonar', nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
+    v: 12, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
     draft: { text: '', pri: 1, manual: false, ch: null }, subId: 'elm', scanLevel: 1, seq: 100,
     newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false, chat: [],
     connections: [
@@ -644,29 +661,20 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     if (S.nearQ.trim()) return results();
     const others = nearby().filter((c) => c !== hereTrove());
     const preview = (c) => { const l = latestOf(c); return l ? esc(l.title || l.text) : `${STRENGTH[strength(c.verified)]} · verified ${ago(c.verified)}`; };
-    if (S.rlayout === 'here') {
-      return `${hereCard(true)}<div class="band-h">Around you</div>${others.map((c) => nearRow(c, preview(c))).join('')}`;
-    }
-    if (S.rlayout === 'rings') {
-      const band = (title, list) => list.length ? `<div class="band-h">${title}</div>${list.map((c) => nearRow(c, preview(c))).join('')}` : '';
-      return `${hereCard(false)}${band('A short walk · under 500 m', others.filter((c) => c.dist < 500))}${band('Walkable · under 1.5 km', others.filter((c) => c.dist >= 500 && c.dist < 1500))}${band('Further out', others.filter((c) => c.dist >= 1500))}`;
-    }
-    return `${hereCard(false)}${radarCircle(320)}
-      <div class="legend"><span><b></b>Strong</span><span><b style="opacity:.45"></b>Weak</span><span><b style="background:#FFFFFF"></b>Subscribed</span></div>
-      ${others.map((c) => nearRow(c, preview(c))).join('')}`;
+    const band = (title, list) => list.length ? `<div class="band-h">${title}</div>${list.map((c) => nearRow(c, preview(c))).join('')}` : '';
+    return `${hereCard(true)}${band('A short walk · under 500 m', others.filter((c) => c.dist < 500))}${band('Walkable · under 1.5 km', others.filter((c) => c.dist >= 500 && c.dist < 1500))}${band('Further out', others.filter((c) => c.dist >= 1500))}`;
   }
   function radar() {
+    if (S.scanning) return `<div class="scan">${radarCircle(280)}<p>Scanning nearby…<br><span class="sub">Looking for Troves within ${km(RANGE)}</span></p></div>`;
     const faint = S.connections.filter((c) => !c.owner && c.dist != null && strength(c.verified) === 0).length;
-    const head = S.rlayout === 'here'
-      ? `<div class="row" style="flex-wrap:nowrap;justify-content:space-between"><div><h1>Nearby</h1><p class="sub">${nearby().length} Troves within ${km(RANGE)}</p></div><div class="mini-radar" aria-hidden="true"><div class="sweep"></div>${nearby().map((c) => { const r = (c.dist / RANGE) * 46, a = c.bearing * Math.PI / 180; return `<i style="left:${50 + r * Math.sin(a)}%;top:${50 - r * Math.cos(a)}%;opacity:${[0, .3, .5, .8, 1][strength(c.verified)]}"></i>`; }).join('')}</div></div>`
-      : S.rlayout === 'rings'
-        ? `<div class="pulse-head" aria-hidden="true"><span></span><span></span><span></span><b></b></div><h1 style="text-align:center;margin-top:-8px">Nearby</h1><p class="sub" style="text-align:center">${nearby().length} Troves within ${km(RANGE)}, closest first</p>`
-        : `<h1>Radar</h1><p class="sub">Troves near you. Strong pings were confirmed recently; weak ones may be out of date.</p>`;
-    return `<button type="button" class="back" data-act="go" data-arg="home">‹ Home</button>${head}
+    const head = `${S.rlayout === 'accent' ? `<div class="arc" aria-hidden="true">${radarCircle(340)}</div>` : ''}
+      <h1 ${S.rlayout === 'accent' ? 'style="margin-top:-28px;position:relative"' : ''}>Nearby</h1><p class="sub">${nearby().length} Troves within ${km(RANGE)}, closest first</p>`;
+    return `<div class="${S.rlayout === 'scan' ? 'reveal' : ''}" style="display:flex;flex-direction:column;gap:14px">
+      <button type="button" class="back" data-act="go" data-arg="home">‹ Home</button>${head}
       <div class="qchips" ${S.nearQ.trim() ? 'hidden' : ''} id="near-chips">${['good bagels', 'coffee', 'kids', 'this weekend', 'records'].map((t) => `<button type="button" class="qchip" data-act="near-try" data-arg="${t}">${t}</button>`).join('')}</div>
       <div id="near-results" style="display:flex;flex-direction:column;gap:12px">${radarBody()}</div>
       ${faint ? `<p class="sub" style="text-align:center">${faint} Trove${faint === 1 ? ' is' : 's are'} too faint to show. Their details haven't been confirmed in over six months.</p>` : ''}
-      <p class="demo-note" style="color:#7F95A4">Your location stays on your phone. Prototype: positions are made up.</p>`;
+      <p class="demo-note" style="color:#7F95A4">Your location stays on your phone. Prototype: positions are made up.</p></div>`;
   }
   function troveSheet(c) {
     const s = strength(c.verified);
@@ -909,14 +917,22 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const SCREENS = { home, feed: feedPage, ping: pingView, trove: troveFeed, radar, troves, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
   function render() {
-    ['sonar', 'here', 'rings'].forEach((n) => $('rl-' + n).setAttribute('aria-pressed', S.rlayout === n));
+    ['scan', 'bg', 'accent'].forEach((n) => $('rl-' + n).setAttribute('aria-pressed', S.rlayout === n));
     const el = $('screen');
-    const fab = ['home', 'ask', 'radar'].includes(S.screen);
-    el.className = 'screen' + (S.screen === 'subscribe' ? ' flush' : '') + (fab ? ' has-fab' : '') + (S.screen === 'radar' ? ' radar-screen' : '');
+    const fab = ['home', 'ask'].includes(S.screen) || (S.screen === 'radar' && !S.scanning);
+    el.className = 'screen' + (S.screen === 'subscribe' ? ' flush' : '') + (fab ? ' has-fab' : '') + (S.screen === 'radar' ? ' radar-screen' : '') + (S.screen === 'radar' && S.rlayout === 'bg' ? ' bgmode' : '');
     el.innerHTML = (SCREENS[S.screen] || home)();
     $('float').innerHTML = fab ? floatBar() : '';
+    $('bgfx').innerHTML = S.screen === 'radar' && S.rlayout === 'bg' ? `<div class="bgradar">${radarCircle(640)}</div>` : '';
     $('sheet').innerHTML = S.sheet === 'menu' ? menuSheet() : S.sheet === 'prompt' ? promptSheet() : S.sheet ? troveSheet(conn(S.sheet)) : '';
     if (S.screen === 'ask') el.scrollTop = el.scrollHeight;
+  }
+  let scanTimer;
+  function startScan() {
+    clearTimeout(scanTimer);
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    S.scanning = S.rlayout === 'scan' && !reduce;
+    if (S.scanning) scanTimer = setTimeout(() => { S.scanning = false; if (S.screen === 'radar') render(); }, 1700);
   }
   let toastTimer;
   function toast(msg) {
@@ -933,6 +949,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     reset: () => { S = fresh(); render(); toast('Prototype reset'); },
     go: (a) => {
       if (a !== 'radar') S.nearQ = '';
+      if (a === 'radar' && S.screen !== 'radar') startScan();
       S.screen = a; S.addingDoc = false; S.sheet = null; render(); scrollTop();
       if (a === 'feed' || a === 'home') S.posts.forEach((p) => { p.isNew = false; p.wasUnread = false; });
     },
@@ -944,7 +961,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     'menu-go': (a) => act.go(a),
     'menu-mine': (a) => { S.sheet = null; act['open-mine'](a); },
     trove: (a) => { S.sheet = a; render(); },
-    rlayout: (a) => { S.rlayout = a; S.screen = 'radar'; S.sheet = null; render(); scrollTop(); },
+    rlayout: (a) => { S.rlayout = a; S.screen = 'radar'; S.sheet = null; S.nearQ = ''; startScan(); render(); scrollTop(); },
     'near-try': (a) => { S.nearQ = a; render(); },
     'near-clear': () => { S.nearQ = ''; render(); const i = $('near-q'); if (i) i.focus(); },
     quiet: () => { const y = $('screen').scrollTop; S.showQuiet = !S.showQuiet; render(); $('screen').scrollTop = y; },
@@ -1051,7 +1068,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const hot = window.claude && window.claude.hot;
   if (hot && hot.snapshot) hot.snapshot(() => S);
-  const boot = (data) => { if (data && data.v === 11) S = Object.assign(fresh(), data, { sheet: null }); render(); };
+  const boot = (data) => { if (data && data.v === 12) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
   if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>
