@@ -26,6 +26,13 @@ way to look further back on the radar.
 - A Trove's own freshness (last confirmed, D-009) still applies to the
   Trove itself, for example on its details sheet.
 
+## Update 2026-11-16
+
+The slider is gone. The radar now lists nearby pings from the last month as
+a timeline, like home (D-014): grouped under Today, Yesterday, Earlier this
+week and Older, each row showing the Trove, its distance and the time.
+Older pings fade. Search still covers names, info pages and these pings.
+
 ## Options considered
 
 - **Fading pings with a time slider**: the radar feels live, defaults to

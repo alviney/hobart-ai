@@ -602,16 +602,16 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const recentPings = () => myPosts().slice().sort((a, b) => a.age - b.age || b.id - a.id);
   const dayLabel = (age) => age === 0 ? 'Today' : age === 1 ? 'Yesterday' : age <= 7 ? 'Earlier this week' : 'Older';
-  function rpRow(p) {
+  function rpRow(p, near) {
     const c = conn(p.conn), unread = !p.read;
-    return `<button type="button" class="rp ${unread ? '' : 'read'}" data-act="open-ping" data-arg="${p.id}">
+    return `<button type="button" class="rp ${unread ? '' : 'read'}" data-act="open-ping" data-arg="${p.id}" ${near ? `style="opacity:${OP[pingSig(p.age)]}"` : ''}>
       <span class="who">${unread ? `<span class="udot ${p.pri === 4 ? 'urgent' : ''}" aria-label="Unread"></span>` : ''}<span class="nm">${c.owner ? 'You · ' : ''}${esc(c.name)}</span>${p.pri === 4 ? '<span class="utag">Urgent</span>' : ''}</span>
-      <span class="tm">${esc(p.time)}</span>
+      <span class="tm">${near ? km(c.dist) + ' · ' : ''}${esc(p.time)}</span>
       <span class="tx">${p.title ? `<b style="color:var(--ink);font-weight:600">${esc(p.title)}.</b> ` : ''}${esc(p.text)}</span></button>`;
   }
-  function grouped(list) {
+  function grouped(list, near) {
     let last = null, out = '';
-    for (const p of list) { const d = dayLabel(p.age); if (d !== last) { out += `<div class="dayh">${d}</div>`; last = d; } out += rpRow(p); }
+    for (const p of list) { const d = dayLabel(p.age); if (d !== last) { out += `<div class="dayh">${d}</div>`; last = d; } out += rpRow(p, near); }
     return out || '<div class="empty">No pings yet. Turn on the radar to find Troves nearby.</div>';
   }
   function summaryLine() {
@@ -807,10 +807,11 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   }
   function radarBody() {
     if (S.nearQ.trim()) return results();
-    const { live, quiet } = liveRows();
-    const when = S.win === 0 ? 'today' : 'in this time';
-    return `${hereMin()}${live.length ? live.map((c) => styledRow(c, latestIn(c))).join('') : `<p class="sub">Nothing nearby ${when}.</p>`}${quiet ? `<p class="quiet-n">${quiet} more quiet ${when}</p>` : ''}`;
+    const ids = nearby().map((c) => c.id);
+    const list = S.posts.filter((p) => ids.includes(p.conn) && p.age <= 30).sort((a, b) => a.age - b.age || b.id - a.id);
+    return `${hereMin()}<div>${list.length ? grouped(list, true) : '<p class="sub">Nothing nearby in the last month.</p>'}</div>`;
   }
+
   function radar() {
     if (S.scanning) return `<div class="scan">${radarCircle(120)}<p>Scanning nearby…</p></div>`;
     const back = '';
@@ -824,7 +825,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     } else {
       top = `<div class="rtop"><div class="slim"><span id="win-val">${WINDOWS[S.win].label}</span>${slider()}</div></div>`;
     }
-    return `<div class="${S.rlayout === 'scan' ? 'reveal' : ''}" style="display:flex;flex-direction:column;gap:${S.rstyle === 'c' ? 18 : 10}px">${top}
+    return `<div class="${S.rlayout === 'scan' ? 'reveal' : ''}" style="display:flex;flex-direction:column;gap:10px">
       <div id="near-results" style="display:flex;flex-direction:column;gap:${S.rstyle === 'c' ? 10 : 0}px">${radarBody()}</div></div>`;
   }
   function troveSheet(c) {

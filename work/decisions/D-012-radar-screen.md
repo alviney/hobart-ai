@@ -21,12 +21,10 @@ space on the screen.
   two seconds. People with reduced motion skip it.
 - Then the results appear as a **quiet list** (chosen 2026-11-16 over
   "Signal dots" and "Big names"):
-  - A top row with the time slider (D-013).
   - **"You're here"**: one line, "You're at <Trove>", with a Subscribe pill,
     when you're within about 50 m of a Trove you don't subscribe to.
-  - The other nearby public Troves that pinged in the time window, closest
-    first: name and distance, then the latest ping on a second line. Older
-    pings fade; there are no meters, headings or dividers.
+  - Then nearby pings from the last month as a timeline (see D-013's
+    update), with the Trove's distance next to the time. Older pings fade.
 - The bottom bar always says **Ask anything**. While the radar is on, what
   you type also searches nearby: it searches
   the names, info pages and recent pings of every public Trove nearby,
