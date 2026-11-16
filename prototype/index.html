@@ -383,15 +383,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
 <div class="bar">
   <div class="brand">Sub1<small>clickable prototype</small></div>
-  <div class="row">
-    <span class="sub" id="rs-label" style="font-weight:600">Radar design</span>
-    <div class="seg" role="group" aria-labelledby="rs-label">
-      <button type="button" data-act="rstyle" data-arg="a" id="rs-a">1 · Quiet list</button>
-      <button type="button" data-act="rstyle" data-arg="b" id="rs-b">2 · Signal dots</button>
-      <button type="button" data-act="rstyle" data-arg="c" id="rs-c">3 · Big names</button>
-    </div>
-    <button type="button" class="link-btn" data-act="reset">Reset</button>
-  </div>
+  <button type="button" class="link-btn" data-act="reset">Reset</button>
 </div>
 <div class="phone" id="phone">
   <div id="bgfx" aria-hidden="true"></div>
@@ -1004,7 +996,6 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const SCREENS = { home, feed: feedPage, ping: pingView, trove: troveFeed, radar, troves, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
   function render() {
-    ['a', 'b', 'c'].forEach((n) => $('rs-' + n).setAttribute('aria-pressed', S.rstyle === n));
     const el = $('screen');
     const fab = ['home', 'ask'].includes(S.screen) || (S.screen === 'radar' && !S.scanning);
     el.className = 'screen' + (S.screen === 'subscribe' ? ' flush' : '') + (fab ? ' has-fab' : '') + (S.screen === 'radar' ? ' radar-screen' : '') + (S.screen === 'radar' && S.rlayout === 'bg' ? ' bgmode' : '');
@@ -1048,7 +1039,6 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     'menu-go': (a) => act.go(a),
     'menu-mine': (a) => { S.sheet = null; act['open-mine'](a); },
     trove: (a) => { S.sheet = a; render(); },
-    rstyle: (a) => { S.rstyle = a; S.screen = 'radar'; S.sheet = null; S.nearQ = ''; startScan(); render(); scrollTop(); },
     'win-set': (a) => { S.win = +a; $('near-results').innerHTML = radarBody(); document.querySelectorAll('.tw button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.arg === a)); },
     'near-try': (a) => { S.nearQ = a; render(); },
     'near-clear': () => { S.nearQ = ''; render(); const i = $('near-q'); if (i) i.focus(); },

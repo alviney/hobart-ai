@@ -16,12 +16,14 @@ space on the screen.
 - Opening the radar shows a short, minimal **scan**: faint rings and a slow
   sweep in the same colour as the page, with "Scanning nearby…", for under
   two seconds. People with reduced motion skip it.
-- Then the results appear:
-  - **"You're here"**: a Trove within about 50 m that you don't subscribe to
-    is the top recommendation, with Subscribe and "What's here".
-  - The other nearby public Troves, grouped by walking distance (under
-    500 m, under 1.5 km, further out), each with its latest ping, distance
-    and ping strength.
+- Then the results appear as a **quiet list** (chosen 2026-11-16 over
+  "Signal dots" and "Big names"):
+  - A top row with a back button and the time slider (D-013).
+  - **"You're here"**: one line, "You're at <Trove>", with a Subscribe pill,
+    when you're within about 50 m of a Trove you don't subscribe to.
+  - The other nearby public Troves that pinged in the time window, closest
+    first: name and distance, then the latest ping on a second line. Older
+    pings fade; there are no meters, headings or dividers.
 - On the radar screen the bottom bar becomes **Search nearby**: it searches
   the names, info pages and recent pings of every public Trove nearby,
   including ones you don't subscribe to (see Q-006).
