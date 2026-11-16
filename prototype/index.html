@@ -277,12 +277,57 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
 .sheet-item:hover { background: var(--soft); }
 .sheet-item .iconbtn { width: 40px; height: 40px; }
 
+.seg { display: flex; background: var(--surface); border-radius: 99px; padding: 3px; border: 1px solid var(--line); flex-wrap: wrap; }
+.bar .seg { background: #FFFFFF; border-color: #D3DBE0; }
+.bar .seg button { border: 0; background: transparent; padding: 7px 12px; border-radius: 99px; font-weight: 600; font-size: 13px; color: #3A4852; }
+.bar .seg button[aria-pressed="true"] { background: #14212B; color: #FFFFFF; }
+.here { display: flex; flex-direction: column; gap: 12px; padding: 18px; border-radius: 24px; background: linear-gradient(180deg, #17384C, #13293A); border: 1px solid #2E5A73; flex-shrink: 0; }
+.here .eyebrow { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--sonar-glow); }
+.here .eyebrow i { width: 8px; height: 8px; border-radius: 4px; background: var(--sonar-glow); box-shadow: 0 0 0 0 rgba(156,214,240,.6); animation: herepulse 1.8s ease-out infinite; }
+@keyframes herepulse { to { box-shadow: 0 0 0 10px rgba(156,214,240,0); } }
+.here h2 { font-size: 24px; color: #FFFFFF; }
+.here .last { font-size: 14px; color: #C5D4DD; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.here.big { padding: 22px; }
+.here.big h2 { font-size: 30px; }
+.near-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 4px; border: 0; border-bottom: 1px solid rgba(156,195,222,.14); background: none; color: inherit; text-align: left; width: 100%; }
+.near-row .nm { font-weight: 700; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 8px; }
+.near-row .pv { font-size: 13px; color: #9FB4C2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 3px; }
+.near-row .pv.wrap { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.near-row .side { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; font-size: 12px; color: #9FB4C2; font-variant-numeric: tabular-nums; }
+.near-row .side .meter i { background: rgba(255,255,255,.18); }
+.near-row .side .meter.s4 i, .near-row .side .meter.s3 i:nth-child(-n+3), .near-row .side .meter.s2 i:nth-child(-n+2), .near-row .side .meter.s1 i:nth-child(1) { background: var(--sonar-glow); }
+.subd-tag { font-size: 11px; font-weight: 700; color: #0B1A24; background: #E6F1F7; border-radius: 99px; padding: 1px 7px; }
+mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; padding: 0 1px; }
+.band-h { display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: #9FB4C2; margin-top: 8px; }
+.band-h::after { content: ""; flex: 1; height: 1px; background: rgba(156,195,222,.18); }
+.mini-radar { position: relative; width: 64px; height: 64px; flex-shrink: 0; border-radius: 50%; background: radial-gradient(circle, #153044 0%, #0F2131 70%); border: 1px solid var(--sonar-line); overflow: hidden; }
+.mini-radar .sweep { animation-duration: 3s; }
+.mini-radar i { position: absolute; width: 5px; height: 5px; margin: -2.5px; border-radius: 50%; background: var(--sonar-glow); }
+.pulse-head { position: relative; height: 120px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.pulse-head span { position: absolute; left: 50%; top: 50%; width: 30px; height: 30px; margin: -15px; border-radius: 50%; border: 2px solid var(--sonar-glow); opacity: 0; animation: ring 3s ease-out infinite; }
+.pulse-head span:nth-child(2) { animation-delay: 1s; } .pulse-head span:nth-child(3) { animation-delay: 2s; }
+.pulse-head b { position: relative; width: 14px; height: 14px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 0 0 5px rgba(255,255,255,.15); }
+@keyframes ring { 0% { transform: scale(1); opacity: .8; } 100% { transform: scale(7); opacity: 0; } }
+.qchips { display: flex; gap: 8px; flex-wrap: wrap; }
+.qchip { border: 1px solid #2E5266; background: rgba(255,255,255,.05); color: #C5D4DD; border-radius: 99px; padding: 7px 12px; font-size: 13px; font-weight: 600; min-height: 36px; }
+.fab-ask.near { border-color: #2E5266; background: #13242F; }
+.fab-ask.near .input { color: #E6F1F7; }
+.fab-ask.near .fab-send { background: #1E78A8; }
+@media (prefers-reduced-motion: reduce) { .here .eyebrow i, .pulse-head span { animation: none; } .pulse-head span:first-child { opacity: .5; transform: scale(3); } }
 @media (prefers-reduced-motion: reduce) { .sweep, .blip.s4 span::after { animation: none; } .sweep { opacity: .6; } }
 </style>
 
 <div class="bar">
   <div class="brand">Sub1<small>clickable prototype</small></div>
-  <button type="button" class="link-btn" data-act="reset">Reset</button>
+  <div class="row">
+    <span class="sub" id="rl-label" style="font-weight:600">Radar layout</span>
+    <div class="seg" role="group" aria-labelledby="rl-label">
+      <button type="button" data-act="rlayout" data-arg="sonar" id="rl-sonar">1 · Sonar</button>
+      <button type="button" data-act="rlayout" data-arg="here" id="rl-here">2 · Here first</button>
+      <button type="button" data-act="rlayout" data-arg="rings" id="rl-rings">3 · Distance rings</button>
+    </div>
+    <button type="button" class="link-btn" data-act="reset">Reset</button>
+  </div>
 </div>
 <div class="phone" id="phone">
   <main class="screen" id="screen" aria-live="polite"></main>
@@ -307,7 +352,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
   const km = (m) => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
 
   const fresh = () => ({
-    v: 10, prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
+    v: 11, rlayout: 'sonar', nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
     draft: { text: '', pri: 1, manual: false, ch: null }, subId: 'elm', scanLevel: 1, seq: 100,
     newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false, chat: [],
     connections: [
@@ -337,6 +382,12 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
         docs: [ { t: 'Opening hours', b: 'Thursday to Saturday, 11am to 5pm.' } ] },
       { id: 'rivulet', name: 'Rivulet Track Friends', short: 'Rivulet Track Friends', level: 1, via: 'Email', on: true, joined: false, verified: 120, dist: 1500, bearing: 120,
         docs: [ { t: 'Clean-up days', b: 'We meet at the Molle St end, first Saturday of the month.' } ] },
+      { id: 'school', name: 'Lansdowne Primary School', short: 'Lansdowne Primary', level: 1, via: 'Email', on: true, joined: false, verified: 1, dist: 15, bearing: 20,
+        docs: [ { t: 'Office hours', b: 'The office is open 8:15am to 3:45pm on school days. Late arrivals sign in at the office.' }, { t: 'Term dates', b: 'Term 4 runs until Friday 18 December.' } ] },
+      { id: 'bagels', name: 'Rise & Roll Bagels', short: 'Rise & Roll', level: 1, via: 'Email', on: true, joined: false, verified: 4, dist: 460, bearing: 60,
+        docs: [ { t: 'Menu', b: 'Boiled and baked every morning: plain, sesame, everything, rye and cinnamon raisin. Vegan cream cheese available.' }, { t: 'Hours', b: 'Every day 7am to 2pm, or until the bagels run out.' } ] },
+      { id: 'coffee', name: 'Kunanyi Coffee Cart', short: 'Kunanyi Coffee', level: 1, via: 'Email', on: true, joined: false, verified: 9, dist: 230, bearing: 290,
+        docs: [ { t: 'Where we park', b: 'Weekdays outside the Lenna Ave shops from 6:30am. Weekends at the rivulet track entrance.' } ] },
       { id: 'pantry', name: 'Corner Pantry', short: 'Corner Pantry', level: 1, via: 'Email', on: true, joined: false, verified: 230, dist: 400, bearing: 140, docs: [] }
     ],
     posts: [
@@ -349,6 +400,10 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
       { id: 7, read: true, conn: 'bodycorp', pri: 1, text: 'Gardeners are in on Thursday morning.', time: 'Mon' },
       { id: 8, read: true, conn: 'elm', pri: 1, text: 'New sourdough rye on the shelves this week.', time: 'Sun' },
       { id: 9, read: true, conn: 'garden', pri: 1, text: 'Seedling swap at the shed this Saturday, 10am.', time: 'Sun' },
+      { id: 11, read: true, conn: 'school', pri: 1, text: 'The swimming carnival has moved to Thursday 4 December at the Aquatic Centre.', time: 'Today' },
+      { id: 12, read: true, conn: 'bagels', pri: 1, title: 'Everything bagels are back', text: 'Our everything bagels are back after the sesame shortage. Hot from 7am; they usually sell out by 10. Good bagels take time, so we boil every one by hand.', time: 'Today' },
+      { id: 13, read: true, conn: 'coffee', pri: 1, text: 'Parked at the rivulet track entrance all weekend. Bagels from Rise & Roll on the counter while they last.', time: 'Yesterday' },
+      { id: 14, read: true, conn: 'records', pri: 1, text: 'Crate of 70s Australian pressings just in. Saturday listening session from 2pm.', time: 'Tue' },
       { id: 10, conn: 'netball', pri: 1, title: 'Finals day: everything you need to know', text: "We made the grand final! It's on Saturday 29 November at the Domain courts, court 3, at 10:20am. Please have players there by 9:50 for warm-up.\n\nUniforms: full club kit, including the navy socks. If your child has lost theirs, we have spares at the canteen.\n\nParking fills up fast on finals day. The Queens Walk car park is the best bet, or the 9:30 bus from the city stops right outside.\n\nAfter the game we're doing a team breakfast at Elm St Bakehouse. The club is covering the players; parents pay their own. Let me know by Thursday if you're coming so I can give them numbers.\n\nWin or lose, it's been a brilliant season. Thanks for every early morning, every lift and every orange quarter.", time: '8:15am' }
     ]
   });
@@ -524,34 +579,93 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
   }
 
   // ---------- Radar ----------
-  function radar() {
-    const all = S.connections.filter((c) => !c.owner && c.dist != null);
-    const shown = all.filter((c) => strength(c.verified) > 0 && c.dist <= RANGE).sort((a, b) => a.dist - b.dist);
-    const hidden = all.length - shown.length;
+  // ---------- Radar ----------
+  const nearby = () => S.connections.filter((c) => !c.owner && c.dist != null && c.dist <= RANGE && strength(c.verified) > 0).sort((a, b) => a.dist - b.dist);
+  const latestOf = (c) => S.posts.filter((p) => p.conn === c.id).sort((a, b) => b.id - a.id)[0];
+  const hereTrove = () => nearby().find((c) => c.dist <= 50);
+  function searchNearby(q) {
+    const words = (q.toLowerCase().match(/[a-z0-9]{3,}/g) || []).map((w) => w.replace(/s$/, ''));
+    if (!words.length) return [];
+    const out = [];
+    for (const c of nearby()) {
+      const texts = [{ src: 'name', t: c.name }]
+        .concat(S.posts.filter((p) => p.conn === c.id).map((p) => ({ src: 'ping', t: (p.title ? p.title + '. ' : '') + p.text, time: p.time })))
+        .concat(c.docs.map((d) => ({ src: 'doc', t: d.t + ': ' + d.b })));
+      let best = null;
+      for (const x of texts) {
+        const low = x.t.toLowerCase(), hits = words.filter((w) => low.includes(w)).length;
+        if (hits && (!best || hits > best.hits)) best = Object.assign({ hits }, x);
+      }
+      if (best) out.push({ c, best, score: best.hits * 10 - c.dist / 500 + (best.src === 'ping' ? 1 : 0) });
+    }
+    return out.sort((a, b) => b.score - a.score);
+  }
+  function hl(text, q) {
+    let h = esc(text);
+    for (const w of (q.toLowerCase().match(/[a-z0-9]{3,}/g) || []).map((x) => x.replace(/s$/, ''))) h = h.replace(new RegExp(`(${w}[a-z]*)`, 'gi'), '<mark>$1</mark>');
+    return h;
+  }
+  function nearRow(c, preview, wrap) {
+    const s = strength(c.verified);
+    return `<button type="button" class="near-row" data-act="trove" data-arg="${c.id}">
+      <span style="min-width:0"><span class="nm">${esc(c.name)}${c.joined ? '<span class="subd-tag">Subscribed</span>' : ''}</span><span class="pv ${wrap ? 'wrap' : ''}">${preview}</span></span>
+      <span class="side">${km(c.dist)}${meter(s)}</span></button>`;
+  }
+  function hereCard(big) {
+    const c = hereTrove(); if (!c) return '';
+    const l = latestOf(c);
+    return `<div class="here ${big ? 'big' : ''}"><span class="eyebrow"><i></i>You're here</span>
+      <h2>${esc(c.name)}</h2>
+      ${l ? `<p class="last">${esc(l.title || l.text)}</p>` : ''}
+      ${c.joined ? `<button type="button" class="btn small" data-act="open-conn" data-arg="${c.id}">Open Trove</button>`
+        : `<div class="row"><button type="button" class="btn ${big ? '' : 'small'}" data-act="sub-start" data-arg="${c.id}">Subscribe</button><button type="button" class="link-btn" data-act="trove" data-arg="${c.id}" style="color:var(--sonar-glow)">What's here</button></div>`}</div>`;
+  }
+  function results() {
+    const q = S.nearQ.trim(), r = searchNearby(q);
+    return `<div class="band-h">${r.length} result${r.length === 1 ? '' : 's'} near you</div>
+      ${r.length ? r.map(({ c, best }) => nearRow(c, (best.src === 'ping' ? `${esc(best.time)} · ` : best.src === 'doc' ? 'From their info · ' : '') + hl(best.t, q), true)).join('')
+        : `<p class="sub">No nearby Troves mention “${esc(q)}”. Try fewer words.</p>`}
+      <p class="demo-note" style="color:#7F95A4">Searches every public Trove within ${km(RANGE)} and their recent pings.</p>`;
+  }
+  function radarCircle(size) {
+    const shown = nearby();
     const blips = shown.map((c) => {
       const s = strength(c.verified), r = (c.dist / RANGE) * 46, a = c.bearing * Math.PI / 180;
-      const x = 50 + r * Math.sin(a), y = 50 - r * Math.cos(a), size = [0, 6, 8, 11, 13][s], op = [0, .3, .5, .8, 1][s];
-      return `<button type="button" class="blip s${s} ${c.joined ? 'subd' : ''}" style="left:${x}%;top:${y}%;opacity:${op}" data-act="trove" data-arg="${c.id}" aria-label="${esc(c.name)}, ${STRENGTH[s]}, ${km(c.dist)}"><span style="width:${size}px;height:${size}px"></span></button>`;
+      const x = 50 + r * Math.sin(a), y = 50 - r * Math.cos(a), sz = [0, 6, 8, 11, 13][s], op = [0, .3, .5, .8, 1][s];
+      return `<button type="button" class="blip s${s} ${c.joined ? 'subd' : ''}" style="left:${x}%;top:${y}%;opacity:${op}" data-act="trove" data-arg="${c.id}" aria-label="${esc(c.name)}, ${STRENGTH[s]}, ${km(c.dist)}"><span style="width:${sz}px;height:${sz}px"></span></button>`;
     }).join('');
-    const rows = shown.map((c) => {
-      const s = strength(c.verified);
-      return `<button type="button" class="trove-row" data-act="trove" data-arg="${c.id}">${meter(s)}
-        <span class="grow" style="gap:3px"><span class="name">${esc(c.name)}</span><span class="sub">${STRENGTH[s]} · verified ${ago(c.verified)}</span></span>
-        ${c.joined ? '<span class="tag plain">Subscribed</span>' : ''}<span class="dist">${km(c.dist)}</span></button>`;
-    }).join('');
-    return `<button type="button" class="back" data-act="go" data-arg="home">‹ Home</button>
-      <h1>Radar</h1><p class="sub">Troves near you. Strong pings were confirmed by their owners recently. Weak ones may be out of date.</p>
-      <div class="radar">
+    return `<div class="radar" style="max-width:${size}px">
         <svg class="grid" viewBox="0 0 100 100" aria-hidden="true"><g fill="none" stroke="rgba(156,195,222,.22)" stroke-width=".4">
           <circle cx="50" cy="50" r="15.3"/><circle cx="50" cy="50" r="30.7"/><circle cx="50" cy="50" r="46"/><path d="M50 2v96M2 50h96"/></g>
           <g fill="rgba(156,195,222,.6)" font-size="3" font-family="Inter, sans-serif"><text x="51" y="34">800 m</text><text x="51" y="18.6">1.7 km</text><text x="51" y="3.4">2.5 km</text></g></svg>
-        <div class="sweep" aria-hidden="true"></div>
-        <span class="you-dot" aria-hidden="true"></span>
-        ${blips}
-      </div>
+        <div class="sweep" aria-hidden="true"></div><span class="you-dot" aria-hidden="true"></span>${blips}</div>`;
+  }
+  function radarBody() {
+    if (S.nearQ.trim()) return results();
+    const others = nearby().filter((c) => c !== hereTrove());
+    const preview = (c) => { const l = latestOf(c); return l ? esc(l.title || l.text) : `${STRENGTH[strength(c.verified)]} · verified ${ago(c.verified)}`; };
+    if (S.rlayout === 'here') {
+      return `${hereCard(true)}<div class="band-h">Around you</div>${others.map((c) => nearRow(c, preview(c))).join('')}`;
+    }
+    if (S.rlayout === 'rings') {
+      const band = (title, list) => list.length ? `<div class="band-h">${title}</div>${list.map((c) => nearRow(c, preview(c))).join('')}` : '';
+      return `${hereCard(false)}${band('A short walk · under 500 m', others.filter((c) => c.dist < 500))}${band('Walkable · under 1.5 km', others.filter((c) => c.dist >= 500 && c.dist < 1500))}${band('Further out', others.filter((c) => c.dist >= 1500))}`;
+    }
+    return `${hereCard(false)}${radarCircle(320)}
       <div class="legend"><span><b></b>Strong</span><span><b style="opacity:.45"></b>Weak</span><span><b style="background:#FFFFFF"></b>Subscribed</span></div>
-      ${rows}
-      ${hidden ? `<p class="sub" style="text-align:center">${hidden} Trove${hidden === 1 ? ' is' : 's are'} too faint to show. Their details haven't been confirmed in over six months.</p>` : ''}
+      ${others.map((c) => nearRow(c, preview(c))).join('')}`;
+  }
+  function radar() {
+    const faint = S.connections.filter((c) => !c.owner && c.dist != null && strength(c.verified) === 0).length;
+    const head = S.rlayout === 'here'
+      ? `<div class="row" style="flex-wrap:nowrap;justify-content:space-between"><div><h1>Nearby</h1><p class="sub">${nearby().length} Troves within ${km(RANGE)}</p></div><div class="mini-radar" aria-hidden="true"><div class="sweep"></div>${nearby().map((c) => { const r = (c.dist / RANGE) * 46, a = c.bearing * Math.PI / 180; return `<i style="left:${50 + r * Math.sin(a)}%;top:${50 - r * Math.cos(a)}%;opacity:${[0, .3, .5, .8, 1][strength(c.verified)]}"></i>`; }).join('')}</div></div>`
+      : S.rlayout === 'rings'
+        ? `<div class="pulse-head" aria-hidden="true"><span></span><span></span><span></span><b></b></div><h1 style="text-align:center;margin-top:-8px">Nearby</h1><p class="sub" style="text-align:center">${nearby().length} Troves within ${km(RANGE)}, closest first</p>`
+        : `<h1>Radar</h1><p class="sub">Troves near you. Strong pings were confirmed recently; weak ones may be out of date.</p>`;
+    return `<button type="button" class="back" data-act="go" data-arg="home">‹ Home</button>${head}
+      <div class="qchips" ${S.nearQ.trim() ? 'hidden' : ''} id="near-chips">${['good bagels', 'coffee', 'kids', 'this weekend', 'records'].map((t) => `<button type="button" class="qchip" data-act="near-try" data-arg="${t}">${t}</button>`).join('')}</div>
+      <div id="near-results" style="display:flex;flex-direction:column;gap:12px">${radarBody()}</div>
+      ${faint ? `<p class="sub" style="text-align:center">${faint} Trove${faint === 1 ? ' is' : 's are'} too faint to show. Their details haven't been confirmed in over six months.</p>` : ''}
       <p class="demo-note" style="color:#7F95A4">Your location stays on your phone. Prototype: positions are made up.</p>`;
   }
   function troveSheet(c) {
@@ -767,6 +881,11 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
 
   // ---------- Shell ----------
   function floatBar() {
+    if (S.screen === 'radar') return `<div class="fab">
+      <form class="fab-ask near" data-form="near">
+        <label for="near-q" class="sr">Search nearby Troves and their pings</label>
+        <input class="input" id="near-q" placeholder="Search nearby" autocomplete="off" value="${esc(S.nearQ)}">
+        <button class="fab-send" type="${S.nearQ ? 'button' : 'submit'}" ${S.nearQ ? 'data-act="near-clear" aria-label="Clear search"' : 'aria-label="Search"'}>${S.nearQ ? '×' : '↑'}</button></form></div>`;
     return `<div class="fab">
       <form class="fab-ask" data-form="ask">
         <label for="float-ask" style="position:absolute;left:-9999px">Ask about anything you subscribe to</label>
@@ -790,8 +909,9 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
 
   const SCREENS = { home, feed: feedPage, ping: pingView, trove: troveFeed, radar, troves, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
   function render() {
+    ['sonar', 'here', 'rings'].forEach((n) => $('rl-' + n).setAttribute('aria-pressed', S.rlayout === n));
     const el = $('screen');
-    const fab = ['home', 'ask'].includes(S.screen);
+    const fab = ['home', 'ask', 'radar'].includes(S.screen);
     el.className = 'screen' + (S.screen === 'subscribe' ? ' flush' : '') + (fab ? ' has-fab' : '') + (S.screen === 'radar' ? ' radar-screen' : '');
     el.innerHTML = (SCREENS[S.screen] || home)();
     $('float').innerHTML = fab ? floatBar() : '';
@@ -812,6 +932,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
   const act = {
     reset: () => { S = fresh(); render(); toast('Prototype reset'); },
     go: (a) => {
+      if (a !== 'radar') S.nearQ = '';
       S.screen = a; S.addingDoc = false; S.sheet = null; render(); scrollTop();
       if (a === 'feed' || a === 'home') S.posts.forEach((p) => { p.isNew = false; p.wasUnread = false; });
     },
@@ -823,6 +944,9 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
     'menu-go': (a) => act.go(a),
     'menu-mine': (a) => { S.sheet = null; act['open-mine'](a); },
     trove: (a) => { S.sheet = a; render(); },
+    rlayout: (a) => { S.rlayout = a; S.screen = 'radar'; S.sheet = null; render(); scrollTop(); },
+    'near-try': (a) => { S.nearQ = a; render(); },
+    'near-clear': () => { S.nearQ = ''; render(); const i = $('near-q'); if (i) i.focus(); },
     quiet: () => { const y = $('screen').scrollTop; S.showQuiet = !S.showQuiet; render(); $('screen').scrollTop = y; },
     'open-ping': (a) => { S.back = S.screen === 'trove' ? 'trove' : 'feed'; S.pingId = +a; const p = S.posts.find((x) => x.id === +a); if (p) { p.isNew = false; p.read = true; } S.screen = 'ping'; render(); scrollTop(); },
     'open-trove': (a) => {
@@ -901,6 +1025,12 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && S.sheet) { S.sheet = null; render(); } });
   document.addEventListener('input', (e) => {
     if (e.target.id === 'draft') { S.draft.text = e.target.value; if (!e.target.value.trim()) S.draft.manual = false; updateCompose(); }
+    if (e.target.id === 'near-q') {
+      S.nearQ = e.target.value;
+      $('near-results').innerHTML = radarBody();
+      $('near-chips').hidden = !!S.nearQ.trim();
+      return;
+    }
     if (e.target.id === 'ch-name') { S.newCh.name = e.target.value; $('ch-create').disabled = !e.target.value.trim(); }
   });
   document.addEventListener('change', (e) => {
@@ -910,6 +1040,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
     const f = e.target.dataset.form; if (!f) return;
     e.preventDefault();
     if (f === 'ask') doAsk(e.target.querySelector('input').value);
+    if (f === 'near') { S.nearQ = $('near-q').value; render(); }
     if (f === 'prompt') { const v = $('prompt-in').value.trim(); S.prompt = v || DEFAULT_PROMPT; S.sheet = null; render(); toast('Briefing updated'); }
     if (f === 'doc') {
       const t = $('doc-t').value.trim(), b = $('doc-b').value.trim();
@@ -920,7 +1051,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
 
   const hot = window.claude && window.claude.hot;
   if (hot && hot.snapshot) hot.snapshot(() => S);
-  const boot = (data) => { if (data && data.v === 10) S = Object.assign(fresh(), data, { sheet: null }); render(); };
+  const boot = (data) => { if (data && data.v === 11) S = Object.assign(fresh(), data, { sheet: null }); render(); };
   if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>
