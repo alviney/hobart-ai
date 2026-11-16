@@ -1,7 +1,7 @@
 # D-008: Working name Sub1; entities are Troves, messages are Pings
 
 - **Date:** 2026-11-15
-- **Status:** accepted
+- **Status:** accepted (the word "Trove" is superseded by D-017: entities are now Stations)
 - **Answers:** Q-001
 - **Projects:** [notify-core](../projects/notify-core.md), [ui-mockups](../projects/ui-mockups.md), [pilot-publishers](../projects/pilot-publishers.md)
 

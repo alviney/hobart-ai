@@ -82,7 +82,7 @@ p { margin: 0; }
 .fhead { display: flex; align-items: center; justify-content: space-between; gap: 10px; position: relative; }
 .fhead h2 { font-size: 20px; font-weight: 800; }
 
-/* Feed rows: same height; rating marker | title + Trove | time */
+/* Feed rows: same height; rating marker | title + Station | time */
 .plist { display: flex; flex-direction: column; flex-shrink: 0; }
 .prow { height: 64px; flex-shrink: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 0 4px; border: 0; background: transparent; text-align: left; width: 100%; color: var(--ink); }
 .pmain { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
@@ -109,7 +109,7 @@ p { margin: 0; }
 .fmenu button[aria-pressed="true"], .fmenu button:hover { background: var(--soft); }
 .fmenu .n { margin-left: auto; color: var(--muted); font-variant-numeric: tabular-nums; font-weight: 500; }
 
-/* Trove rows: one per Trove. rating circle | Trove name + latest ping | time + unread */
+/* Station rows: one per Station. rating circle | Station name + latest ping | time + unread */
 .trow { height: 66px; flex-shrink: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 0 4px; border: 0; border-bottom: 1px solid var(--line); background: transparent; text-align: left; width: 100%; color: var(--ink); }
 .trow:hover { background: var(--soft); }
 .trow .tname { font-size: 16px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -690,7 +690,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 .phone[data-theme="friendly"] .conn.off { opacity: .55; }
 .phone[data-theme="friendly"] .choice[aria-pressed="true"] { box-shadow: 0 0 0 2px #FFD23F, 0 2px 10px rgba(42,35,64,.06); }
 .phone[data-theme="friendly"] .choice[aria-pressed="true"] .radio { border-color: #2A2340; background: #FFD23F; }
-/* Trove icons: yellow circle with the category icon, like "You're here" */
+/* Station icons: yellow circle with the category icon, like "You're here" */
 .phone[data-theme="friendly"] .avatar { background: #FFD23F; color: #2A2340; }
 .phone[data-theme="friendly"] .avatar svg { width: 22px; height: 22px; }
 .phone[data-theme="friendly"] .avatar.big svg { width: 28px; height: 28px; }
@@ -713,7 +713,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 .phone[data-theme="friendly"] .hero .sub { color: #FFD23F; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
 .phone[data-theme="friendly"] .hero h1 { color: #FFFFFF; font-weight: 600; }
 .phone[data-theme="friendly"] .hero > span:last-child { color: #C6D6E8; }
-/* Lists of pings on Trove pages use the home cards */
+/* Lists of pings on Station pages use the home cards */
 .cardlist { display: flex; flex-direction: column; }
 .cardlist .rp { margin-bottom: 8px; }
 /* All pings: home-style cards with the category icon */
@@ -745,7 +745,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 .phone[data-sig="ring"] .avatar.sig2 { background: #FFEBA8; box-shadow: 0 0 0 3px #FFFFFF, 0 0 0 4px #FFE48A; }
 .phone[data-sig="ring"] .avatar.sig1, .phone[data-sig="ring"] .avatar.sig0 { background: #EFEDF5; color: #8C86A3; box-shadow: none; outline: 2px dashed #C9C4D8; outline-offset: 3px; }
 .phone[data-sig="ring"] .avatar.ink.sig2 { background: #3D5675; }
-/* 3 Glow: fresh Troves glow like a light that's on; stale ones go flat and grey */
+/* 3 Glow: fresh Stations glow like a light that's on; stale ones go flat and grey */
 .phone[data-sig="glow"] .avatar.sig4 { box-shadow: 0 0 0 4px rgba(255,210,63,.35), 0 0 20px 2px rgba(255,200,40,.85); }
 .phone[data-sig="glow"] .avatar.sig3 { box-shadow: 0 0 12px rgba(255,200,40,.55); }
 .phone[data-sig="glow"] .avatar.sig2 { background: #FFE9A6; box-shadow: none; }
@@ -756,7 +756,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 .phone[data-sig="tier"] .avatar.sig4 { box-shadow: inset 0 0 0 3px #E0A500; }
 .phone[data-sig="tier"] .avatar.sig2, .phone[data-sig="tier"] .avatar.sig1, .phone[data-sig="tier"] .avatar.sig0 { opacity: .4; }
 
-/* Ping strength as a horizontal bar: along the bottom of a Trove card, small inline elsewhere */
+/* Ping strength as a horizontal bar: along the bottom of a Station card, small inline elsewhere */
 .sig-bar { display: inline-block; width: 44px; height: 6px; border-radius: 3px; background: #EFEDF5; overflow: hidden; flex-shrink: 0; vertical-align: middle; }
 .sig-bar i { display: block; height: 100%; border-radius: 3px; background: #F2B600; }
 .sig-bar.s2 i, .sig-bar.s1 i, .sig-bar.s0 i { background: #CFC9E0; }
@@ -812,7 +812,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const RANGE = 2500; // metres shown at the radar's edge
   const EMPTY_AUD = () => ({ 4: 0, 1: 0, ai: 0 });
 
-  // Ping strength comes from how recently the Trove's owner confirmed its details.
+  // Ping strength comes from how recently the Station's owner confirmed its details.
   const strength = (days) => days <= 7 ? 4 : days <= 30 ? 3 : days <= 90 ? 2 : days <= 180 ? 1 : 0;
   const ago = (d) => d === 0 ? 'today' : d === 1 ? 'yesterday' : d < 14 ? `${d} days ago` : d < 60 ? `${Math.round(d / 7)} weeks ago` : `${Math.round(d / 30)} months ago`;
   const km = (m) => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
@@ -993,7 +993,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   function briefing() {
     const q = S.prompt.toLowerCase(), all = briefingItems();
     const say = (it, text) => `<p class="bline">${it.urgent ? '<span class="urg">' : ''}${esc(text || it.line || it.text)}${it.urgent ? '</span>' : ''}</p>`;
-    if (!all.length) return '<p class="bline">Nothing on yet. Subscribe to a few Troves and this will fill up.</p>';
+    if (!all.length) return '<p class="bline">Nothing on yet. Subscribe to a few Stations and this will fill up.</p>';
     if (/week|day by day/.test(q)) return all.slice(0, 4).map((it) => say(it, `${it.day === 'This week' ? 'This week' : it.day}: ${it.text}`)).join('');
     if (/urgent/.test(q)) { const u = all.filter((it) => it.urgent); return u.length ? u.slice(0, 3).map((it) => say(it)).join('') : '<p class="bline">No urgent news.</p>'; }
     const soon = all.filter((it) => ['Today', 'Fri', 'Sat', 'Sun'].includes(it.day));
@@ -1005,7 +1005,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const RAV = [['#FFE3D6', '#9A3412'], ['#DDF5E7', '#1F6B3E'], ['#E6E0FF', '#4B2FBF'], ['#DCEFFF', '#1B4F8A'], ['#FFF0C2', '#7A5300']];
   const hashId = (id) => [...id].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) >>> 0, 7);
-  // Category icons: what kind of Trove a ping came from.
+  // Category icons: what kind of Station a ping came from.
   const CAT = {
     school: ['School', '<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11.5v4c2 2 10 2 12 0v-4M22 9v5"/>'],
     sport: ['Sport', '<circle cx="12" cy="12" r="9"/><path d="M5.6 5.6c3.5 3.5 3.5 9.3 0 12.8M18.4 5.6c-3.5 3.5-3.5 9.3 0 12.8"/>'],
@@ -1023,12 +1023,12 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const catIcon = (c) => { const [label, d] = CAT[catOf(c)]; return `<span class="cat" title="${label}">${svg(d)}<span class="sr">${label}</span></span>`; };
   const clock = (p) => { const m = /^(\d{1,2}):(\d{2})(am|pm)$/.exec(p.time || ''); return m ? (+m[1] % 12 + (m[3] === 'pm' ? 12 : 0)) * 60 + +m[2] : -1; };
   const byNewest = (a, b) => a.age - b.age || clock(b) - clock(a) || b.id - a.id;
-  // Category filter: icons for the kinds of Trove in the list, plus All.
+  // Category filter: icons for the kinds of Station in the list, plus All.
   const catMatch = (p) => !S.catOff.includes(catOf(conn(p.conn)));
   function catFilter(list) {
     const present = new Set(list.map((p) => catOf(conn(p.conn))));
     const keys = Object.keys(CAT).filter((k) => present.has(k));
-    return `<div class="cicons" role="group" aria-label="Show or hide types of Trove">${keys.map((k) => { const on = !S.catOff.includes(k); return `<button type="button" class="cicon" data-act="cat" data-arg="${k}" aria-pressed="${on}" aria-label="${CAT[k][0]}" title="${CAT[k][0]}${on ? '' : ' (hidden)'}">${svg(CAT[k][1])}</button>`; }).join('')}</div>`;
+    return `<div class="cicons" role="group" aria-label="Show or hide types of Station">${keys.map((k) => { const on = !S.catOff.includes(k); return `<button type="button" class="cicon" data-act="cat" data-arg="${k}" aria-pressed="${on}" aria-label="${CAT[k][0]}" title="${CAT[k][0]}${on ? '' : ' (hidden)'}">${svg(CAT[k][1])}</button>`; }).join('')}</div>`;
   }
   const recentPings = () => myPosts().slice().sort((a, b) => byNewest(a, b));
   const dayLabel = (age) => age === 0 ? 'Today' : age === 1 ? 'Yesterday' : age <= 7 ? 'Earlier this week' : 'Older';
@@ -1045,7 +1045,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   function grouped(list, near, tail) {
     const bands = [];
     for (const p of list) { const d = dayLabel(p.age); let b = bands[bands.length - 1]; if (!b || b.d !== d) bands.push(b = { d, rows: [] }); b.rows.push(p); }
-    if (!bands.length) return '<div class="empty">No pings yet. Turn on the radar to find Troves nearby.</div>';
+    if (!bands.length) return '<div class="empty">No pings yet. Turn on the radar to find Stations nearby.</div>';
     const depth = { Today: 0, Yesterday: 1, 'Earlier this week': 2, Older: 3 };
     let n = 0;
     return `<div class="dive">${bands.map((b, k) => `<section class="band d${depth[b.d]}"><h2 class="dayh">${b.d}</h2>${b.rows.map((p) => rpRow(p, near, n++)).join('')}${k === bands.length - 1 ? (tail || '') : ''}</section>`).join('')}</div>`;
@@ -1059,7 +1059,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     const unread = myPosts().filter((p) => !p.read).length, urgent = myPosts().some((p) => !p.read && p.pri === 4);
     return `<div class="topline"><button type="button" class="iconbtn" data-act="menu" aria-label="Menu">${icon.menu}</button>
         ${extra || '<span style="flex:1"></span>'}
-        ${S.concept === 'tabs' ? '' : `<button type="button" class="radar-btn troves-btn" data-act="troves-toggle" aria-pressed="${!!S.trovesOn}" aria-label="${S.trovesOn ? 'Close your subs' : 'Your subs'}">${S.trovesOn ? icon.close : icon.chest}</button><button type="button" class="radar-btn" data-act="radar-toggle" aria-pressed="${!!S.radarOn}" aria-label="${S.radarOn ? 'Close the radar' : 'Radar: Troves near you'}">${S.radarOn ? icon.close : icon.radar}</button>`}</div>`;
+        ${S.concept === 'tabs' ? '' : `<button type="button" class="radar-btn troves-btn" data-act="troves-toggle" aria-pressed="${!!S.trovesOn}" aria-label="${S.trovesOn ? 'Close your subs' : 'Your subs'}">${S.trovesOn ? icon.close : icon.chest}</button><button type="button" class="radar-btn" data-act="radar-toggle" aria-pressed="${!!S.radarOn}" aria-label="${S.radarOn ? 'Close the radar' : 'Radar: Stations near you'}">${S.radarOn ? icon.close : icon.radar}</button>`}</div>`;
   }
   function home() {
     if (S.concept === 'tabs') {
@@ -1085,7 +1085,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     return `<div class="topline"><button type="button" class="iconbtn" data-act="menu" aria-label="Menu">${icon.menu}</button>
         <span style="flex:1"></span>
         <button type="button" class="pings-btn" data-act="go" data-arg="feed" aria-label="All pings${unread ? `, ${unread} unread` : ''}">${icon.inbox}${unread ? `<span class="badge ${urgent ? 'urgent' : ''}">${unread}</span>` : ''}</button>
-        <button type="button" class="radar-btn" data-act="radar-toggle" aria-pressed="${!!S.radarOn}" aria-label="Radar: Troves near you">${icon.radar}</button></div>
+        <button type="button" class="radar-btn" data-act="radar-toggle" aria-pressed="${!!S.radarOn}" aria-label="Radar: Stations near you">${icon.radar}</button></div>
       ${S.radarOn ? radar() : `<section class="brief2 reveal" aria-label="Your briefing">
         <span class="eyebrow">${TODAY}</span>
         ${briefing()}
@@ -1096,7 +1096,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     return `<div class="backdrop" data-act="sheet-close"></div>
       <form class="sheet" role="dialog" aria-label="Edit your prompt" data-form="prompt"><span class="grabber"></span>
         <h2>Your briefing prompt</h2>
-        <p class="sub">Tell Sub1 how to turn your pings into a briefing. It only uses Troves you subscribe to.</p>
+        <p class="sub">Tell Sub1 how to turn your pings into a briefing. It only uses Stations you subscribe to.</p>
         <label for="prompt-in" class="sr">Prompt</label>
         <textarea class="input" id="prompt-in" style="height:110px;font-size:16px">${esc(S.prompt)}</textarea>
         <p class="label" style="margin-top:4px">Try one of these</p>
@@ -1120,10 +1120,10 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     return `<button type="button" class="back" data-act="go" data-arg="home">‹ Home</button><h1>Pings</h1>
       ${S.pullOnly ? '<p class="sub">Pull only is on, so nothing pings you. Everything is here when you or your AI look.</p>' : ''}
       ${rows ? `<div class="plist">${rows}</div>` : `<div class="empty">No ${f === 'all' ? '' : 'urgent '}pings right now.</div>`}
-      <p class="tagline">An orange count means one of the unread pings is urgent. Dimmed Troves don't notify you.</p>`;
+      <p class="tagline">An orange count means one of the unread pings is urgent. Dimmed Stations don't notify you.</p>`;
   }
 
-  // ---------- One Trove's pings ----------
+  // ---------- One Station's pings ----------
   function troveFeed() {
     const c = conn(S.troveId);
     const list = S.posts.filter((p) => p.conn === c.id).sort((a, b) => b.id - a.id);
@@ -1193,15 +1193,15 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     return `<div class="here ${big ? 'big' : ''}"><span class="eyebrow"><i></i>You're here</span>
       <h2>${esc(c.name)}</h2>
       ${l ? `<p class="last">${esc(l.title || l.text)}</p>` : ''}
-      ${c.joined ? `<button type="button" class="btn small" data-act="open-conn" data-arg="${c.id}">Open Trove</button>`
+      ${c.joined ? `<button type="button" class="btn small" data-act="open-conn" data-arg="${c.id}">Open Station</button>`
         : `<div class="row"><button type="button" class="btn ${big ? '' : 'small'}" data-act="sub-start" data-arg="${c.id}">Subscribe</button><button type="button" class="link-btn" data-act="trove" data-arg="${c.id}" style="color:var(--sonar-glow)">What's here</button></div>`}</div>`;
   }
   function results() {
     const q = S.nearQ.trim(), r = searchNearby(q);
     return `<div class="band-h">${r.length} result${r.length === 1 ? '' : 's'} near you</div>
       ${r.length ? r.map(({ c, best }) => nearRow(c, (best.src === 'ping' ? `${esc(best.time)} · ` : best.src === 'doc' ? 'From their info · ' : '') + hl(best.t, q), true, best.src === 'ping' ? pingSig(best.age) : 0)).join('')
-        : `<p class="sub">No nearby Troves mention “${esc(q)}”. Try fewer words.</p>`}
-      <p class="demo-note" style="color:#7F95A4">Searches every public Trove within ${km(RANGE)} and their recent pings.</p>`;
+        : `<p class="sub">No nearby Stations mention “${esc(q)}”. Try fewer words.</p>`}
+      <p class="demo-note" style="color:#7F95A4">Searches every public Station within ${km(RANGE)} and their recent pings.</p>`;
   }
   function radarCircle(size) {
     const shown = nearby();
@@ -1233,7 +1233,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     const c = hereTrove(); if (!c) return '';
     const l = latestOf(c), [catLabel, catPath] = CAT[catOf(c)];
     const act = c.joined ? `data-act="open-conn" data-arg="${c.id}"` : `data-act="sub-start" data-arg="${c.id}"`;
-    const cta = c.joined ? 'Open Trove' : 'Subscribe';
+    const cta = c.joined ? 'Open Station' : 'Subscribe';
     const sig = STRENGTH[strength(c.verified)] || 'Faint ping';
     if (S.hereUi === 'sonar') return `<section class="h-sonar" aria-label="You're here">
         <div class="h-top"><div class="grow" style="gap:6px"><span class="h-eb">Contact · ${km(c.dist)}</span>
@@ -1326,12 +1326,12 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
         <div class="setting" style="background:var(--soft)"><span class="row" style="gap:10px;flex-wrap:nowrap">${meter(s)}<span><b>${STRENGTH[s]}</b><br><span class="sub">Details confirmed by the owner ${ago(c.verified)}</span></span></span></div>
         ${c.docs.length ? `<p class="label">What's here</p>${c.docs.map((d) => `<details class="doc"><summary>${esc(d.t)}</summary><p>${esc(d.b)}</p></details>`).join('')}` : ''}
         ${c.joined
-          ? `<button type="button" class="btn" data-act="open-conn" data-arg="${c.id}">Open Trove</button>`
+          ? `<button type="button" class="btn" data-act="open-conn" data-arg="${c.id}">Open Station</button>`
           : `<button type="button" class="btn" data-act="sub-start" data-arg="${c.id}">Subscribe</button>`}
       </div>`;
   }
 
-  // ---------- Troves you subscribe to ----------
+  // ---------- Stations you subscribe to ----------
   function troves() {
     const mine = owned().map((c) => `
       <button type="button" class="conn mine" data-act="open-mine" data-arg="${c.id}">
@@ -1400,23 +1400,23 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
       <span class="avatar big${sigCls(c)}">${svg(CAT[catOf(c)][1])}</span><h1>You're subscribed</h1>
       <p class="sub" style="font-size:16px">${esc(c.name)} will ping you for <b>${LINE[c.level].toLowerCase()}</b>${c.via === 'My AI only' ? ', through your AI only' : ' by email'}. Change it any time in Your subs.</p>
       <button type="button" class="btn" data-act="go" data-arg="home">See your pings</button>
-      <p class="sub">Got something to share? <button type="button" class="link-btn" data-act="go" data-arg="start" style="padding:0">Start a Trove</button></p></div>`;
+      <p class="sub">Got something to share? <button type="button" class="link-btn" data-act="go" data-arg="start" style="padding:0">Start a Station</button></p></div>`;
   }
 
-  // ---------- Troves you run ----------
+  // ---------- Stations you run ----------
   function start() {
     const n = S.newCh;
     return `<button type="button" class="back" data-act="go" data-arg="home">‹ Home</button>
-      <h1>Start a Trove</h1>
-      <p class="sub" style="font-size:16px;color:var(--body)">A Trove keeps people in the loop about your club, street, shop or group. It takes a minute.</p>
+      <h1>Start a Station</h1>
+      <p class="sub" style="font-size:16px;color:var(--body)">A Station keeps people in the loop about your club, street, shop or group. It takes a minute.</p>
       <label class="label" for="ch-name">What's it called?</label>
       <input class="input" id="ch-name" placeholder="Lenna St neighbours" value="${esc(n.name)}" autocomplete="off">
       <p class="label">What is it?</p>
       <div class="pills">${KINDS.map((k) => `<button type="button" class="pill" aria-pressed="${n.kind === k}" data-act="ch-kind" data-arg="${k}">${k}</button>`).join('')}</div>
       <p class="label">Who can subscribe?</p>
       <button type="button" class="choice" aria-pressed="${n.access === 'invite'}" data-act="ch-access" data-arg="invite"><span class="radio"></span><span class="grow" style="gap:2px"><b>People I invite</b><span class="sub">By link or QR code. Ready straight away.</span></span></button>
-      <button type="button" class="choice" aria-pressed="${n.access === 'public'}" data-act="ch-access" data-arg="public"><span class="radio"></span><span class="grow" style="gap:2px"><b>Anyone nearby</b><span class="sub">Shows on the radar. We check public Troves within a day.</span></span></button>
-      <button type="button" class="btn" id="ch-create" data-act="create" style="margin-top:auto" ${n.name.trim() ? '' : 'disabled'}>Create Trove</button>
+      <button type="button" class="choice" aria-pressed="${n.access === 'public'}" data-act="ch-access" data-arg="public"><span class="radio"></span><span class="grow" style="gap:2px"><b>Anyone nearby</b><span class="sub">Shows on the radar. We check public Stations within a day.</span></span></button>
+      <button type="button" class="btn" id="ch-create" data-act="create" style="margin-top:auto" ${n.name.trim() ? '' : 'disabled'}>Create Station</button>
       <p class="demo-note">Free during the pilot.</p>`;
   }
 
@@ -1478,7 +1478,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     : S.draft.manual && S.draft.pri !== s.pri ? `You picked <b>${LEVELS[S.draft.pri].toLowerCase()}</b>. We'd have said ${LEVELS[s.pri].toLowerCase()}, because ${s.why}.`
     : `We think it's <b>${LEVELS[s.pri].toLowerCase()}</b>: ${s.why}. Change it if we're wrong.`;
   const reachText = (r) => r.pinged + r.quiet + r.ai === 0
-    ? 'Nobody has subscribed yet, so this will wait in your Trove. Invite people from Your subs.'
+    ? 'Nobody has subscribed yet, so this will wait in your Station. Invite people from Your subs.'
     : `<b class="stat">${r.pinged} ${r.pinged === 1 ? 'person' : 'people'}</b> will get a ping. <span class="stat">${r.quiet}</span> more will see it next time they look. <span class="stat">${r.ai}</span> have their AI keeping watch.`;
 
   // ---------- Ask and your AI ----------
@@ -1486,18 +1486,18 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     const msgs = S.chat.map((m) => `<div class="bubble ${m.who}">${m.who === 'ai' ? m.html : esc(m.text)}</div>`).join('');
     const sugg = ["What's on for me this week?", 'What do I need for Saturday?', 'Is school on Friday?', "When's the next working bee?"];
     return `<div class="topline" style="justify-content:space-between"><h1>Ask</h1><button type="button" class="btn ghost small" data-act="go" data-arg="home">Done</button></div>
-      <p class="sub">Answers come from your Troves' pings and documents.</p>
+      <p class="sub">Answers come from your Stations' pings and documents.</p>
       ${msgs || `<div class="chips">${sugg.map((q) => `<button type="button" class="chip" data-act="ask" data-arg="${esc(q)}">${esc(q)}</button>`).join('')}</div>`}
       <p class="demo-note">Prototype: answers are matched from the sample data, not a real AI.</p>`;
   }
 
   function ai() {
     return `<button type="button" class="back" data-act="go" data-arg="home">‹ Home</button><h1>Connect your AI</h1>
-      <p class="sub" style="font-size:16px;color:var(--body)">Let your own assistant read your pings and documents. It only sees the Troves you allow. No tech skills needed.</p>
+      <p class="sub" style="font-size:16px;color:var(--body)">Let your own assistant read your pings and documents. It only sees the Stations you allow. No tech skills needed.</p>
       <div class="card" style="gap:12px"><p class="label">1. Copy your link</p>
         <div class="row" style="flex-wrap:nowrap"><input class="input" id="mcp-link" readonly value="https://[domain]/mcp" style="font-family:var(--mono);font-size:14px;background:#FFFFFF">
         <button type="button" class="btn small" data-act="copy">Copy</button></div>
-        <p class="label">2. Paste it into your assistant</p><p class="sub">We'll show you exactly where for the one you use. Your AI can send pings from Troves you run, too.</p></div>
+        <p class="label">2. Paste it into your assistant</p><p class="sub">We'll show you exactly where for the one you use. Your AI can send pings from Stations you run, too.</p></div>
       <div class="setting"><span><b>Pull only</b><br><span class="sub">No notifications at all. My AI checks when it wants.</span></span>
         <button type="button" class="switch" role="switch" aria-checked="${S.pullOnly}" aria-label="Pull only" data-act="pull"><span></span></button></div>
       <div class="card"><p class="label">Daily digest</p><p class="sub">A morning summary of your quiet pings, written your way. Coming later.</p></div>`;
@@ -1518,7 +1518,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
       for (const p of S.posts.filter((x) => x.conn === c.id)) { const s = score(p.text); hits.push({ s: s + (s > 0 ? 0.5 : 0), html: `<b>${esc(c.short)} ping:</b> ${esc(p.text)}` }); }
     }
     const top = hits.filter((h) => h.s > 0).sort((a, b) => b.s - a.s).slice(0, 2);
-    return top.length ? top.map((h) => h.html).join('\n\n') : "I couldn't find that in your Troves' pings or documents. Try asking about a club, school or shop you subscribe to.";
+    return top.length ? top.map((h) => h.html).join('\n\n') : "I couldn't find that in your Stations' pings or documents. Try asking about a club, school or shop you subscribe to.";
   }
   function doAsk(q) {
     if (!q.trim()) return;
@@ -1530,7 +1530,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   function floatBar() {
     if (S.screen === 'home' && S.radarOn && (S.concept !== 'tabs' || S.tab === 'nearby')) return `<div class="fab">
       <form class="fab-ask" data-form="near">
-        <label for="near-q" class="sr">Ask anything. While the radar is on, this also searches nearby Troves and their pings.</label>
+        <label for="near-q" class="sr">Ask anything. While the radar is on, this also searches nearby Stations and their pings.</label>
         <input class="input" id="near-q" placeholder="Ask anything" autocomplete="off" value="${esc(S.nearQ)}">
         <button class="fab-send" type="${S.nearQ ? 'button' : 'submit'}" ${S.nearQ ? 'data-act="near-clear" aria-label="Clear search"' : 'aria-label="Search"'}>${S.nearQ ? '×' : '↑'}</button></form></div>`;
     return `<div class="fab">
@@ -1546,8 +1546,8 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
       <div class="sheet" role="dialog" aria-label="Menu"><span class="grabber"></span>
         ${owned().length ? item('menu-go', 'share', icon.pen, 'Send a ping') : ''}
         ${item('menu-go', 'troves', icon.chest, 'Your subs', `<span class="sub">${S.connections.filter((c) => c.joined && !c.owner).length} subscribed</span>`)}
-        ${mine ? `<p class="section-h" style="padding:0 10px">Troves you run</p>${mine}` : ''}
-        ${item('menu-go', 'start', icon.plus, 'Start a Trove')}
+        ${mine ? `<p class="section-h" style="padding:0 10px">Stations you run</p>${mine}` : ''}
+        ${item('menu-go', 'start', icon.plus, 'Start a Station')}
         ${item('menu-go', 'scan', icon.scan, 'Scan a code')}
         ${item('menu-go', 'ai', icon.plug, 'Your AI and settings')}
       </div>`;

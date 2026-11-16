@@ -3,7 +3,7 @@
 - **Status:** scoping
 - **Size guess:** L (split into milestones before building)
 - **Touches:** the web app, database schema, auth, email delivery
-- **Related decisions:** [D-016](../decisions/D-016-thematic-tactile.md), [D-015](../decisions/D-015-friendly-look.md), [D-014](../decisions/D-014-home-timeline.md), [D-013](../decisions/D-013-ping-signal-fades.md), [D-012](../decisions/D-012-radar-screen.md), [D-011](../decisions/D-011-urgent-or-not.md), [D-010](../decisions/D-010-deep-sonar.md), [D-008](../decisions/D-008-sub1-troves-pings.md), [D-009](../decisions/D-009-ping-strength-and-radar.md), [D-002](../decisions/D-002-start-with-notifications.md), [D-004](../decisions/D-004-mockups-first-and-ads.md), [D-005](../decisions/D-005-visual-direction.md), [D-006](../decisions/D-006-everyone-can-publish.md)
+- **Related decisions:** [D-017](../decisions/D-017-stations.md), [D-016](../decisions/D-016-thematic-tactile.md), [D-015](../decisions/D-015-friendly-look.md), [D-014](../decisions/D-014-home-timeline.md), [D-013](../decisions/D-013-ping-signal-fades.md), [D-012](../decisions/D-012-radar-screen.md), [D-011](../decisions/D-011-urgent-or-not.md), [D-010](../decisions/D-010-deep-sonar.md), [D-008](../decisions/D-008-sub1-troves-pings.md), [D-009](../decisions/D-009-ping-strength-and-radar.md), [D-002](../decisions/D-002-start-with-notifications.md), [D-004](../decisions/D-004-mockups-first-and-ads.md), [D-005](../decisions/D-005-visual-direction.md), [D-006](../decisions/D-006-everyone-can-publish.md)
 
 ## Why
 
@@ -68,3 +68,4 @@ posting weekly (see `work/signals.md`).
 - 2026-11-16: Friendly look with submarine-yellow accents (D-015)
 - 2026-11-16: thematic layer: depth is time, portholes, pressable controls, the ripple (D-016)
 - 2026-11-16: Troves need a category (drives the row icon); chosen when a Trove is created
+- 2026-11-16: Troves renamed Stations (D-017)
