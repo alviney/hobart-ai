@@ -590,6 +590,25 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 @keyframes rip-scan { 0% { transform: scale(1); opacity: .95; } 100% { transform: scale(3.6); opacity: 0; } }
 .phone[data-theme="friendly"] .scan p { color: var(--body); font-weight: 600; }
 @media (prefers-reduced-motion: reduce) { .rav.arrive::after, .ripple-scan i { animation: none; } .ripple-scan i:first-child { opacity: .6; transform: scale(2.4); } .phone[data-theme="friendly"] .radar-btn.radar-btn svg { transition: none; } }
+
+/* Flat controls (2026-11-16): no raised edges or drop shadows; a light press-in instead */
+.phone[data-theme="friendly"] .btn, .phone[data-theme="friendly"] .btn:active, .phone[data-theme="friendly"] .btn[disabled],
+.phone[data-theme="friendly"] .pillbtn, .phone[data-theme="friendly"] .pillbtn:active,
+.phone[data-theme="friendly"] .fab-send, .phone[data-theme="friendly"] .fab-send:active,
+.phone[data-theme="friendly"] .iconbtn, .phone[data-theme="friendly"] .iconbtn:active,
+.phone .step, .phone .step:active, .phone .step[disabled], .phone .place, .phone .place:active,
+.phone[data-theme="friendly"] .switch, .phone[data-theme="friendly"] .switch span,
+.phone[data-theme="friendly"] .radar-btn.radar-btn, .phone[data-theme="friendly"] .radar-btn.radar-btn[aria-pressed="true"],
+.phone[data-theme="friendly"] .radar-btn.radar-btn svg { box-shadow: none !important; }
+.phone[data-theme="friendly"] .btn:active, .phone[data-theme="friendly"] .pillbtn:active, .phone[data-theme="friendly"] .fab-send:active,
+.phone[data-theme="friendly"] .iconbtn:active, .phone .step:active, .phone .place:active { transform: scale(.96); }
+.phone[data-theme="friendly"] .iconbtn { background: #FFFFFF; border: 1px solid var(--line); }
+.phone[data-theme="friendly"] .radar-btn.radar-btn { background: #ECE9F4 !important; }
+.phone[data-theme="friendly"] .radar-btn.radar-btn[aria-pressed="true"] { background: var(--hull) !important; }
+.phone[data-theme="friendly"] .switch { background: #ECE9F4; }
+.phone[data-theme="friendly"] .switch span { border: 1px solid #DDD8EC; }
+.phone[data-theme="friendly"] .switch[aria-checked="true"] span { border-color: transparent; }
+.phone[data-theme="friendly"] .fab-ask { box-shadow: 0 6px 20px rgba(42,35,64,.08) !important; }
 </style>
 
 <div class="bar">

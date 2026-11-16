@@ -27,9 +27,11 @@ Three ideas, used with restraint (a fourth, portholes, was dropped):
   are in the list; they fade out only as they slide under the Ask bar at
   the bottom of the screen. (Fading every row after the first two was
   tried and dropped.)
-- **Controls you can press.** Buttons have a solid lower edge and sink when
-  pressed, with a short vibration where the phone allows. The radar is a
-  two-position switch with a yellow knob. "Urgent" is a flip switch.
+- **Flat controls.** Raised 3D buttons (a solid lower edge that sinks on
+  press) were tried and dropped. Buttons, switches and the radar toggle are
+  flat, with no drop shadows; pressing shrinks them slightly, with a short
+  vibration where the phone allows. The radar is still a two-position
+  switch with a yellow knob, and "Urgent" is a flip switch.
 - **The ripple.** One motion everywhere: sending a ping sends rings out
   across the screen, a new ping's card ripples, and the radar scan is
   the same rings. People who ask for reduced motion don't get it.
