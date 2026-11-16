@@ -544,6 +544,31 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 .step { width: 46px; height: 42px; flex-shrink: 0; border-radius: 23px; border: 0; background: var(--brass, #FFD23F); color: #2A2340; font-size: 24px; font-weight: 700; line-height: 1; box-shadow: 0 4px 0 var(--brass-edge, #C99A00); transition: transform .06s, box-shadow .06s; }
 .step:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--brass-edge, #C99A00); }
 .step[disabled] { background: #E6E2F0; color: #A7A1BA; box-shadow: 0 4px 0 #D3CEE2; cursor: not-allowed; }
+/* Range control options */
+.range-v.walk { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 18px; }
+.range-v.walk svg { width: 24px; height: 24px; color: var(--primary); flex-shrink: 0; }
+.ringwrap, .dialrow { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+.ring-lab { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ring-lab b { font-family: var(--display); font-weight: 600; font-size: 22px; line-height: 1.15; color: var(--ink); }
+.ringctl { position: relative; width: 168px; height: 168px; flex-shrink: 0; touch-action: none; cursor: grab; border-radius: 50%; background: radial-gradient(circle, rgba(108,76,224,.07), rgba(108,76,224,0) 70%); }
+.ringctl:active { cursor: grabbing; }
+.ring-o { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); border-radius: 50%; border: 4px solid var(--brass, #FFD23F); box-shadow: 0 0 0 1px rgba(201,154,0,.5), inset 0 0 0 1px rgba(201,154,0,.5); background: rgba(255,210,63,.12); transition: width .12s, height .12s; }
+.ring-knob { position: absolute; right: -13px; top: 50%; width: 22px; height: 22px; margin-top: -11px; border-radius: 50%; background: var(--brass, #FFD23F); box-shadow: 0 3px 0 var(--brass-edge, #C99A00); }
+.ring-me { position: absolute; left: 50%; top: 50%; width: 12px; height: 12px; margin: -6px; border-radius: 50%; background: var(--hull, #0B2545); }
+.dial { position: relative; width: 132px; height: 132px; flex-shrink: 0; touch-action: none; cursor: grab; }
+.dial-k { position: absolute; left: 22px; top: 22px; width: 88px; height: 88px; border-radius: 50%; background: var(--brass, #FFD23F); box-shadow: 0 5px 0 var(--brass-edge, #C99A00), inset 0 -6px 10px rgba(201,154,0,.35); transition: transform .12s; }
+.dial-k i { position: absolute; left: 50%; top: 8px; width: 6px; height: 24px; margin-left: -3px; border-radius: 3px; background: var(--hull, #0B2545); }
+.dial .tick { position: absolute; width: 7px; height: 7px; margin: -3.5px; border-radius: 50%; background: #CFC9E0; }
+.dial .tick.on { background: var(--hull, #0B2545); }
+.places { display: flex; flex-wrap: wrap; gap: 8px; flex-shrink: 0; }
+.place { min-height: 40px; padding: 0 14px; border-radius: 99px; border: 0; background: #FFFFFF; color: var(--body); font-weight: 700; font-size: 14px; box-shadow: 0 3px 0 #DDD8EC; transition: transform .06s, box-shadow .06s; }
+.place:active { transform: translateY(2px); box-shadow: 0 1px 0 #DDD8EC; }
+.place[aria-pressed="true"] { background: var(--brass, #FFD23F); color: #2A2340; box-shadow: 0 3px 0 var(--brass-edge, #C99A00); }
+.pull-more { margin-top: 10px; width: 100%; min-height: 48px; border-radius: 99px; border: 2px dashed rgba(255,255,255,.75); background: rgba(255,255,255,.2); color: var(--ink); font-weight: 700; font-size: 14px; }
+.band.d2:last-child .pull-more, .band.d3:last-child .pull-more { color: #FFFFFF; }
+.pull-end { margin-top: 12px; text-align: center; font-size: 13px; font-weight: 600; color: var(--muted); }
+.band.d3 .pull-end { color: #C6D6E8; }
+@media (prefers-reduced-motion: reduce) { .ring-o, .dial-k { transition: none; } }
 /* The ripple: sending, arriving and scanning all use it */
 .ripple-fx { position: absolute; inset: 0; pointer-events: none; z-index: 6; overflow: hidden; }
 .ripple-fx span { position: absolute; left: 50%; top: 42%; width: 70px; height: 70px; margin: -35px; border-radius: 50%; border: 1px solid var(--brass, #FFD23F); opacity: 0; animation: rip-big 1.5s ease-out forwards; }
@@ -560,7 +585,17 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
 <div class="bar">
   <div class="brand">Sub1<small>clickable prototype</small></div>
-  <button type="button" class="link-btn" data-act="reset">Reset</button>
+  <div class="row">
+    <span class="sub" id="ru-label" style="font-weight:600">Range control</span>
+    <div class="seg" role="group" aria-labelledby="ru-label">
+      <button type="button" data-act="rui" data-arg="ring" id="ru-ring">1 · Stretch the ring</button>
+      <button type="button" data-act="rui" data-arg="walk" id="ru-walk">2 · Walking time</button>
+      <button type="button" data-act="rui" data-arg="dial" id="ru-dial">3 · Dial</button>
+      <button type="button" data-act="rui" data-arg="pull" id="ru-pull">4 · Pull further</button>
+      <button type="button" data-act="rui" data-arg="places" id="ru-places">5 · Places</button>
+    </div>
+    <button type="button" class="link-btn" data-act="reset">Reset</button>
+  </div>
 </div>
 <div class="phone" id="phone">
   <div id="bgfx" aria-hidden="true"></div>
@@ -579,6 +614,16 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const STRENGTH = { 4: 'Strong ping', 3: 'Good ping', 2: 'Weak ping', 1: 'Faint ping' };
   const RANGES = [250, 500, 1000, 2500, 5000, 10000, 99999];
   const rangeLabel = (r) => r >= 99999 ? 'All of Hobart' : km(r).replace('.0 km', ' km');
+  const WALK = ['3 min walk', '6 min walk', '12 min walk', 'A bike ride', 'A short drive', 'Across town', 'All of Hobart'];
+  const WALK_ICON = [0, 0, 0, 1, 2, 2, 3];
+  const TRAVEL = [
+    '<circle cx="13" cy="4.5" r="1.8"/><path d="M9.5 21l2.5-6.5-2-2.5 1-4.5 3 2.5 3 1M10.5 8l-3 1.5-.5 3M13.5 15l2 6"/>',
+    '<circle cx="6" cy="16.5" r="3.5"/><circle cx="18" cy="16.5" r="3.5"/><path d="M6 16.5l4-8h5l3 8M10 8.5l3 8M9 6h3"/>',
+    '<path d="M4 16v-3l2-5h12l2 5v3zM4 13h16"/><circle cx="7.5" cy="16.5" r="1.5"/><circle cx="16.5" cy="16.5" r="1.5"/>',
+    '<path d="M3 21V9l6-3v15M9 21V4l7 3v14M16 21v-9l5 2v7M2 21h20"/>'
+  ];
+  const PLACES = [[250, 'Right here'], [500, 'My street'], [2500, 'My suburb'], [5000, 'Nearby suburbs'], [99999, 'All of Hobart']];
+  const stepLabel = (i) => (S.rangeUi === 'ring' || S.rangeUi === 'walk') ? WALK[i] : rangeLabel(RANGES[i]);
   const RANGE = 2500; // metres shown at the radar's edge
   const EMPTY_AUD = () => ({ 4: 0, 1: 0, ai: 0 });
 
@@ -588,7 +633,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const km = (m) => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
 
   const fresh = () => ({
-    v: 20, range: 1000, theme: 'friendly', concept: 'timeline', shelfSel: 'all', tab: 'now', radarOn: false, rstyle: 'a', win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
+    v: 21, rangeUi: 'ring', range: 1000, theme: 'friendly', concept: 'timeline', shelfSel: 'all', tab: 'now', radarOn: false, rstyle: 'a', win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
     draft: { text: '', pri: 1, manual: false, ch: null }, subId: 'elm', scanLevel: 1, seq: 100,
     newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false, chat: [],
     connections: [
@@ -786,13 +831,13 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
       <span class="tx">${p.title ? `<b style="color:var(--ink);font-weight:600">${esc(p.title)}.</b> ` : ''}${esc(p.text)}</span></button>`;
   }
   // Depth is time: each day band sits deeper and darker than the one above it.
-  function grouped(list, near) {
+  function grouped(list, near, tail) {
     const bands = [];
     for (const p of list) { const d = dayLabel(p.age); let b = bands[bands.length - 1]; if (!b || b.d !== d) bands.push(b = { d, rows: [] }); b.rows.push(p); }
     if (!bands.length) return '<div class="empty">No pings yet. Turn on the radar to find Troves nearby.</div>';
     const depth = { Today: 0, Yesterday: 1, 'Earlier this week': 2, Older: 3 };
     let n = 0;
-    return `<div class="dive">${bands.map((b) => `<section class="band d${depth[b.d]}"><h2 class="dayh">${b.d}</h2>${b.rows.map((p) => rpRow(p, near, n++)).join('')}</section>`).join('')}</div>`;
+    return `<div class="dive">${bands.map((b, k) => `<section class="band d${depth[b.d]}"><h2 class="dayh">${b.d}</h2>${b.rows.map((p) => rpRow(p, near, n++)).join('')}${k === bands.length - 1 ? (tail || '') : ''}</section>`).join('')}</div>`;
   }
   function summaryLine() {
     const all = briefingItems(); if (!all.length) return '';
@@ -989,9 +1034,39 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     if (S.nearQ.trim()) return results();
     const ids = nearby().map((c) => c.id);
     const list = S.posts.filter((p) => ids.includes(p.conn) && p.age <= 30).sort((a, b) => a.age - b.age || b.id - a.id);
-    return `${hereMin()}${list.length ? grouped(list, true) : `<p class="sub">No pings within ${rangeLabel(S.range)} in the last month. Try looking further.</p>`}`;
+    return `${hereMin()}${list.length ? grouped(list, true, pullTail()) : `<p class="sub">No pings within ${rangeLabel(S.range)} in the last month. Try looking further.</p>${pullTail()}`}`;
   }
 
+  function rangeCtl() {
+    const i = RANGES.indexOf(S.range), ui = S.rangeUi, max = RANGES.length - 1;
+    const slider = (id, kind) => `id="${id}" data-drag="${kind}" role="slider" tabindex="0" aria-label="How far to look" aria-valuemin="0" aria-valuemax="${max}" aria-valuenow="${i}" aria-valuetext="${stepLabel(i)}"`;
+    if (ui === 'ring') {
+      const d = 44 + i * 18;
+      return `<div class="ringwrap"><div class="ringctl" ${slider('ring-ctl', 'ring')}><span class="ring-o" id="ring-o" style="width:${d}px;height:${d}px"><i class="ring-knob"></i></span><b class="ring-me"></b></div>
+        <p class="ring-lab"><span class="range-l">Within</span><b id="range-lab">${stepLabel(i)}</b><span class="sub">Drag the ring in or out</span></p></div>`;
+    }
+    if (ui === 'dial') {
+      const ticks = RANGES.map((r, k) => { const a = (-135 + 45 * k) * Math.PI / 180; return `<i class="tick ${k <= i ? 'on' : ''}" style="left:${66 + 58 * Math.sin(a)}px;top:${66 - 58 * Math.cos(a)}px"></i>`; }).join('');
+      return `<div class="dialrow"><div class="dial" ${slider('dial-ctl', 'dial')}>${ticks}<span class="dial-k" id="dial-k" style="transform:rotate(${-135 + 45 * i}deg)"><i></i></span></div>
+        <p class="ring-lab"><span class="range-l">Within</span><b id="range-lab">${stepLabel(i)}</b><span class="sub">Turn the dial</span></p></div>`;
+    }
+    if (ui === 'pull') {
+      return `<div class="range"><span class="range-l" style="flex:1">Reaching <b style="color:var(--ink)">${rangeLabel(S.range)}</b></span>${i > 0 ? '<button type="button" class="link-btn" data-act="range-set" data-arg="250">Start again nearby</button>' : ''}</div>`;
+    }
+    if (ui === 'places') {
+      return `<div class="places" role="group" aria-label="How far to look">${PLACES.map(([r, label]) => `<button type="button" class="place" data-act="range-set" data-arg="${r}" aria-pressed="${S.range === r}">${label}</button>`).join('')}</div>`;
+    }
+    return `<div class="range" role="group" aria-label="How far to look">
+        <button type="button" class="step" data-act="range-step" data-arg="-1" aria-label="Look closer" ${i === 0 ? 'disabled' : ''}>−</button>
+        <span class="range-v walk" aria-live="polite">${svg(TRAVEL[WALK_ICON[i]])}${stepLabel(i)}</span>
+        <button type="button" class="step" data-act="range-step" data-arg="1" aria-label="Look further" ${i === max ? 'disabled' : ''}>+</button>
+      </div>`;
+  }
+  function pullTail() {
+    if (S.rangeUi !== 'pull' || S.nearQ.trim()) return '';
+    const last = RANGES.indexOf(S.range) === RANGES.length - 1;
+    return last ? '<p class="pull-end">That’s all of Hobart.</p>' : '<button type="button" class="pull-more" id="pull-more" data-act="pull-more">Keep pulling to look further ↓</button>';
+  }
   function radar() {
     if (S.scanning) return `<div class="scan"><span class="ripple-scan" aria-hidden="true"><i></i><i></i><i></i><b></b></span><p>Scanning nearby…</p></div>`;
     const back = '';
@@ -1006,12 +1081,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
       top = `<div class="rtop"><div class="slim"><span id="win-val">${WINDOWS[S.win].label}</span>${slider()}</div></div>`;
     }
     return `<div class="${S.rlayout === 'scan' ? 'reveal' : ''}" style="display:flex;flex-direction:column;gap:10px;flex:1">
-      <div class="range" role="group" aria-label="How far to look">
-        <span class="range-l">Within</span>
-        <button type="button" class="step" data-act="range-step" data-arg="-1" aria-label="Look closer" ${RANGES.indexOf(S.range) === 0 ? 'disabled' : ''}>−</button>
-        <span class="range-v" aria-live="polite">${rangeLabel(S.range)}</span>
-        <button type="button" class="step" data-act="range-step" data-arg="1" aria-label="Look further" ${RANGES.indexOf(S.range) === RANGES.length - 1 ? 'disabled' : ''}>+</button>
-      </div>
+      ${rangeCtl()}
       <div id="near-results" style="display:flex;flex-direction:column;gap:0;flex:1">${radarBody()}</div></div>`;
   }
   function troveSheet(c) {
@@ -1255,6 +1325,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const SCREENS = { home, feed: feedPage, ping: pingView, trove: troveFeed, troves, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
   function render() {
+    ['ring', 'walk', 'dial', 'pull', 'places'].forEach((n) => $('ru-' + n).setAttribute('aria-pressed', S.rangeUi === n));
     $('phone').dataset.theme = S.theme;
     const el = $('screen');
     const fab = S.screen === 'home' || S.screen === 'ask';
@@ -1277,6 +1348,55 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     const el = document.createElement('div'); el.className = 'ripple-fx'; el.setAttribute('aria-hidden', 'true'); el.innerHTML = '<span></span><span></span><span></span>';
     $('phone').appendChild(el); setTimeout(() => el.remove(), 1900);
   }
+  // Pull further: reaching the bottom of the list scans the next ring out.
+  let pulling = false;
+  function extendRange() {
+    const i = RANGES.indexOf(S.range);
+    if (pulling || i >= RANGES.length - 1) return;
+    pulling = true;
+    const b = $('pull-more'); if (b) b.textContent = `Looking further… ${rangeLabel(RANGES[i + 1])}`;
+    setTimeout(() => { pulling = false; S.range = RANGES[i + 1]; const y = $('screen').scrollTop; render(); $('screen').scrollTop = y; }, 900);
+  }
+  $('screen').addEventListener('scroll', () => {
+    if (S.screen !== 'home' || !S.radarOn || S.rangeUi !== 'pull' || S.nearQ.trim() || S.scanning) return;
+    const el = $('screen');
+    if (el.scrollTop > 0 && el.scrollTop + el.clientHeight >= el.scrollHeight - 6) extendRange();
+  });
+  // Ring and dial: drag to set the range; arrow keys work too.
+  let drag = null;
+  const clampI = (i) => Math.max(0, Math.min(RANGES.length - 1, i));
+  function previewRange(i) {
+    const ro = $('ring-o'), dk = $('dial-k'), lab = $('range-lab');
+    if (ro) { const d = 44 + i * 18; ro.style.width = d + 'px'; ro.style.height = d + 'px'; }
+    if (dk) dk.style.transform = `rotate(${-135 + 45 * i}deg)`;
+    if (lab) lab.textContent = stepLabel(i);
+  }
+  function moveDrag(e) {
+    const r = drag.el.getBoundingClientRect(), dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+    const i = drag.kind === 'ring' ? Math.round((Math.hypot(dx, dy) - 22) / 9) : Math.round((Math.max(-135, Math.min(135, Math.atan2(dx, -dy) * 180 / Math.PI)) + 135) / 45);
+    drag.i = clampI(i); previewRange(drag.i);
+  }
+  function commitRange(i, focusId) {
+    if (RANGES[i] === S.range) return;
+    S.range = RANGES[i]; render(); rippleFx();
+    if (focusId && $(focusId)) $(focusId).focus();
+    if (navigator.vibrate) { try { navigator.vibrate(8); } catch (err) {} }
+  }
+  document.addEventListener('pointerdown', (e) => {
+    const el = e.target.closest('[data-drag]'); if (!el) return;
+    drag = { el, kind: el.dataset.drag, i: RANGES.indexOf(S.range) };
+    if (el.setPointerCapture) { try { el.setPointerCapture(e.pointerId); } catch (err) {} }
+    moveDrag(e); e.preventDefault();
+  });
+  document.addEventListener('pointermove', (e) => { if (drag) moveDrag(e); });
+  const endDrag = () => { if (!drag) return; const { i, el } = drag; drag = null; commitRange(i, el.id); };
+  document.addEventListener('pointerup', endDrag);
+  document.addEventListener('pointercancel', endDrag);
+  document.addEventListener('keydown', (e) => {
+    const el = e.target.closest && e.target.closest('[data-drag]'); if (!el) return;
+    const step = ['ArrowRight', 'ArrowUp'].includes(e.key) ? 1 : ['ArrowLeft', 'ArrowDown'].includes(e.key) ? -1 : 0;
+    if (step) { e.preventDefault(); commitRange(clampI(RANGES.indexOf(S.range) + step), el.id); }
+  });
   let toastTimer;
   function toast(msg) {
     const t = $('toast'); t.textContent = msg; t.hidden = false;
@@ -1303,6 +1423,9 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     'menu-go': (a) => act.go(a),
     'menu-mine': (a) => { S.sheet = null; act['open-mine'](a); },
     trove: (a) => { S.sheet = a; render(); },
+    rui: (a) => { S.rangeUi = a; S.range = a === 'pull' ? 250 : a === 'places' ? 2500 : 1000; S.screen = 'home'; S.sheet = null; S.nearQ = ''; S.radarOn = true; clearTimeout(scanTimer); S.scanning = false; render(); scrollTop(); },
+    'range-set': (a) => { S.range = +a; render(); if (S.rangeUi === 'pull') scrollTop(); },
+    'pull-more': () => extendRange(),
     'range-step': (a) => { const i = Math.min(RANGES.length - 1, Math.max(0, RANGES.indexOf(S.range) + +a)); S.range = RANGES[i]; const y = $('screen').scrollTop; render(); $('screen').scrollTop = y; },
     shelf: (a) => { S.shelfSel = a; render(); },
     tab: (a) => { S.tab = a; S.nearQ = ''; S.radarOn = a === 'nearby'; if (a === 'nearby') startScan(); render(); scrollTop(); },
@@ -1422,7 +1545,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const hot = window.claude && window.claude.hot;
   if (hot && hot.snapshot) hot.snapshot(() => S);
-  const boot = (data) => { if (data && data.v === 20) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
+  const boot = (data) => { if (data && data.v === 21) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
   if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>

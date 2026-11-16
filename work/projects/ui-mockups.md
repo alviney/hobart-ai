@@ -89,3 +89,4 @@ screens, from which the owner picks one (recorded as a decision).
 - 2026-11-16: category icons on timeline rows (school, sport, food and so on) (D-016 updated)
 - 2026-11-16: radar range control: Within 250 m / 500 m / 1 km / 2.5 km (D-012 updated)
 - 2026-11-16: radar range is a minus/plus stepper, 250 m up to All of Hobart (D-012 updated)
+- 2026-11-16: five radar range controls to compare (stretch the ring, walking time, dial, pull further, places); not yet chosen
