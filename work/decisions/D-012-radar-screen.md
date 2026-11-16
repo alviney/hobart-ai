@@ -37,6 +37,15 @@ No range control for now. The radar shows public Troves within about
 walking time, dial, pull further, named places) and none felt right yet;
 revisit later.
 
+## Update 2026-11-16: "You're here" card
+
+The "You're here" recommendation is a navy **contact card** at the top of
+the radar: "CONTACT · 20 M" in yellow, the Trove's name in large white
+type, its latest ping, a yellow Subscribe pill and "What's here". On the
+right, the Trove's category icon sits in a yellow circle with rings
+rippling out from it. Chosen over a centred spotlight card and a "peek
+inside" card with quick facts.
+
 ## Options considered
 
 - **Scan first**: you get the radar feeling every time without losing space.

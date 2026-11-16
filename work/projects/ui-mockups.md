@@ -102,3 +102,4 @@ screens, from which the owner picks one (recorded as a decision).
 - 2026-11-16: radar button shows an X while the radar is on (D-016 updated)
 - 2026-11-16: home header stays fixed; content scrolls under it with a fade (D-016 updated)
 - 2026-11-16: three 'You're here' styles to compare (Spotlight, Sonar contact, Peek inside)
+- 2026-11-16: 'You're here' is a navy contact card with the category icon ping (D-012 updated)

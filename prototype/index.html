@@ -656,19 +656,18 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 .h-facts { display: flex; flex-wrap: wrap; gap: 6px; }
 .h-facts span { font-size: 12px; font-weight: 700; color: var(--body); background: var(--soft); border-radius: 99px; padding: 5px 10px; }
 @media (prefers-reduced-motion: reduce) { .h-icon i, .h-rings i { animation: none; opacity: .4; } }
+
+/* Sonar contact with the Spotlight icon ping */
+.h-top { display: flex; align-items: flex-start; gap: 14px; position: relative; }
+.h-sonar .h-top h2 { max-width: none; }
+.h-icon-s { width: 64px; height: 64px; flex-shrink: 0; margin: 2px 2px 0 0; }
+.h-icon-s svg { width: 32px; height: 32px; }
+.h-icon-s i:nth-child(2) { animation-delay: 1.1s; }
 </style>
 
 <div class="bar">
   <div class="brand">Sub1<small>clickable prototype</small></div>
-  <div class="row">
-    <span class="sub" id="hu-label" style="font-weight:600">"You're here" style</span>
-    <div class="seg" role="group" aria-labelledby="hu-label">
-      <button type="button" data-act="hereui" data-arg="spot" id="hu-spot">1 · Spotlight</button>
-      <button type="button" data-act="hereui" data-arg="sonar" id="hu-sonar">2 · Sonar contact</button>
-      <button type="button" data-act="hereui" data-arg="peek" id="hu-peek">3 · Peek inside</button>
-    </div>
-    <button type="button" class="link-btn" data-act="reset">Reset</button>
-  </div>
+  <button type="button" class="link-btn" data-act="reset">Reset</button>
 </div>
 <div class="phone" id="phone">
   <div id="bgfx" aria-hidden="true"></div>
@@ -707,7 +706,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const km = (m) => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
 
   const fresh = () => ({
-    v: 28, hereUi: 'spot', catOff: [], rangeUi: 'none', range: 2500, theme: 'friendly', concept: 'timeline', shelfSel: 'all', tab: 'now', radarOn: false, rstyle: 'a', win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
+    v: 29, hereUi: 'sonar', catOff: [], rangeUi: 'none', range: 2500, theme: 'friendly', concept: 'timeline', shelfSel: 'all', tab: 'now', radarOn: false, rstyle: 'a', win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
     draft: { text: '', pri: 1, manual: false, ch: null }, subId: 'elm', scanLevel: 1, seq: 200,
     newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false, chat: [],
     connections: [
@@ -1114,9 +1113,8 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     const cta = c.joined ? 'Open Trove' : 'Subscribe';
     const sig = STRENGTH[strength(c.verified)] || 'Faint ping';
     if (S.hereUi === 'sonar') return `<section class="h-sonar" aria-label="You're here">
-        <span class="h-rings" aria-hidden="true"><i></i><i></i><i></i></span>
-        <span class="h-eb">Contact · ${km(c.dist)}</span>
-        <h2>${esc(c.name)}</h2>
+        <div class="h-top"><div class="grow" style="gap:6px"><span class="h-eb">Contact · ${km(c.dist)}</span>
+        <h2>${esc(c.name)}</h2></div><span class="h-icon h-icon-s" aria-hidden="true"><i></i><i></i>${svg(catPath)}</span></div>
         ${l ? `<p>${esc(l.title || l.text)}</p>` : ''}
         <div class="row"><button type="button" class="pillbtn h-big" ${act}>${cta}</button><button type="button" class="link-btn" data-act="trove" data-arg="${c.id}" style="color:#FFE476">What's here</button></div>
       </section>`;
@@ -1438,7 +1436,6 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const SCREENS = { home, feed: feedPage, ping: pingView, trove: troveFeed, troves, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
   function render() {
-    ['spot', 'sonar', 'peek'].forEach((n) => $('hu-' + n).setAttribute('aria-pressed', S.hereUi === n));
     $('phone').dataset.theme = S.theme;
     const el = $('screen');
     const fab = S.screen === 'home' || S.screen === 'ask';
@@ -1538,7 +1535,6 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     'menu-go': (a) => act.go(a),
     'menu-mine': (a) => { S.sheet = null; act['open-mine'](a); },
     trove: (a) => { S.sheet = a; render(); },
-    hereui: (a) => { S.hereUi = a; S.screen = 'home'; S.sheet = null; S.nearQ = ''; S.radarOn = true; clearTimeout(scanTimer); S.scanning = false; render(); scrollTop(); },
     cat: (a) => { S.catOff = S.catOff.includes(a) ? S.catOff.filter((k) => k !== a) : S.catOff.concat(a); const y = $('screen').scrollTop; render(); $('screen').scrollTop = y; },
     'range-set': (a) => { S.range = +a; render(); if (S.rangeUi === 'pull') scrollTop(); },
     'pull-more': () => extendRange(),
@@ -1661,7 +1657,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const hot = window.claude && window.claude.hot;
   if (hot && hot.snapshot) hot.snapshot(() => S);
-  const boot = (data) => { if (data && data.v === 28) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
+  const boot = (data) => { if (data && data.v === 29) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
   if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>
