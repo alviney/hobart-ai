@@ -1,7 +1,7 @@
 # D-010: Deep Sonar look, and a feed with one row per Trove
 
 - **Date:** 2026-11-16
-- **Status:** accepted
+- **Status:** superseded by D-015 (colours); the feed layout was replaced by D-014
 - **Projects:** [ui-mockups](../projects/ui-mockups.md), [notify-core](../projects/notify-core.md)
 - **Supersedes:** the colours in [D-005](D-005-visual-direction.md)
 

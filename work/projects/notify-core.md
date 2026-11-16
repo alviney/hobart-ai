@@ -3,7 +3,7 @@
 - **Status:** scoping
 - **Size guess:** L (split into milestones before building)
 - **Touches:** the web app, database schema, auth, email delivery
-- **Related decisions:** [D-014](../decisions/D-014-home-timeline.md), [D-013](../decisions/D-013-ping-signal-fades.md), [D-012](../decisions/D-012-radar-screen.md), [D-011](../decisions/D-011-urgent-or-not.md), [D-010](../decisions/D-010-deep-sonar.md), [D-008](../decisions/D-008-sub1-troves-pings.md), [D-009](../decisions/D-009-ping-strength-and-radar.md), [D-002](../decisions/D-002-start-with-notifications.md), [D-004](../decisions/D-004-mockups-first-and-ads.md), [D-005](../decisions/D-005-visual-direction.md), [D-006](../decisions/D-006-everyone-can-publish.md)
+- **Related decisions:** [D-015](../decisions/D-015-friendly-look.md), [D-014](../decisions/D-014-home-timeline.md), [D-013](../decisions/D-013-ping-signal-fades.md), [D-012](../decisions/D-012-radar-screen.md), [D-011](../decisions/D-011-urgent-or-not.md), [D-010](../decisions/D-010-deep-sonar.md), [D-008](../decisions/D-008-sub1-troves-pings.md), [D-009](../decisions/D-009-ping-strength-and-radar.md), [D-002](../decisions/D-002-start-with-notifications.md), [D-004](../decisions/D-004-mockups-first-and-ads.md), [D-005](../decisions/D-005-visual-direction.md), [D-006](../decisions/D-006-everyone-can-publish.md)
 
 ## Why
 
@@ -65,3 +65,4 @@ posting weekly (see `work/signals.md`).
 - 2026-11-16: radar screen settled: minimal scan, then You're here and a nearby list with search (D-012); visibility of public pings asked as Q-006
 - 2026-11-16: ping signal fades with age; radar 'Listening back' slider from today to a month (D-013)
 - 2026-11-16: home is a timeline of recent pings (D-014)
+- 2026-11-16: Friendly look with submarine-yellow accents (D-015)
