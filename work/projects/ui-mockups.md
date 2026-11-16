@@ -87,3 +87,4 @@ screens, from which the owner picks one (recorded as a decision).
 - 2026-11-16: portholes dropped; back to pastel letter avatars with unread dots (D-016 updated)
 - 2026-11-16: avatar circles removed; timeline rows fade after the first two (D-016 updated)
 - 2026-11-16: category icons on timeline rows (school, sport, food and so on) (D-016 updated)
+- 2026-11-16: radar range control: Within 250 m / 500 m / 1 km / 2.5 km (D-012 updated)

@@ -30,6 +30,12 @@ space on the screen.
   the names, info pages and recent pings of every public Trove nearby,
   including ones you don't subscribe to (see Q-006).
 
+## Update 2026-11-16: range
+
+The radar has a **"Within" control** at the top: 250 m, 500 m, 1 km or
+2.5 km (default 1 km). It limits the list, the "You're here" check and
+nearby search to Troves inside that distance.
+
 ## Options considered
 
 - **Scan first**: you get the radar feeling every time without losing space.

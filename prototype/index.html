@@ -537,6 +537,12 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 .phone[data-theme="friendly"] .switch[aria-checked="true"] span { background: var(--brass); box-shadow: 0 3px 0 var(--brass-edge); }
 .phone[data-theme="friendly"] #pri-switch[aria-checked="true"] { background: #C2410C; }
 
+/* Radar range: a pressable segmented control */
+.range { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.range-l { font-size: 14px; font-weight: 700; color: var(--body); }
+.range-seg { flex: 1; display: flex; gap: 4px; background: #E6E2F0; border-radius: 99px; padding: 4px; box-shadow: inset 0 2px 4px rgba(42,35,64,.15); }
+.range-seg button { flex: 1; min-height: 38px; border: 0; background: none; border-radius: 99px; font-weight: 700; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; padding: 0 4px; }
+.range-seg button[aria-pressed="true"] { background: var(--brass, #FFD23F); color: #2A2340; box-shadow: 0 3px 0 var(--brass-edge, #C99A00); }
 /* The ripple: sending, arriving and scanning all use it */
 .ripple-fx { position: absolute; inset: 0; pointer-events: none; z-index: 6; overflow: hidden; }
 .ripple-fx span { position: absolute; left: 50%; top: 42%; width: 70px; height: 70px; margin: -35px; border-radius: 50%; border: 1px solid var(--brass, #FFD23F); opacity: 0; animation: rip-big 1.5s ease-out forwards; }
@@ -570,6 +576,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const VIA = ['Email', 'My AI only', 'Webhook', 'SMS'];
   const KINDS = ['Club or team', 'School group', 'Business', 'Neighbours', 'Something else'];
   const STRENGTH = { 4: 'Strong ping', 3: 'Good ping', 2: 'Weak ping', 1: 'Faint ping' };
+  const RANGES = [250, 500, 1000, 2500];
   const RANGE = 2500; // metres shown at the radar's edge
   const EMPTY_AUD = () => ({ 4: 0, 1: 0, ai: 0 });
 
@@ -579,7 +586,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const km = (m) => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
 
   const fresh = () => ({
-    v: 18, theme: 'friendly', concept: 'timeline', shelfSel: 'all', tab: 'now', radarOn: false, rstyle: 'a', win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
+    v: 19, range: 1000, theme: 'friendly', concept: 'timeline', shelfSel: 'all', tab: 'now', radarOn: false, rstyle: 'a', win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
     draft: { text: '', pri: 1, manual: false, ch: null }, subId: 'elm', scanLevel: 1, seq: 100,
     newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false, chat: [],
     connections: [
@@ -878,7 +885,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   // ---------- Radar ----------
   // ---------- Radar ----------
-  const nearby = () => S.connections.filter((c) => !c.owner && c.dist != null && c.dist <= RANGE && strength(c.verified) > 0).sort((a, b) => a.dist - b.dist);
+  const nearby = () => S.connections.filter((c) => !c.owner && c.dist != null && c.dist <= S.range && strength(c.verified) > 0).sort((a, b) => a.dist - b.dist);
   // A ping's signal fades as it gets older. The slider widens how far back the radar listens.
   const WINDOWS = [{ d: 0, label: 'Today' }, { d: 3, label: 'Last 3 days' }, { d: 7, label: 'This week' }, { d: 14, label: 'Last 2 weeks' }, { d: 30, label: 'Last month' }];
   const pingSig = (age) => age === 0 ? 4 : age <= 3 ? 3 : age <= 7 ? 2 : age <= 30 ? 1 : 0;
@@ -974,7 +981,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     if (S.nearQ.trim()) return results();
     const ids = nearby().map((c) => c.id);
     const list = S.posts.filter((p) => ids.includes(p.conn) && p.age <= 30).sort((a, b) => a.age - b.age || b.id - a.id);
-    return `${hereMin()}${list.length ? grouped(list, true) : '<p class="sub">Nothing nearby in the last month.</p>'}`;
+    return `${hereMin()}${list.length ? grouped(list, true) : `<p class="sub">No pings within ${km(S.range)} in the last month. Try a wider range.</p>`}`;
   }
 
   function radar() {
@@ -991,6 +998,10 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
       top = `<div class="rtop"><div class="slim"><span id="win-val">${WINDOWS[S.win].label}</span>${slider()}</div></div>`;
     }
     return `<div class="${S.rlayout === 'scan' ? 'reveal' : ''}" style="display:flex;flex-direction:column;gap:10px;flex:1">
+      <div class="range" role="group" aria-label="How far to look">
+        <span class="range-l">Within</span>
+        <div class="range-seg">${RANGES.map((r) => `<button type="button" data-act="range" data-arg="${r}" aria-pressed="${S.range === r}">${km(r)}</button>`).join('')}</div>
+      </div>
       <div id="near-results" style="display:flex;flex-direction:column;gap:0;flex:1">${radarBody()}</div></div>`;
   }
   function troveSheet(c) {
@@ -1282,6 +1293,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     'menu-go': (a) => act.go(a),
     'menu-mine': (a) => { S.sheet = null; act['open-mine'](a); },
     trove: (a) => { S.sheet = a; render(); },
+    range: (a) => { S.range = +a; render(); },
     shelf: (a) => { S.shelfSel = a; render(); },
     tab: (a) => { S.tab = a; S.nearQ = ''; S.radarOn = a === 'nearby'; if (a === 'nearby') startScan(); render(); scrollTop(); },
     'radar-toggle': () => { S.radarOn = !S.radarOn; S.nearQ = ''; if (S.radarOn) startScan(); else { clearTimeout(scanTimer); S.scanning = false; } render(); scrollTop(); },
@@ -1400,7 +1412,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const hot = window.claude && window.claude.hot;
   if (hot && hot.snapshot) hot.snapshot(() => S);
-  const boot = (data) => { if (data && data.v === 18) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
+  const boot = (data) => { if (data && data.v === 19) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
   if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>
