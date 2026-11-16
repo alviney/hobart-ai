@@ -149,6 +149,10 @@ p { margin: 0; }
 .btext { font-size: 15px; line-height: 1.45; }
 .bsrc { border: 0; background: none; padding: 2px 0 0; color: var(--muted); font-size: 12px; font-weight: 600; display: block; text-align: left; }
 .bsrc:hover { color: var(--primary-ink); }
+.pings-btn { position: relative; width: 48px; height: 48px; flex-shrink: 0; border-radius: 24px; border: 0; background: var(--soft); color: var(--ink); display: flex; align-items: center; justify-content: center; }
+.pings-btn svg { width: 24px; height: 24px; }
+.pings-btn .badge { position: absolute; top: -2px; right: -2px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px; background: #6FC3EC; color: #0B1A24; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 2px var(--app); font-variant-numeric: tabular-nums; }
+.pings-btn .badge.urgent { background: #FF8A5B; }
 .allp { display: flex; align-items: center; gap: 12px; width: 100%; padding: 16px 18px; border-radius: 22px; background: var(--soft); border: 0; color: var(--ink); text-align: left; font-weight: 700; font-size: 16px; flex-shrink: 0; }
 .allp .grow { gap: 2px; }
 .allp .sub { font-weight: 500; }
@@ -386,6 +390,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
     scan: svg('<path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3M8 12h8"/>'),
     plug: svg('<path d="M9 3v5M15 3v5M6 8h12v3a6 6 0 0 1-12 0V8ZM12 17v4"/>'),
     radar: svg('<circle cx="12" cy="12" r="9" opacity=".45"/><circle cx="12" cy="12" r="5" opacity=".7"/><path d="M12 12 18.4 5.6"/><circle cx="16" cy="9" r="1.3" fill="currentColor" stroke="none"/>'),
+    inbox: svg('<path d="M4 13h4l1.5 3h5L16 13h4"/><path d="M5.5 5h13L21 13v5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-5Z"/>'),
     sonar: svg('<path d="M12 12h.01"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/><path d="M5.6 5.6a9 9 0 0 0 0 12.8M18.4 5.6a9 9 0 0 1 0 12.8"/>', 'stroke-width="2.4"')
   };
 
@@ -454,13 +459,13 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
     const unread = myPosts().filter((p) => !p.read).length, urgent = myPosts().some((p) => !p.read && p.pri === 4);
     return `<div class="topline"><button type="button" class="iconbtn" data-act="menu" aria-label="Menu">${icon.menu}</button>
         <span class="wordmark" style="flex:1">${icon.sonar}Sub1</span>
+        <button type="button" class="pings-btn" data-act="go" data-arg="feed" aria-label="All pings${unread ? `, ${unread} unread` : ''}">${icon.inbox}${unread ? `<span class="badge ${urgent ? 'urgent' : ''}">${unread}</span>` : ''}</button>
         <button type="button" class="radar-btn" data-act="go" data-arg="radar" aria-label="Radar: Troves near you">${icon.radar}</button></div>
       <section class="brief2" aria-label="Your briefing">
         <span class="eyebrow">${TODAY}</span>
         ${briefing()}
         <button type="button" class="editp" data-act="edit-prompt">${icon.pen}Edit prompt</button>
-      </section>
-      <button type="button" class="allp" data-act="go" data-arg="feed"><span class="grow"><span>All pings</span><span class="sub">By Trove, newest first</span></span>${unread ? `<span class="unread ${urgent ? 'urgent' : ''}">${unread}</span>` : ''}<span aria-hidden="true" style="color:var(--muted)">›</span></button>`;
+      </section>`;
   }
   function promptSheet() {
     return `<div class="backdrop" data-act="sheet-close"></div>
