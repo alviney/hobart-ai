@@ -314,6 +314,41 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 .win-val { font-weight: 700; font-size: 15px; color: #E6F1F7; }
 .win input[type=range] { width: 100%; accent-color: #6FC3EC; height: 28px; margin: 0; }
 .win-ends { display: flex; justify-content: space-between; font-size: 11px; color: #7F95A4; }
+/* Minimal radar designs */
+.rtop { display: flex; align-items: center; gap: 12px; }
+.rback { width: 40px; height: 40px; border-radius: 20px; border: 0; background: transparent; color: #9FB4C2; font-size: 22px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.rback:hover { background: rgba(255,255,255,.06); color: #E6F1F7; }
+.slim { flex: 1; display: flex; align-items: center; gap: 12px; }
+.slim span { font-size: 13px; font-weight: 600; color: #C5D4DD; min-width: 92px; }
+.slim input[type=range] { flex: 1; accent-color: #6FC3EC; height: 28px; margin: 0; }
+.qhere { display: flex; align-items: center; gap: 10px; justify-content: space-between; padding: 6px 0 2px; font-size: 15px; color: #C5D4DD; }
+.qhere b { color: #FFFFFF; font-weight: 700; }
+.pillbtn { border: 1px solid #6FC3EC; background: transparent; color: #9CD6F0; border-radius: 99px; min-height: 34px; padding: 0 14px; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+.pillbtn:hover { background: rgba(111,195,236,.12); }
+.qrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 12px; row-gap: 2px; padding: 10px 0; border: 0; background: none; color: #E6F1F7; text-align: left; width: 100%; }
+.qn { font-weight: 600; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.qd { font-size: 12px; color: #8FA6B4; font-variant-numeric: tabular-nums; white-space: nowrap; align-self: center; }
+.qp { grid-column: 1 / -1; font-size: 13px; color: #8FA6B4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.qp.wrap { white-space: normal; }
+.quiet-n { font-size: 12px; color: #7F95A4; padding-top: 6px; }
+.tw { display: flex; gap: 2px; margin-left: auto; }
+.tw button { border: 0; background: none; color: #7F95A4; font-size: 13px; font-weight: 600; padding: 8px 8px; min-height: 36px; border-radius: 10px; }
+.tw button[aria-pressed="true"] { color: #E6F1F7; background: rgba(255,255,255,.07); }
+.drow { display: flex; align-items: center; gap: 14px; padding: 12px 0; border: 0; background: none; color: #E6F1F7; text-align: left; width: 100%; }
+.drow .sdot { width: 10px; display: flex; justify-content: center; flex-shrink: 0; }
+.drow .sdot i { display: block; border-radius: 50%; background: #9CD6F0; }
+.drow .qn { flex: 1; min-width: 0; font-weight: 500; }
+.dhere { display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 16px; border: 1px solid rgba(156,214,240,.35); }
+.dhere .qn { flex: 1; min-width: 0; }
+.dhere .sdot i { width: 10px; height: 10px; border: 2px solid #9CD6F0; background: transparent; }
+.bwin { font-family: var(--display); font-weight: 800; font-size: 40px; line-height: 1; color: #E6F1F7; }
+.bslider { accent-color: #6FC3EC; width: 100%; height: 24px; margin: 0; }
+.bhere .eb { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #9CD6F0; }
+.bhere .bn { font-family: var(--display); font-weight: 800; font-size: 28px; line-height: 1.05; color: #FFFFFF; display: block; margin: 4px 0 6px; }
+.textbtn { border: 0; background: none; padding: 4px 0; min-height: 32px; color: #9CD6F0; font-weight: 700; font-size: 14px; }
+.brow { display: flex; flex-direction: column; gap: 2px; padding: 9px 0; border: 0; background: none; color: #E6F1F7; text-align: left; width: 100%; }
+.brow .bn { font-family: var(--display); font-weight: 600; font-size: 24px; line-height: 1.1; }
+.brow .qd { align-self: flex-start; }
 .qchips { display: flex; gap: 8px; flex-wrap: wrap; }
 .qchip { border: 1px solid #2E5266; background: rgba(255,255,255,.05); color: #C5D4DD; border-radius: 99px; padding: 7px 12px; font-size: 13px; font-weight: 600; min-height: 36px; }
 .fab-ask.near { border-color: #2E5266; background: #13242F; }
@@ -348,7 +383,15 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
 <div class="bar">
   <div class="brand">Sub1<small>clickable prototype</small></div>
-  <button type="button" class="link-btn" data-act="reset">Reset</button>
+  <div class="row">
+    <span class="sub" id="rs-label" style="font-weight:600">Radar design</span>
+    <div class="seg" role="group" aria-labelledby="rs-label">
+      <button type="button" data-act="rstyle" data-arg="a" id="rs-a">1 · Quiet list</button>
+      <button type="button" data-act="rstyle" data-arg="b" id="rs-b">2 · Signal dots</button>
+      <button type="button" data-act="rstyle" data-arg="c" id="rs-c">3 · Big names</button>
+    </div>
+    <button type="button" class="link-btn" data-act="reset">Reset</button>
+  </div>
 </div>
 <div class="phone" id="phone">
   <div id="bgfx" aria-hidden="true"></div>
@@ -374,7 +417,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const km = (m) => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
 
   const fresh = () => ({
-    v: 13, win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
+    v: 14, rstyle: 'a', win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
     draft: { text: '', pri: 1, manual: false, ch: null }, subId: 'elm', scanLevel: 1, seq: 100,
     newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false, chat: [],
     connections: [
@@ -672,33 +715,53 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
           <g fill="rgba(156,195,222,.6)" font-size="3" font-family="Inter, sans-serif"><text x="51" y="34">800 m</text><text x="51" y="18.6">1.7 km</text><text x="51" y="3.4">2.5 km</text></g></svg>
         <div class="sweep" aria-hidden="true"></div><span class="you-dot" aria-hidden="true"></span>${blips}</div>`;
   }
+  const OP = { 4: 1, 3: .78, 2: .56, 1: .38, 0: .3 };
+  function liveRows() {
+    const others = nearby().filter((c) => c !== hereTrove());
+    const live = others.filter((c) => latestIn(c));
+    return { live, quiet: others.length - live.length };
+  }
+  function styledRow(c, l, preview, wrap) {
+    const sig = l ? pingSig(l.age) : 0, op = OP[sig];
+    const label = `${esc(c.name)}, ${km(c.dist)}${l ? ', ' + esc(l.time) : ''}`;
+    if (S.rstyle === 'b') return `<button type="button" class="drow" data-act="trove" data-arg="${c.id}" aria-label="${label}"><span class="sdot"><i style="width:${4 + sig * 1.5}px;height:${4 + sig * 1.5}px;opacity:${op}"></i></span><span class="qn">${esc(c.name)}</span><span class="qd">${km(c.dist)}</span></button>`;
+    if (S.rstyle === 'c') return `<button type="button" class="brow" data-act="trove" data-arg="${c.id}" style="opacity:${preview ? 1 : op}"><span class="bn">${esc(c.name)}</span><span class="qd">${km(c.dist)}${l ? ' · ' + esc(l.time) : ''}</span>${preview ? `<span class="qp wrap">${preview}</span>` : ''}</button>`;
+    return `<button type="button" class="qrow" data-act="trove" data-arg="${c.id}" style="opacity:${preview ? 1 : op}"><span class="qn">${esc(c.name)}</span><span class="qd">${km(c.dist)}</span><span class="qp ${wrap ? 'wrap' : ''}">${preview || (l ? esc(l.title || l.text) : '')}</span></button>`;
+  }
+  function hereMin() {
+    const c = hereTrove(); if (!c) return '';
+    const act = c.joined ? `data-act="open-conn" data-arg="${c.id}"` : `data-act="sub-start" data-arg="${c.id}"`;
+    if (S.rstyle === 'b') return `<div class="dhere"><span class="sdot"><i></i></span><span class="qn">You're at <b>${esc(c.name)}</b></span><button type="button" class="pillbtn" ${act}>${c.joined ? 'Open' : 'Subscribe'}</button></div>`;
+    if (S.rstyle === 'c') return `<div class="bhere"><span class="eb">You're here</span><span class="bn">${esc(c.name)}</span><button type="button" class="textbtn" ${act}>${c.joined ? 'Open Trove ›' : '+ Subscribe'}</button></div>`;
+    return `<div class="qhere"><span>You're at <b>${esc(c.name)}</b></span><button type="button" class="pillbtn" ${act}>${c.joined ? 'Open' : 'Subscribe'}</button></div>`;
+  }
+  function results() {
+    const q = S.nearQ.trim(), r = searchNearby(q);
+    return `<p class="quiet-n">${r.length} result${r.length === 1 ? '' : 's'} nearby</p>` + (r.length
+      ? r.map(({ c, best }) => styledRow(c, best.src === 'ping' ? { age: best.age, time: best.time } : null, (best.src === 'ping' ? `${esc(best.time)} · ` : '') + hl(best.t, q), true)).join('')
+      : `<p class="sub">Nothing nearby mentions “${esc(q)}”.</p>`);
+  }
   function radarBody() {
     if (S.nearQ.trim()) return results();
-    const others = nearby().filter((c) => c !== hereTrove());
-    const live = others.filter((c) => latestIn(c)), quietN = others.length - live.length;
-    const row = (c) => { const l = latestIn(c); return nearRow(c, `${esc(l.time)} · ${esc(l.title || l.text)}`, false, pingSig(l.age)); };
-    const band = (title, list) => list.length ? `<div class="band-h">${title}</div>${list.map(row).join('')}` : '';
-    return `${hereCard(true)}${live.length ? '' : `<p class="sub">No pings nearby ${S.win === 0 ? 'today' : 'in this time'}. Slide to listen further back.</p>`}
-      ${band('A short walk · under 500 m', live.filter((c) => c.dist < 500))}${band('Walkable · under 1.5 km', live.filter((c) => c.dist >= 500 && c.dist < 1500))}${band('Further out', live.filter((c) => c.dist >= 1500))}
-      ${quietN ? `<p class="sub" style="text-align:center">${quietN} more Trove${quietN === 1 ? ' hasn’t' : 's haven’t'} pinged ${S.win === 0 ? 'today' : 'in this time'}.</p>` : ''}`;
+    const { live, quiet } = liveRows();
+    const when = S.win === 0 ? 'today' : 'in this time';
+    return `${hereMin()}${live.length ? live.map((c) => styledRow(c, latestIn(c))).join('') : `<p class="sub">Nothing nearby ${when}.</p>`}${quiet ? `<p class="quiet-n">${quiet} more quiet ${when}</p>` : ''}`;
   }
-
   function radar() {
     if (S.scanning) return `<div class="scan">${radarCircle(300)}<p>Scanning nearby…</p></div>`;
-    const faint = S.connections.filter((c) => !c.owner && c.dist != null && strength(c.verified) === 0).length;
-    const head = `${S.rlayout === 'accent' ? `<div class="arc" aria-hidden="true">${radarCircle(340)}</div>` : ''}
-      <h1 ${S.rlayout === 'accent' ? 'style="margin-top:-28px;position:relative"' : ''}>Nearby</h1>`;
-    return `<div class="${S.rlayout === 'scan' ? 'reveal' : ''}" style="display:flex;flex-direction:column;gap:14px">
-      <button type="button" class="back" data-act="go" data-arg="home">‹ Home</button>${head}
-      <div class="win">
-        <div class="win-top"><label for="win" class="win-label">Listening back</label><span class="win-val" id="win-val">${WINDOWS[S.win].label}</span></div>
-        <input type="range" id="win" min="0" max="${WINDOWS.length - 1}" step="1" value="${S.win}" aria-valuetext="${WINDOWS[S.win].label}">
-        <div class="win-ends" aria-hidden="true"><span>Today</span><span>A month</span></div>
-      </div>
-      <div class="qchips" ${S.nearQ.trim() ? 'hidden' : ''} id="near-chips">${['good bagels', 'coffee', 'kids', 'this weekend', 'records'].map((t) => `<button type="button" class="qchip" data-act="near-try" data-arg="${t}">${t}</button>`).join('')}</div>
-      <div id="near-results" style="display:flex;flex-direction:column;gap:12px">${radarBody()}</div>
-      ${faint ? `<p class="sub" style="text-align:center">${faint} Trove${faint === 1 ? ' is' : 's are'} too faint to show. Their details haven't been confirmed in over six months.</p>` : ''}
-      <p class="demo-note" style="color:#7F95A4">Your location stays on your phone. Prototype: positions are made up.</p></div>`;
+    const back = '<button type="button" class="rback" data-act="go" data-arg="home" aria-label="Back to home">‹</button>';
+    const slider = (cls) => `<input type="range" id="win" class="${cls || ''}" min="0" max="${WINDOWS.length - 1}" step="1" value="${S.win}" aria-label="How far back to listen" aria-valuetext="${WINDOWS[S.win].label}">`;
+    let top;
+    if (S.rstyle === 'b') {
+      const short = ['Today', '3d', '1w', '2w', '1m'];
+      top = `<div class="rtop">${back}<div class="tw" role="group" aria-label="How far back to listen">${short.map((t, k) => `<button type="button" data-act="win-set" data-arg="${k}" aria-pressed="${S.win === k}" aria-label="${WINDOWS[k].label}">${t}</button>`).join('')}</div></div>`;
+    } else if (S.rstyle === 'c') {
+      top = `<div class="rtop">${back}</div><div style="display:flex;flex-direction:column;gap:6px"><span class="bwin" id="win-val">${WINDOWS[S.win].label}</span>${slider('bslider')}</div>`;
+    } else {
+      top = `<div class="rtop">${back}<div class="slim"><span id="win-val">${WINDOWS[S.win].label}</span>${slider()}</div></div>`;
+    }
+    return `<div class="${S.rlayout === 'scan' ? 'reveal' : ''}" style="display:flex;flex-direction:column;gap:${S.rstyle === 'c' ? 18 : 10}px">${top}
+      <div id="near-results" style="display:flex;flex-direction:column;gap:${S.rstyle === 'c' ? 10 : 0}px">${radarBody()}</div></div>`;
   }
   function troveSheet(c) {
     const s = strength(c.verified);
@@ -941,6 +1004,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const SCREENS = { home, feed: feedPage, ping: pingView, trove: troveFeed, radar, troves, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
   function render() {
+    ['a', 'b', 'c'].forEach((n) => $('rs-' + n).setAttribute('aria-pressed', S.rstyle === n));
     const el = $('screen');
     const fab = ['home', 'ask'].includes(S.screen) || (S.screen === 'radar' && !S.scanning);
     el.className = 'screen' + (S.screen === 'subscribe' ? ' flush' : '') + (fab ? ' has-fab' : '') + (S.screen === 'radar' ? ' radar-screen' : '') + (S.screen === 'radar' && S.rlayout === 'bg' ? ' bgmode' : '');
@@ -984,6 +1048,8 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     'menu-go': (a) => act.go(a),
     'menu-mine': (a) => { S.sheet = null; act['open-mine'](a); },
     trove: (a) => { S.sheet = a; render(); },
+    rstyle: (a) => { S.rstyle = a; S.screen = 'radar'; S.sheet = null; S.nearQ = ''; startScan(); render(); scrollTop(); },
+    'win-set': (a) => { S.win = +a; $('near-results').innerHTML = radarBody(); document.querySelectorAll('.tw button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.arg === a)); },
     'near-try': (a) => { S.nearQ = a; render(); },
     'near-clear': () => { S.nearQ = ''; render(); const i = $('near-q'); if (i) i.focus(); },
     quiet: () => { const y = $('screen').scrollTop; S.showQuiet = !S.showQuiet; render(); $('screen').scrollTop = y; },
@@ -1066,7 +1132,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     if (e.target.id === 'draft') { S.draft.text = e.target.value; if (!e.target.value.trim()) S.draft.manual = false; updateCompose(); }
     if (e.target.id === 'win') {
       S.win = +e.target.value;
-      $('win-val').textContent = WINDOWS[S.win].label;
+      if ($('win-val')) $('win-val').textContent = WINDOWS[S.win].label;
       e.target.setAttribute('aria-valuetext', WINDOWS[S.win].label);
       $('near-results').innerHTML = radarBody();
       return;
@@ -1074,7 +1140,6 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     if (e.target.id === 'near-q') {
       S.nearQ = e.target.value;
       $('near-results').innerHTML = radarBody();
-      $('near-chips').hidden = !!S.nearQ.trim();
       return;
     }
     if (e.target.id === 'ch-name') { S.newCh.name = e.target.value; $('ch-create').disabled = !e.target.value.trim(); }
@@ -1097,7 +1162,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const hot = window.claude && window.claude.hot;
   if (hot && hot.snapshot) hot.snapshot(() => S);
-  const boot = (data) => { if (data && data.v === 13) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
+  const boot = (data) => { if (data && data.v === 14) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
   if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>

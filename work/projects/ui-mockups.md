@@ -71,3 +71,4 @@ screens, from which the owner picks one (recorded as a decision).
 - 2026-11-16: radar visual no longer takes up space; three treatments to compare (scan-first loading screen, background, header accent) over the same 'You're here' card and walking-distance list
 - 2026-11-16: radar screen settled: minimal scan, then You're here and a nearby list with search (D-012); visibility of public pings asked as Q-006
 - 2026-11-16: ping signal fades with age; radar 'Listening back' slider from today to a month (D-013)
+- 2026-11-16: three minimal radar designs to compare (Quiet list, Signal dots, Big names); signal shown by fading rather than meters
