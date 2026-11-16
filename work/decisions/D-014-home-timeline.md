@@ -23,7 +23,9 @@ shelf (story-style circles) and Now / Nearby / Yours tabs.
 - The header has the menu and the **radar toggle** (D-012), which swaps the
   timeline for the radar in place. The "Ask anything" bar stays at the
   bottom.
-- The per-Trove list (D-010) stays as the "All pings" page in the menu.
+- ~~The per-Trove list (D-010) stays as the "All pings" page in the menu.~~
+  Removed 2026-11-16: the timeline already shows every ping, and Your subs
+  covers the per-Trove view.
 
 ## Update 2026-11-16: no filters
 

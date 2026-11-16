@@ -117,3 +117,4 @@ screens, from which the owner picks one (recorded as a decision).
 - 2026-11-16: sonar rings larger and moved to the bottom right of Trove cards (D-009 updated)
 - 2026-11-16: ping strength as a loading ring around the icon circle (D-009 updated)
 - 2026-11-16: more space between the ringed icon and the text on Trove cards and headers
+- 2026-11-16: All pings page removed from the menu; links now go home (D-014 updated)

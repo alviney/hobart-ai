@@ -1127,7 +1127,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   function troveFeed() {
     const c = conn(S.troveId);
     const list = S.posts.filter((p) => p.conn === c.id).sort((a, b) => b.id - a.id);
-    return `<button type="button" class="back" data-act="go" data-arg="feed">‹ Pings</button>
+    return `<button type="button" class="back" data-act="go" data-arg="home">‹ Home</button>
       <div class="row" style="flex-wrap:nowrap"><span class="avatar big ${c.owner ? 'ink' : ''}${sigCls(c)}">${svg(CAT[catOf(c)][1])}</span>
         <div class="grow"><h2>${esc(c.name)}</h2><span class="row" style="gap:8px">${meter(strength(c.verified || 0))}<span class="sub">${c.owner ? 'You run this' : LINE[c.level] + (c.on ? '' : ' · paused')}</span></span></div>
         <button type="button" class="link-btn" data-act="${c.owner ? 'open-mine' : 'open-conn'}" data-arg="${c.id}">${c.owner ? 'Manage' : 'Settings'}</button></div>
@@ -1399,7 +1399,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     return `<div style="margin:auto 0;display:flex;flex-direction:column;gap:16px;text-align:center;align-items:center">
       <span class="avatar big${sigCls(c)}">${svg(CAT[catOf(c)][1])}</span><h1>You're subscribed</h1>
       <p class="sub" style="font-size:16px">${esc(c.name)} will ping you for <b>${LINE[c.level].toLowerCase()}</b>${c.via === 'My AI only' ? ', through your AI only' : ' by email'}. Change it any time in Your subs.</p>
-      <button type="button" class="btn" data-act="go" data-arg="feed">See your pings</button>
+      <button type="button" class="btn" data-act="go" data-arg="home">See your pings</button>
       <p class="sub">Got something to share? <button type="button" class="link-btn" data-act="go" data-arg="start" style="padding:0">Start a Trove</button></p></div>`;
   }
 
@@ -1544,7 +1544,6 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     const mine = owned().map((c) => item('menu-mine', c.id, `<b style="font-family:var(--display)">${esc(c.name[0])}</b>`, esc(c.name), `<span class="tag you">${subs(c)}</span>`)).join('');
     return `<div class="backdrop" data-act="sheet-close"></div>
       <div class="sheet" role="dialog" aria-label="Menu"><span class="grabber"></span>
-        ${item('menu-go', 'feed', icon.inbox, 'All pings', `<span class="sub">${myPosts().filter((p) => !p.read).length} unread</span>`)}
         ${owned().length ? item('menu-go', 'share', icon.pen, 'Send a ping') : ''}
         ${item('menu-go', 'troves', icon.chest, 'Your subs', `<span class="sub">${S.connections.filter((c) => c.joined && !c.owner).length} subscribed</span>`)}
         ${mine ? `<p class="section-h" style="padding:0 10px">Troves you run</p>${mine}` : ''}
@@ -1554,7 +1553,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
       </div>`;
   }
 
-  const SCREENS = { home, feed: feedPage, ping: pingView, trove: troveFeed, troves, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
+  const SCREENS = { home, feed: home, ping: pingView, trove: troveFeed, troves, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
   function render() {
     $('phone').dataset.sig = S.sigUi;
     $('phone').dataset.theme = S.theme;
@@ -1669,7 +1668,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     'near-try': (a) => { S.nearQ = a; render(); },
     'near-clear': () => { S.nearQ = ''; render(); const i = $('near-q'); if (i) i.focus(); },
     quiet: () => { const y = $('screen').scrollTop; S.showQuiet = !S.showQuiet; render(); $('screen').scrollTop = y; },
-    'open-ping': (a) => { S.back = S.screen === 'trove' ? 'trove' : S.screen === 'home' ? 'home' : 'feed'; S.pingId = +a; const p = S.posts.find((x) => x.id === +a); if (p) { p.isNew = false; p.read = true; } S.screen = 'ping'; render(); scrollTop(); },
+    'open-ping': (a) => { S.back = S.screen === 'trove' ? 'trove' : 'home'; S.pingId = +a; const p = S.posts.find((x) => x.id === +a); if (p) { p.isNew = false; p.read = true; } S.screen = 'ping'; render(); scrollTop(); },
     'open-trove': (a) => {
       S.troveId = a; S.screen = 'trove';
       S.posts.forEach((p) => { if (p.conn === a) { p.wasUnread = !p.read; p.read = true; } });
