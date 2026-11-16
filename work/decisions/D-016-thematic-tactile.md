@@ -23,6 +23,9 @@ Three ideas, used with restraint (a fourth, portholes, was dropped):
   Instead each row starts with a **category icon** for its Trove (school,
   sport, food, coffee, nature, home, music, shop, group), then the name
   with an unread dot, orange for urgent.
+- **The header stays put.** On home, the menu and radar buttons stay fixed
+  at the top; the timeline scrolls underneath and fades out just below
+  them instead of being cut off.
 - **Fade at the bottom edge only.** Rows are full strength wherever they
   are in the list; they fade out only as they slide under the Ask bar at
   the bottom of the screen. (Fading every row after the first two was

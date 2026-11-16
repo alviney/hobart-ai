@@ -615,6 +615,15 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 .phone[data-theme="friendly"] .radar-btn.radar-btn svg { width: 26px; height: 26px; padding: 0; background: none; border-radius: 0; color: inherit; transform: none !important; transition: none; }
 .phone[data-theme="friendly"] .radar-btn.radar-btn[aria-pressed="true"] { background: var(--hull) !important; color: #FFD23F !important; box-shadow: 0 0 0 4px rgba(255,210,63,.35) !important; }
 .phone[data-theme="friendly"] .radar-btn.radar-btn:active { transform: scale(.94); }
+
+/* Home header stays put; content scrolls under it and fades out at the top and bottom edges */
+#topbar { position: absolute; top: 0; left: 0; right: 0; padding: 22px 20px 0; z-index: 2; pointer-events: none; }
+#topbar > * { pointer-events: auto; }
+.screen.has-top { padding-top: 86px; }
+.screen.has-top.has-fab {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, transparent 62px, #000 104px, #000 calc(100% - 170px), transparent calc(100% - 50px));
+  mask-image: linear-gradient(to bottom, transparent 0, transparent 62px, #000 104px, #000 calc(100% - 170px), transparent calc(100% - 50px));
+}
 </style>
 
 <div class="bar">
@@ -624,6 +633,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 <div class="phone" id="phone">
   <div id="bgfx" aria-hidden="true"></div>
   <main class="screen" id="screen" aria-live="polite"></main>
+  <div id="topbar"></div>
   <div id="float"></div>
   <div id="sheet"></div>
   <div class="toast" id="toast" hidden></div>
@@ -897,7 +907,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
       const body = t === 'nearby' ? radar() : t === 'yours' ? troves().replace(/^<button type="button" class="back"[^>]*>[^<]*<\/button><h1>Your Troves<\/h1>/, '') : `${summaryLine()}${grouped(recentPings())}`;
       return `${header(`<div class="tabs" role="tablist" aria-label="Home">${tab('now', `Now${unread ? ` · ${unread}` : ''}`)}${tab('nearby', 'Nearby')}${tab('yours', 'Yours')}</div>`)}${body}`;
     }
-    if (S.radarOn) return header() + radar();
+    if (S.radarOn) return radar();
     if (S.concept === 'shelf') {
       const troveList = [];
       for (const p of recentPings()) if (!troveList.includes(p.conn)) troveList.push(p.conn);
@@ -906,7 +916,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
       const list = recentPings().filter((p) => S.shelfSel === 'all' || p.conn === S.shelfSel);
       return `${header()}${shelf}${S.shelfSel !== 'all' ? `<div class="row" style="justify-content:space-between"><h2>${esc(conn(S.shelfSel).name)}</h2><button type="button" class="link-btn" data-act="open-trove" data-arg="${S.shelfSel}">Open ›</button></div>` : ''}<div>${grouped(list)}</div>`;
     }
-    { const all = recentPings(); return `${header()}${summaryLine()}${grouped(all)}`; }
+    { const all = recentPings(); return `${summaryLine()}${grouped(all)}`; }
   }
   function homeOld() {
     const unread = myPosts().filter((p) => !p.read).length, urgent = myPosts().some((p) => !p.read && p.pri === 4);
@@ -1371,6 +1381,8 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     el.className = 'screen' + (S.screen === 'subscribe' ? ' flush' : '') + (fab ? ' has-fab' : '') + '';
     el.innerHTML = (SCREENS[S.screen] || home)();
     $('float').innerHTML = fab ? floatBar() : '';
+    $('topbar').innerHTML = S.screen === 'home' ? header() : '';
+    el.classList.toggle('has-top', S.screen === 'home');
     $('sheet').innerHTML = S.sheet === 'menu' ? menuSheet() : S.sheet === 'prompt' ? promptSheet() : S.sheet ? troveSheet(conn(S.sheet)) : '';
     if (S.screen === 'ask') el.scrollTop = el.scrollHeight;
   }
