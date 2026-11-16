@@ -23,9 +23,10 @@ Three ideas, used with restraint (a fourth, portholes, was dropped):
   Instead each row starts with a **category icon** for its Trove (school,
   sport, food, coffee, nature, home, music, shop, group), then the name
   with an unread dot, orange for urgent.
-- **Rows fade after the first two.** The newest two pings are at full
-  strength and each one after is fainter (down to about a third); hovering
-  or focusing a row brings it back to full.
+- **Fade at the bottom edge only.** Rows are full strength wherever they
+  are in the list; they fade out only as they slide under the Ask bar at
+  the bottom of the screen. (Fading every row after the first two was
+  tried and dropped.)
 - **Controls you can press.** Buttons have a solid lower edge and sink when
   pressed, with a short vibration where the phone allows. The radar is a
   two-position switch with a yellow knob. "Urgent" is a flip switch.
