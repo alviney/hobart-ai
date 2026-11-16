@@ -30,7 +30,7 @@ ones mean possibly out of date.
 Ping strength is shown on the Trove's icon circle, with nothing extra on
 the row:
 
-- **Strong:** a rich yellow rim around the circle.
+- **Strong:** a rich yellow border drawn over the edge of the circle.
 - **Good:** the normal circle.
 - **Weak or faint:** the circle drops to low opacity.
 
