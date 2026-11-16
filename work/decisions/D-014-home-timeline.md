@@ -25,6 +25,14 @@ shelf (story-style circles) and Now / Nearby / Yours tabs.
   bottom.
 - The per-Trove list (D-010) stays as the "All pings" page in the menu.
 
+## Update 2026-11-16: category filter
+
+A scrolling row of category chips sits above the timeline: **All**, then
+one chip per category in your pings (School, Sport, Food, Coffee, Nature
+and so on), each with its icon and a count. Picking one shows only pings
+from that kind of Trove; the selected chip turns yellow. The radar list has
+the same filter.
+
 ## Options considered
 
 - **Timeline**: the most direct way to see what's new.
