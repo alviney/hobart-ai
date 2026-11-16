@@ -623,8 +623,8 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const km = (m) => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
 
   const fresh = () => ({
-    v: 23, rangeUi: 'none', range: 2500, theme: 'friendly', concept: 'timeline', shelfSel: 'all', tab: 'now', radarOn: false, rstyle: 'a', win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
-    draft: { text: '', pri: 1, manual: false, ch: null }, subId: 'elm', scanLevel: 1, seq: 100,
+    v: 24, rangeUi: 'none', range: 2500, theme: 'friendly', concept: 'timeline', shelfSel: 'all', tab: 'now', radarOn: false, rstyle: 'a', win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
+    draft: { text: '', pri: 1, manual: false, ch: null }, subId: 'elm', scanLevel: 1, seq: 200,
     newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false, chat: [],
     connections: [
       { id: 'netball', name: 'South Hobart Netball U12s', short: 'Netball U12s', level: 1, via: 'Email', on: true, joined: true, verified: 3, dist: 1200, bearing: 165,
@@ -663,6 +663,14 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
         docs: [ { t: 'When we swim', b: 'Every morning at 6:30am from the pontoon. All paces welcome; bring a bright cap.' } ] },
       { id: 'shed', name: 'Northside Community Shed', short: 'Northside Shed', cat: 'group', level: 1, via: 'Email', on: true, joined: false, verified: 10, dist: 7400, bearing: 340,
         docs: [ { t: 'Open days', b: 'Tuesday and Thursday, 9am to 1pm. Tools and tea provided.' } ] },
+      { id: 'pressed', name: 'Pressed Coffee', short: 'Pressed Coffee', cat: 'coffee', level: 1, via: 'Email', on: true, joined: true, verified: 0, dist: 180, bearing: 75,
+        docs: [ { t: 'Hours', b: 'Weekdays 6:30am to 3pm, weekends 7:30am to 2pm.' } ] },
+      { id: 'larder', name: 'Larder & Co', short: 'Larder & Co', cat: 'food', level: 1, via: 'Email', on: true, joined: true, verified: 1, dist: 390, bearing: 230,
+        docs: [ { t: 'Hours', b: 'Every day 7am to 4pm. Kitchen closes at 2:30pm.' } ] },
+      { id: 'tidal', name: 'Tidal Bakery', short: 'Tidal Bakery', cat: 'food', level: 1, via: 'Email', on: true, joined: true, verified: 0, dist: 610, bearing: 15,
+        docs: [ { t: 'Bake times', b: 'Sourdough out at 7am, croissants at 7:30am, a second croissant batch around 11am.' } ] },
+      { id: 'beanstalk', name: 'Beanstalk Espresso', short: 'Beanstalk', cat: 'coffee', level: 1, via: 'Email', on: true, joined: true, verified: 2, dist: 270, bearing: 300,
+        docs: [ { t: 'Milk options', b: 'Full cream, light, oat, almond and soy. Lactose-free on request.' } ] },
       { id: 'pantry', name: 'Corner Pantry', short: 'Corner Pantry', level: 1, via: 'Email', on: true, joined: false, verified: 230, dist: 400, bearing: 140, docs: [] }
     ],
     posts: [
@@ -685,6 +693,41 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
       { id: 18, read: true, conn: 'coffee', pri: 1, text: 'New winter hours: from 7am until the end of August.', time: '29 Oct', age: 29 },
       { id: 19, read: true, conn: 'swim', pri: 1, text: 'Water is 14 degrees this morning. Sunrise swim and coffee on Saturday.', time: 'Today', age: 0 },
       { id: 20, read: true, conn: 'shed', pri: 1, text: 'Free bike repair morning this Thursday. Bring your bike and we will show you how.', time: 'Yesterday', age: 1 },
+      { id: 101, read: true, conn: 'tidal', pri: 1, text: "Sourdough is sold out for the day. Back tomorrow at 7am.", time: 'Tue', age: 2 },
+      { id: 102, read: true, conn: 'pressed', pri: 1, text: "We have run out of oat milk. More arriving tomorrow morning.", time: 'Tue', age: 2 },
+      { id: 103, read: true, conn: 'larder', pri: 1, text: "Soup of the day: roast pumpkin and ginger.", time: 'Tue', age: 2 },
+      { id: 104, read: true, conn: 'beanstalk', pri: 1, text: "Cold brew is back on tap.", time: 'Tue', age: 2 },
+      { id: 105, read: true, conn: 'tidal', pri: 1, text: "Almond croissants gone for today, sorry!", time: 'Tue', age: 2 },
+      { id: 106, read: true, conn: 'larder', pri: 1, text: "Out of eggs for the rest of the day. Brunch menu is limited.", time: 'Tue', age: 2 },
+      { id: 107, read: true, conn: 'tidal', pri: 1, text: "Fresh sourdough out of the oven.", time: 'Yesterday', age: 1 },
+      { id: 108, read: true, conn: 'pressed', pri: 1, text: "Oat milk is back in stock.", time: 'Yesterday', age: 1 },
+      { id: 109, read: true, conn: 'beanstalk', pri: 1, text: "Out of decaf beans until Friday.", time: 'Yesterday', age: 1 },
+      { id: 110, read: true, conn: 'larder', pri: 1, text: "Eggs are back. Full brunch menu from 9am.", time: 'Yesterday', age: 1 },
+      { id: 111, read: true, conn: 'tidal', pri: 1, text: "First croissant batch is sold out. Second batch around 11.", time: 'Yesterday', age: 1 },
+      { id: 112, read: true, conn: 'pressed', pri: 1, text: "Banana bread is sold out.", time: 'Yesterday', age: 1 },
+      { id: 113, read: true, conn: 'beanstalk', pri: 1, text: "Almond milk has run out. Oat and soy still available.", time: 'Yesterday', age: 1 },
+      { id: 114, read: true, conn: 'tidal', pri: 1, text: "Second croissant batch is out now.", time: 'Yesterday', age: 1 },
+      { id: 115, read: true, conn: 'larder', pri: 1, text: "Sold out of the pulled pork roll.", time: 'Yesterday', age: 1 },
+      { id: 116, read: true, conn: 'tidal', pri: 1, text: "All croissants sold out for today.", time: 'Yesterday', age: 1 },
+      { id: 117, read: true, conn: 'pressed', pri: 1, text: "Closing 30 minutes early today for a staff meeting.", time: 'Yesterday', age: 1 },
+      { id: 118, conn: 'tidal', pri: 1, text: "Sourdough loaves are out.", time: '6:58am', age: 0 },
+      { id: 119, conn: 'pressed', pri: 1, text: "Morning! Oat, almond and soy all in stock today.", time: '7:05am', age: 0 },
+      { id: 120, conn: 'beanstalk', pri: 1, text: "Decaf is back.", time: '7:20am', age: 0 },
+      { id: 121, conn: 'tidal', pri: 1, text: "Croissants are out, including almond.", time: '7:31am', age: 0 },
+      { id: 122, conn: 'larder', pri: 1, text: "Kitchen open. Specials board is up.", time: '7:45am', age: 0 },
+      { id: 123, conn: 'pressed', pri: 1, text: "Banana bread is back.", time: '8:02am', age: 0 },
+      { id: 124, conn: 'tidal', pri: 1, text: "Almond croissants are sold out. Plain still available.", time: '8:40am', age: 0 },
+      { id: 125, conn: 'beanstalk', pri: 1, text: "Down to the last few cinnamon scrolls.", time: '8:55am', age: 0 },
+      { id: 126, conn: 'larder', pri: 1, text: "Out of smashed avo for now. More avocados arriving at 11.", time: '9:10am', age: 0 },
+      { id: 127, conn: 'pressed', pri: 1, text: "Oat milk is running low. Might be gone by 11.", time: '9:22am', age: 0 },
+      { id: 128, conn: 'beanstalk', pri: 1, text: "Cinnamon scrolls are sold out.", time: '9:30am', age: 0 },
+      { id: 129, conn: 'tidal', pri: 1, text: "Rye loaves are sold out.", time: '9:48am', age: 0 },
+      { id: 130, conn: 'pressed', pri: 1, text: "Out of oat milk. Soy and almond still available.", time: '10:15am', age: 0 },
+      { id: 131, conn: 'larder', pri: 1, text: "Avocados are here, smashed avo is back.", time: '10:20am', age: 0 },
+      { id: 132, conn: 'tidal', pri: 1, text: "Second croissant batch is out now.", time: '10:58am', age: 0 },
+      { id: 133, conn: 'beanstalk', pri: 1, text: "Fresh batch of cinnamon scrolls out of the oven.", time: '11:05am', age: 0 },
+      { id: 134, conn: 'larder', pri: 1, text: "Soup of the day: minestrone.", time: '11:30am', age: 0 },
+      { id: 135, conn: 'tidal', pri: 1, text: "Sourdough sold out for today.", time: '11:42am', age: 0 },
       { id: 10, conn: 'netball', pri: 1, title: 'Finals day: everything you need to know', text: "We made the grand final! It's on Saturday 29 November at the Domain courts, court 3, at 10:20am. Please have players there by 9:50 for warm-up.\n\nUniforms: full club kit, including the navy socks. If your child has lost theirs, we have spares at the canteen.\n\nParking fills up fast on finals day. The Queens Walk car park is the best bet, or the 9:30 bus from the city stops right outside.\n\nAfter the game we're doing a team breakfast at Elm St Bakehouse. The club is covering the players; parents pay their own. Let me know by Thursday if you're coming so I can give them numbers.\n\nWin or lose, it's been a brilliant season. Thanks for every early morning, every lift and every orange quarter.", time: '8:15am', age: 0 }
     ]
   });
@@ -809,7 +852,9 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const KIND_CAT = { 'Club or team': 'sport', 'School group': 'school', Business: 'shop', Neighbours: 'home' };
   const catOf = (c) => c.cat || CAT_OF[c.id] || KIND_CAT[c.kind] || 'group';
   const catIcon = (c) => { const [label, d] = CAT[catOf(c)]; return `<span class="cat" title="${label}">${svg(d)}<span class="sr">${label}</span></span>`; };
-  const recentPings = () => myPosts().slice().sort((a, b) => a.age - b.age || b.id - a.id);
+  const clock = (p) => { const m = /^(\d{1,2}):(\d{2})(am|pm)$/.exec(p.time || ''); return m ? (+m[1] % 12 + (m[3] === 'pm' ? 12 : 0)) * 60 + +m[2] : -1; };
+  const byNewest = (a, b) => a.age - b.age || clock(b) - clock(a) || b.id - a.id;
+  const recentPings = () => myPosts().slice().sort((a, b) => byNewest(a, b));
   const dayLabel = (age) => age === 0 ? 'Today' : age === 1 ? 'Yesterday' : age <= 7 ? 'Earlier this week' : 'Older';
   function rpRow(p, near, idx) {
     const c = conn(p.conn), unread = !p.read;
@@ -935,7 +980,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const SIG = { 4: 'Strong signal', 3: 'Good signal', 2: 'Fading', 1: 'Faint' };
   const inWin = (p) => p.age <= WINDOWS[S.win].d;
   const latestOf = (c) => S.posts.filter((p) => p.conn === c.id).sort((a, b) => b.id - a.id)[0];
-  const latestIn = (c) => S.posts.filter((p) => p.conn === c.id && inWin(p)).sort((a, b) => a.age - b.age || b.id - a.id)[0];
+  const latestIn = (c) => S.posts.filter((p) => p.conn === c.id && inWin(p)).sort((a, b) => byNewest(a, b))[0];
   const hereTrove = () => nearby().find((c) => c.dist <= 50);
   function searchNearby(q) {
     const words = (q.toLowerCase().match(/[a-z0-9]{3,}/g) || []).map((w) => w.replace(/s$/, ''));
@@ -1023,7 +1068,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   function radarBody() {
     if (S.nearQ.trim()) return results();
     const ids = nearby().map((c) => c.id);
-    const list = S.posts.filter((p) => ids.includes(p.conn) && p.age <= 30).sort((a, b) => a.age - b.age || b.id - a.id);
+    const list = S.posts.filter((p) => ids.includes(p.conn) && p.age <= 30).sort((a, b) => byNewest(a, b));
     return `${hereMin()}${list.length ? grouped(list, true, pullTail()) : '<p class="sub">Nothing nearby in the last month.</p>'}`;
   }
 
@@ -1532,7 +1577,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const hot = window.claude && window.claude.hot;
   if (hot && hot.snapshot) hot.snapshot(() => S);
-  const boot = (data) => { if (data && data.v === 23) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
+  const boot = (data) => { if (data && data.v === 24) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
   if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>

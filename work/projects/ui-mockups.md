@@ -92,3 +92,4 @@ screens, from which the owner picks one (recorded as a decision).
 - 2026-11-16: five radar range controls to compare (stretch the ring, walking time, dial, pull further, places); not yet chosen
 - 2026-11-16: 'pull further' chosen for radar range; other controls removed (D-012 updated)
 - 2026-11-16: range control removed; radar shows Troves within about 2.5 km (D-012 updated)
+- 2026-11-16: four cafes (Pressed Coffee, Larder & Co, Tidal Bakery, Beanstalk Espresso) with 35 stock pings added to see the noise; same-day pings now sort by clock time
