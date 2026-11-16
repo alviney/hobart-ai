@@ -96,3 +96,4 @@ screens, from which the owner picks one (recorded as a decision).
 - 2026-11-16: per-row fade replaced by a fade at the bottom edge of the screen (D-016 updated)
 - 2026-11-16: category filter chips on the timeline and radar (D-014 updated)
 - 2026-11-16: category filter becomes a small row of on/off icons (D-014 updated)
+- 2026-11-16: filters removed; noise is handled by subscribing or not. Cafe dummy data cut to two pings (Tidal Bakery, Pressed Coffee) (D-014 updated)

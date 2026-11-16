@@ -25,13 +25,12 @@ shelf (story-style circles) and Now / Nearby / Yours tabs.
   bottom.
 - The per-Trove list (D-010) stays as the "All pings" page in the menu.
 
-## Update 2026-11-16: category toggles
+## Update 2026-11-16: no filters
 
-A small row of category icons sits above the timeline, one per category in
-your pings (School, Sport, Food, Coffee, Nature, Home and so on). All are on
-by default; tap one to switch that type of Trove off (it greys out with a
-slash), tap again to switch it back on. Several can be off at once. The
-radar list has the same row.
+There are no filters on the timeline or the radar: it shows everything from
+the Troves you subscribe to. Noise is controlled by subscribing: if a
+Trove posts things you don't want, you unsubscribe (or pause it). Category
+chips and category on/off toggles were tried and removed.
 
 ## Options considered
 
