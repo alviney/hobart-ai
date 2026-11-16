@@ -624,11 +624,51 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   -webkit-mask-image: linear-gradient(to bottom, transparent 0, transparent 62px, #000 104px, #000 calc(100% - 170px), transparent calc(100% - 50px));
   mask-image: linear-gradient(to bottom, transparent 0, transparent 62px, #000 104px, #000 calc(100% - 170px), transparent calc(100% - 50px));
 }
+
+/* "You're here" options */
+.h-big { min-height: 48px !important; padding: 0 26px !important; font-size: 16px !important; border-radius: 99px; }
+.h-eb2 { font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--primary); }
+/* 1 Spotlight: centred card, the place's icon with a ripple behind it */
+.h-spot { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding: 26px 20px 18px; border-radius: 28px; background: #FFFFFF; box-shadow: 0 6px 24px rgba(42,35,64,.08); flex-shrink: 0; margin-bottom: 6px; }
+.h-spot h2 { font-family: var(--display); font-size: 28px; font-weight: 600; line-height: 1.1; }
+.h-spot .h-big { margin-top: 6px; width: 100%; }
+.h-icon { position: relative; width: 72px; height: 72px; border-radius: 36px; background: #FFD23F; color: #2A2340; display: flex; align-items: center; justify-content: center; margin-bottom: 6px; }
+.h-icon svg { width: 36px; height: 36px; position: relative; }
+.h-icon i { position: absolute; inset: 0; border-radius: 50%; border: 2px solid #FFD23F; animation: hring 2.2s ease-out infinite; }
+@keyframes hring { from { transform: scale(1); opacity: .9; } to { transform: scale(1.9); opacity: 0; } }
+/* 2 Sonar contact: navy panel with rings, like the radar has found something */
+.h-sonar { position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 8px; padding: 22px 20px; border-radius: 28px; background: #0B2545; color: #FFFFFF; flex-shrink: 0; margin-bottom: 6px; }
+.h-sonar h2 { position: relative; font-family: var(--display); font-size: 30px; font-weight: 600; line-height: 1.05; color: #FFFFFF; max-width: 80%; }
+.h-sonar p { position: relative; font-size: 15px; line-height: 1.45; color: #C6D6E8; }
+.h-sonar .row { position: relative; margin-top: 6px; }
+.h-eb { position: relative; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #FFD23F; }
+.h-rings { position: absolute; right: -40px; top: -40px; width: 200px; height: 200px; }
+.h-rings i { position: absolute; left: 50%; top: 50%; width: 40px; height: 40px; margin: -20px; border-radius: 50%; border: 2px solid rgba(255,210,63,.55); animation: hsonar 3s ease-out infinite; }
+.h-rings i:nth-child(2) { animation-delay: 1s; } .h-rings i:nth-child(3) { animation-delay: 2s; }
+@keyframes hsonar { from { transform: scale(1); opacity: .9; } to { transform: scale(5); opacity: 0; } }
+/* 3 Peek inside: what the place just said, plus quick facts */
+.h-peek { display: flex; flex-direction: column; gap: 12px; padding: 18px; border-radius: 28px; background: #FFFFFF; box-shadow: 0 6px 24px rgba(42,35,64,.08); flex-shrink: 0; margin-bottom: 6px; }
+.h-peek h2 { font-family: var(--display); font-size: 24px; font-weight: 600; line-height: 1.1; }
+.h-tile { width: 52px; height: 52px; border-radius: 16px; background: #FFF3C4; color: #2A2340; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.h-tile svg { width: 28px; height: 28px; }
+.h-bubble { position: relative; border: 0; text-align: left; background: #F1EEFB; color: var(--ink); border-radius: 18px 18px 18px 6px; padding: 12px 14px; font-size: 15px; line-height: 1.45; }
+.h-bt { display: block; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 2px; }
+.h-facts { display: flex; flex-wrap: wrap; gap: 6px; }
+.h-facts span { font-size: 12px; font-weight: 700; color: var(--body); background: var(--soft); border-radius: 99px; padding: 5px 10px; }
+@media (prefers-reduced-motion: reduce) { .h-icon i, .h-rings i { animation: none; opacity: .4; } }
 </style>
 
 <div class="bar">
   <div class="brand">Sub1<small>clickable prototype</small></div>
-  <button type="button" class="link-btn" data-act="reset">Reset</button>
+  <div class="row">
+    <span class="sub" id="hu-label" style="font-weight:600">"You're here" style</span>
+    <div class="seg" role="group" aria-labelledby="hu-label">
+      <button type="button" data-act="hereui" data-arg="spot" id="hu-spot">1 · Spotlight</button>
+      <button type="button" data-act="hereui" data-arg="sonar" id="hu-sonar">2 · Sonar contact</button>
+      <button type="button" data-act="hereui" data-arg="peek" id="hu-peek">3 · Peek inside</button>
+    </div>
+    <button type="button" class="link-btn" data-act="reset">Reset</button>
+  </div>
 </div>
 <div class="phone" id="phone">
   <div id="bgfx" aria-hidden="true"></div>
@@ -667,7 +707,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const km = (m) => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
 
   const fresh = () => ({
-    v: 27, catOff: [], rangeUi: 'none', range: 2500, theme: 'friendly', concept: 'timeline', shelfSel: 'all', tab: 'now', radarOn: false, rstyle: 'a', win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
+    v: 28, hereUi: 'spot', catOff: [], rangeUi: 'none', range: 2500, theme: 'friendly', concept: 'timeline', shelfSel: 'all', tab: 'now', radarOn: false, rstyle: 'a', win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
     draft: { text: '', pri: 1, manual: false, ch: null }, subId: 'elm', scanLevel: 1, seq: 200,
     newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false, chat: [],
     connections: [
@@ -1069,11 +1109,34 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   }
   function hereMin() {
     const c = hereTrove(); if (!c) return '';
+    const l = latestOf(c), [catLabel, catPath] = CAT[catOf(c)];
     const act = c.joined ? `data-act="open-conn" data-arg="${c.id}"` : `data-act="sub-start" data-arg="${c.id}"`;
-    if (S.rstyle === 'b') return `<div class="dhere"><span class="sdot"><i></i></span><span class="qn">You're at <b>${esc(c.name)}</b></span><button type="button" class="pillbtn" ${act}>${c.joined ? 'Open' : 'Subscribe'}</button></div>`;
-    if (S.rstyle === 'c') return `<div class="bhere"><span class="eb">You're here</span><span class="bn">${esc(c.name)}</span><button type="button" class="textbtn" ${act}>${c.joined ? 'Open Trove ›' : '+ Subscribe'}</button></div>`;
-    return `<div class="qhere"><span>You're at <b>${esc(c.name)}</b></span><button type="button" class="pillbtn" ${act}>${c.joined ? 'Open' : 'Subscribe'}</button></div>`;
+    const cta = c.joined ? 'Open Trove' : 'Subscribe';
+    const sig = STRENGTH[strength(c.verified)] || 'Faint ping';
+    if (S.hereUi === 'sonar') return `<section class="h-sonar" aria-label="You're here">
+        <span class="h-rings" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="h-eb">Contact · ${km(c.dist)}</span>
+        <h2>${esc(c.name)}</h2>
+        ${l ? `<p>${esc(l.title || l.text)}</p>` : ''}
+        <div class="row"><button type="button" class="pillbtn h-big" ${act}>${cta}</button><button type="button" class="link-btn" data-act="trove" data-arg="${c.id}" style="color:#FFE476">What's here</button></div>
+      </section>`;
+    if (S.hereUi === 'peek') return `<section class="h-peek" aria-label="You're here">
+        <div class="row" style="flex-wrap:nowrap;align-items:flex-start"><span class="h-tile" aria-hidden="true">${svg(catPath)}</span>
+          <div class="grow" style="gap:2px"><span class="h-eb2">You're here</span><h2>${esc(c.name)}</h2></div></div>
+        ${l ? `<button type="button" class="h-bubble" data-act="open-ping" data-arg="${l.id}"><span class="h-bt">${esc(l.time)}</span>${esc(l.title || l.text)}</button>` : ''}
+        <div class="h-facts"><span>${catLabel}</span><span>${sig}</span><span>${c.docs.length} info page${c.docs.length === 1 ? '' : 's'}</span></div>
+        <div class="row"><button type="button" class="btn small" ${act}>${cta}</button><button type="button" class="link-btn" data-act="trove" data-arg="${c.id}">What's here</button></div>
+      </section>`;
+    return `<section class="h-spot" aria-label="You're here">
+        <span class="h-icon" aria-hidden="true"><i></i>${svg(catPath)}</span>
+        <span class="h-eb2">You're here</span>
+        <h2>${esc(c.name)}</h2>
+        ${l ? `<p class="sub" style="font-size:15px">${esc(l.title || l.text)}</p>` : ''}
+        <button type="button" class="pillbtn h-big" ${act}>${cta}</button>
+        <button type="button" class="link-btn" data-act="trove" data-arg="${c.id}">What's here</button>
+      </section>`;
   }
+
   function results() {
     const q = S.nearQ.trim(), r = searchNearby(q);
     return `<p class="quiet-n">${r.length} result${r.length === 1 ? '' : 's'} nearby</p>` + (r.length
@@ -1375,6 +1438,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const SCREENS = { home, feed: feedPage, ping: pingView, trove: troveFeed, troves, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
   function render() {
+    ['spot', 'sonar', 'peek'].forEach((n) => $('hu-' + n).setAttribute('aria-pressed', S.hereUi === n));
     $('phone').dataset.theme = S.theme;
     const el = $('screen');
     const fab = S.screen === 'home' || S.screen === 'ask';
@@ -1474,6 +1538,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     'menu-go': (a) => act.go(a),
     'menu-mine': (a) => { S.sheet = null; act['open-mine'](a); },
     trove: (a) => { S.sheet = a; render(); },
+    hereui: (a) => { S.hereUi = a; S.screen = 'home'; S.sheet = null; S.nearQ = ''; S.radarOn = true; clearTimeout(scanTimer); S.scanning = false; render(); scrollTop(); },
     cat: (a) => { S.catOff = S.catOff.includes(a) ? S.catOff.filter((k) => k !== a) : S.catOff.concat(a); const y = $('screen').scrollTop; render(); $('screen').scrollTop = y; },
     'range-set': (a) => { S.range = +a; render(); if (S.rangeUi === 'pull') scrollTop(); },
     'pull-more': () => extendRange(),
@@ -1596,7 +1661,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const hot = window.claude && window.claude.hot;
   if (hot && hot.snapshot) hot.snapshot(() => S);
-  const boot = (data) => { if (data && data.v === 27) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
+  const boot = (data) => { if (data && data.v === 28) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
   if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>
