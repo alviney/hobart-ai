@@ -483,6 +483,69 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 .phone[data-theme="sub"] .scan .radar svg.grid g, .phone[data-theme="friendly"] .scan .radar svg.grid g { stroke: rgba(11,37,69,.12); }
 .phone[data-theme="sub"] .you-dot { background: #0B2545; }
 .phone[data-theme="friendly"] .you-dot { background: #6C4CE0; }
+
+/* ===== Thematic layer (D-016): depth is time, portholes, pressable controls, the ripple ===== */
+.phone[data-theme="friendly"] { --hull: #0B2545; --brass: #FFD23F; --brass-edge: #C99A00; }
+
+/* Depth is time */
+.dive { margin: 0 -20px -100px; flex: 1; display: flex; flex-direction: column; }
+.band { padding: 4px 20px 14px; }
+.band:last-child { flex: 1; padding-bottom: 116px; }
+.band.d0 { background: linear-gradient(#F8F7FB, #E6EEF8); }
+.band.d1 { background: linear-gradient(#E6EEF8, #B9CFE8); }
+.band.d2 { background: linear-gradient(#B9CFE8, #3F6694); }
+.band.d3 { background: linear-gradient(#3F6694, #0B2545); }
+.band.d1:first-child, .band.d2:first-child, .band.d3:first-child { margin-top: 6px; border-radius: 28px 28px 0 0; }
+.phone[data-theme="friendly"] .band .dayh { margin: 0; padding: 14px 4px 8px; line-height: 1.2; }
+.phone[data-theme="friendly"] .band.d3 .dayh { color: #FFFFFF; }
+.phone[data-theme="friendly"] .band.d2 .rp { background: #F1F5FA; box-shadow: 0 2px 10px rgba(11,37,69,.18); }
+.phone[data-theme="friendly"] .band.d3 .rp { background: #1D3D63; box-shadow: none; color: #E4EDF7; }
+.phone[data-theme="friendly"] .band.d3 .rp .who, .phone[data-theme="friendly"] .band.d3 .rp .tx b { color: #FFFFFF !important; }
+.phone[data-theme="friendly"] .band.d3 .rp .tx { color: #C6D6E8; }
+.phone[data-theme="friendly"] .band.d3 .rp .tm { color: #A9BFD8; }
+.phone[data-theme="friendly"] .band.d3 .utag { color: #FFB08A; }
+
+/* Portholes: light on means something new */
+.phone[data-theme="friendly"] .rp .rav { position: relative; width: 44px; height: 44px; border: 4px solid var(--brass); background: #1D3D63; color: #9FB6D0; box-shadow: inset 0 0 0 2px rgba(11,37,69,.55), 0 2px 0 var(--brass-edge); }
+.phone[data-theme="friendly"] .rp .rav.lit { background: radial-gradient(circle at 50% 40%, #FFFFFF, #FFF1B0); color: #2A2340; box-shadow: inset 0 0 0 2px rgba(201,154,0,.45), 0 2px 0 var(--brass-edge), 0 0 14px rgba(255,210,63,.75); }
+.phone[data-theme="friendly"] .rp .rav.lit.urgent { background: radial-gradient(circle at 50% 40%, #FFF4EC, #FFB58A); box-shadow: inset 0 0 0 2px rgba(194,65,12,.4), 0 2px 0 var(--brass-edge), 0 0 14px rgba(255,138,91,.8); }
+.phone[data-theme="friendly"] .udot { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.phone[data-theme="friendly"] .rp.read .who { color: var(--ink); }
+.rav.arrive::after { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 3px solid var(--brass); animation: rip-small 1.2s ease-out 3; }
+@keyframes rip-small { from { transform: scale(1); opacity: .9; } to { transform: scale(2.2); opacity: 0; } }
+
+/* Controls you can press */
+.phone[data-theme="friendly"] .btn { box-shadow: 0 4px 0 #4B2FBF; transition: transform .06s, box-shadow .06s; }
+.phone[data-theme="friendly"] .btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #4B2FBF; }
+.phone[data-theme="friendly"] .btn[disabled] { box-shadow: 0 4px 0 #8C9AA3; }
+.phone[data-theme="friendly"] .btn.ghost, .phone[data-theme="friendly"] .btn.dashed { box-shadow: none; }
+.phone[data-theme="friendly"] .pillbtn, .phone[data-theme="friendly"] .fab-send { box-shadow: 0 3px 0 var(--brass-edge); transition: transform .06s, box-shadow .06s; }
+.phone[data-theme="friendly"] .pillbtn:active, .phone[data-theme="friendly"] .fab-send:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--brass-edge); }
+.phone[data-theme="friendly"] .iconbtn { box-shadow: 0 3px 0 #DDD8EC; transition: transform .06s, box-shadow .06s; }
+.phone[data-theme="friendly"] .iconbtn:active { transform: translateY(2px); box-shadow: 0 1px 0 #DDD8EC; }
+/* The radar is a chunky two-position switch with a brass knob */
+.phone[data-theme="friendly"] .radar-btn.radar-btn { width: 84px; height: 48px; border-radius: 24px; padding: 4px; justify-content: flex-start; background: #DCD8EA !important; box-shadow: inset 0 2px 4px rgba(42,35,64,.22) !important; transition: background .15s; }
+.phone[data-theme="friendly"] .radar-btn.radar-btn svg { width: 40px; height: 37px; padding: 7px; box-sizing: border-box; border-radius: 50%; background: var(--brass); color: #2A2340; box-shadow: 0 3px 0 var(--brass-edge); transition: transform .18s cubic-bezier(.3,1.4,.5,1); }
+.phone[data-theme="friendly"] .radar-btn.radar-btn[aria-pressed="true"] { background: var(--hull) !important; box-shadow: inset 0 2px 4px rgba(0,0,0,.4) !important; }
+.phone[data-theme="friendly"] .radar-btn.radar-btn[aria-pressed="true"] svg { transform: translateX(36px); }
+.phone[data-theme="friendly"] .switch { width: 64px; height: 38px; border-radius: 19px; background: #DCD8EA; box-shadow: inset 0 2px 4px rgba(42,35,64,.22); }
+.phone[data-theme="friendly"] .switch span { width: 30px; height: 27px; border-radius: 15px; background: #FFFFFF; box-shadow: 0 3px 0 #BDB6D3; }
+.phone[data-theme="friendly"] .switch[aria-checked="true"] { background: var(--hull); }
+.phone[data-theme="friendly"] .switch[aria-checked="true"] span { background: var(--brass); box-shadow: 0 3px 0 var(--brass-edge); }
+.phone[data-theme="friendly"] #pri-switch[aria-checked="true"] { background: #C2410C; }
+
+/* The ripple: sending, arriving and scanning all use it */
+.ripple-fx { position: absolute; inset: 0; pointer-events: none; z-index: 6; overflow: hidden; }
+.ripple-fx span { position: absolute; left: 50%; top: 42%; width: 70px; height: 70px; margin: -35px; border-radius: 50%; border: 1px solid var(--brass, #FFD23F); opacity: 0; animation: rip-big 1.5s ease-out forwards; }
+.ripple-fx span:nth-child(2) { animation-delay: .2s; } .ripple-fx span:nth-child(3) { animation-delay: .4s; }
+@keyframes rip-big { 0% { transform: scale(.4); opacity: .95; } 100% { transform: scale(11); opacity: 0; } }
+.ripple-scan { position: relative; width: 96px; height: 96px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.ripple-scan i { position: absolute; left: 50%; top: 50%; width: 26px; height: 26px; margin: -13px; border-radius: 50%; border: 1.5px solid var(--brass-edge, #C99A00); opacity: 0; animation: rip-scan 1.7s ease-out infinite; }
+.ripple-scan i:nth-child(2) { animation-delay: .55s; } .ripple-scan i:nth-child(3) { animation-delay: 1.1s; }
+.ripple-scan b { width: 14px; height: 14px; border-radius: 50%; background: var(--hull, #0B2545); }
+@keyframes rip-scan { 0% { transform: scale(1); opacity: .95; } 100% { transform: scale(3.6); opacity: 0; } }
+.phone[data-theme="friendly"] .scan p { color: var(--body); font-weight: 600; }
+@media (prefers-reduced-motion: reduce) { .rav.arrive::after, .ripple-scan i { animation: none; } .ripple-scan i:first-child { opacity: .6; transform: scale(2.4); } .phone[data-theme="friendly"] .radar-btn.radar-btn svg { transition: none; } }
 </style>
 
 <div class="bar">
@@ -681,16 +744,19 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const dayLabel = (age) => age === 0 ? 'Today' : age === 1 ? 'Yesterday' : age <= 7 ? 'Earlier this week' : 'Older';
   function rpRow(p, near) {
     const c = conn(p.conn), unread = !p.read;
-    return `<button type="button" class="rp ${unread ? '' : 'read'}" data-act="open-ping" data-arg="${p.id}" ${near ? `style="opacity:${OP[pingSig(p.age)]}"` : ''}>
-      <span class="rav" aria-hidden="true" style="--ravbg:${RAV[hashId(c.id) % RAV.length][0]};--ravfg:${RAV[hashId(c.id) % RAV.length][1]}">${esc(c.name[0])}</span>
+    return `<button type="button" class="rp ${unread ? '' : 'read'}" data-act="open-ping" data-arg="${p.id}">
+      <span class="rav ${unread ? (p.pri === 4 ? 'lit urgent' : 'lit') : ''} ${p.isNew ? 'arrive' : ''}" aria-hidden="true">${esc(c.name[0])}</span>
       <span class="who">${unread ? `<span class="udot ${p.pri === 4 ? 'urgent' : ''}" aria-label="Unread"></span>` : ''}<span class="nm">${c.owner ? 'You · ' : ''}${esc(c.name)}</span>${p.pri === 4 ? '<span class="utag">Urgent</span>' : ''}</span>
       <span class="tm">${near ? km(c.dist) + ' · ' : ''}${esc(p.time)}</span>
       <span class="tx">${p.title ? `<b style="color:var(--ink);font-weight:600">${esc(p.title)}.</b> ` : ''}${esc(p.text)}</span></button>`;
   }
+  // Depth is time: each day band sits deeper and darker than the one above it.
   function grouped(list, near) {
-    let last = null, out = '';
-    for (const p of list) { const d = dayLabel(p.age); if (d !== last) { out += `<div class="dayh">${d}</div>`; last = d; } out += rpRow(p, near); }
-    return out || '<div class="empty">No pings yet. Turn on the radar to find Troves nearby.</div>';
+    const bands = [];
+    for (const p of list) { const d = dayLabel(p.age); let b = bands[bands.length - 1]; if (!b || b.d !== d) bands.push(b = { d, rows: [] }); b.rows.push(p); }
+    if (!bands.length) return '<div class="empty">No pings yet. Turn on the radar to find Troves nearby.</div>';
+    const depth = { Today: 0, Yesterday: 1, 'Earlier this week': 2, Older: 3 };
+    return `<div class="dive">${bands.map((b) => `<section class="band d${depth[b.d]}"><h2 class="dayh">${b.d}</h2>${b.rows.map((p) => rpRow(p, near)).join('')}</section>`).join('')}</div>`;
   }
   function summaryLine() {
     const all = briefingItems(); if (!all.length) return '';
@@ -719,7 +785,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
       const list = recentPings().filter((p) => S.shelfSel === 'all' || p.conn === S.shelfSel);
       return `${header()}${shelf}${S.shelfSel !== 'all' ? `<div class="row" style="justify-content:space-between"><h2>${esc(conn(S.shelfSel).name)}</h2><button type="button" class="link-btn" data-act="open-trove" data-arg="${S.shelfSel}">Open ›</button></div>` : ''}<div>${grouped(list)}</div>`;
     }
-    return `${header()}${summaryLine()}<div>${grouped(recentPings())}</div>`;
+    return `${header()}${summaryLine()}${grouped(recentPings())}`;
   }
   function homeOld() {
     const unread = myPosts().filter((p) => !p.read).length, urgent = myPosts().some((p) => !p.read && p.pri === 4);
@@ -887,11 +953,11 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     if (S.nearQ.trim()) return results();
     const ids = nearby().map((c) => c.id);
     const list = S.posts.filter((p) => ids.includes(p.conn) && p.age <= 30).sort((a, b) => a.age - b.age || b.id - a.id);
-    return `${hereMin()}<div>${list.length ? grouped(list, true) : '<p class="sub">Nothing nearby in the last month.</p>'}</div>`;
+    return `${hereMin()}${list.length ? grouped(list, true) : '<p class="sub">Nothing nearby in the last month.</p>'}`;
   }
 
   function radar() {
-    if (S.scanning) return `<div class="scan">${radarCircle(120)}<p>Scanning nearby…</p></div>`;
+    if (S.scanning) return `<div class="scan"><span class="ripple-scan" aria-hidden="true"><i></i><i></i><i></i><b></b></span><p>Scanning nearby…</p></div>`;
     const back = '';
     const slider = (cls) => `<input type="range" id="win" class="${cls || ''}" min="0" max="${WINDOWS.length - 1}" step="1" value="${S.win}" aria-label="How far back to listen" aria-valuetext="${WINDOWS[S.win].label}">`;
     let top;
@@ -903,8 +969,8 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     } else {
       top = `<div class="rtop"><div class="slim"><span id="win-val">${WINDOWS[S.win].label}</span>${slider()}</div></div>`;
     }
-    return `<div class="${S.rlayout === 'scan' ? 'reveal' : ''}" style="display:flex;flex-direction:column;gap:10px">
-      <div id="near-results" style="display:flex;flex-direction:column;gap:${S.rstyle === 'c' ? 10 : 0}px">${radarBody()}</div></div>`;
+    return `<div class="${S.rlayout === 'scan' ? 'reveal' : ''}" style="display:flex;flex-direction:column;gap:10px;flex:1">
+      <div id="near-results" style="display:flex;flex-direction:column;gap:0;flex:1">${radarBody()}</div></div>`;
   }
   function troveSheet(c) {
     const s = strength(c.verified);
@@ -1058,8 +1124,8 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
       <label for="draft" style="position:absolute;left:-9999px">Message</label>
       <textarea class="input" id="draft" placeholder="Saturday games move to 9am at the Domain courts…">${esc(d.text)}</textarea>
       <button type="button" class="link-btn" data-act="example" style="align-self:flex-start;padding:0">Use an example</button>
-      <p class="label">Is it urgent?</p>
-      <div class="pills" id="pri-pills">${[1, 4].map((l) => `<button type="button" class="pill" aria-pressed="${d.pri === l}" data-act="pri" data-arg="${l}">${l === 4 ? 'Urgent' : 'Not urgent'}</button>`).join('')}</div>
+      <div class="setting"><span id="pri-label"><b>Urgent</b><br><span class="sub">Reaches everyone, even people who only want urgent pings</span></span>
+        <button type="button" class="switch" role="switch" id="pri-switch" aria-checked="${d.pri === 4}" aria-labelledby="pri-label" data-act="pri-toggle"><span></span></button></div>
       <p class="sub" id="why" style="font-size:15px;color:var(--body)">${whyText(s)}</p>
       <div class="reach" id="reach">${reachText(r)}</div>
       <div class="row" style="margin-top:auto"><button type="button" class="btn" id="share" data-act="share" ${d.text.trim() ? '' : 'disabled'}>Send ping</button>
@@ -1163,6 +1229,12 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     S.scanning = S.rlayout === 'scan' && !reduce;
     if (S.scanning) scanTimer = setTimeout(() => { S.scanning = false; if (S.screen === 'home' && (S.radarOn || S.tab === 'nearby')) render(); }, 1700);
   }
+  const calm = () => window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function rippleFx() {
+    if (calm()) return;
+    const el = document.createElement('div'); el.className = 'ripple-fx'; el.setAttribute('aria-hidden', 'true'); el.innerHTML = '<span></span><span></span><span></span>';
+    $('phone').appendChild(el); setTimeout(() => el.remove(), 1900);
+  }
   let toastTimer;
   function toast(msg) {
     const t = $('toast'); t.textContent = msg; t.hidden = false;
@@ -1242,6 +1314,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     'doc-cancel': () => { S.addingDoc = false; render(); },
     'share-to': (a) => { S.draft.ch = a; S.screen = 'share'; render(); scrollTop(); },
     pri: (a) => { S.draft.pri = +a; S.draft.manual = true; updateCompose(); },
+    'pri-toggle': () => { S.draft.pri = S.draft.pri === 4 ? 1 : 4; S.draft.manual = true; updateCompose(); },
     example: () => { Object.assign(S.draft, { text: 'Training is cancelled tonight because of the storm warning. Stay safe and see you Saturday.', pri: 4, manual: false }); render(); },
     share: () => {
       const d = S.draft; if (!d.text.trim()) return;
@@ -1250,7 +1323,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
       Object.assign(S.draft, { text: '', pri: 1, manual: false });
       c.verified = 0;
       S.screen = 'home';
-      render(); scrollTop(); toast(r.pinged + r.quiet + r.ai ? `Ping sent. ${r.pinged} pinged.` : 'Ping sent. It will be waiting when people subscribe.');
+      render(); rippleFx(); scrollTop(); toast(r.pinged + r.quiet + r.ai ? `Ping sent. ${r.pinged} pinged.` : 'Ping sent. It will be waiting when people subscribe.');
     },
     soon: (a) => toast(`${a}: coming later`)
   };
@@ -1258,7 +1331,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   function updateCompose() {
     const s = suggest(S.draft.text);
     if (s && !S.draft.manual) S.draft.pri = s.pri;
-    document.querySelectorAll('#pri-pills .pill').forEach((b) => b.setAttribute('aria-pressed', +b.dataset.arg === S.draft.pri));
+    const sw = $('pri-switch'); if (sw) sw.setAttribute('aria-checked', S.draft.pri === 4);
     $('why').innerHTML = whyText(s);
     $('reach').innerHTML = reachText(reachFor(conn(S.draft.ch), S.draft.pri));
     $('share').disabled = !S.draft.text.trim();
@@ -1267,6 +1340,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   document.addEventListener('click', (e) => {
     const b = e.target.closest('[data-act]');
     if (!b || b.disabled) return;
+    if (b.matches('.btn, .pillbtn, .radar-btn, .switch, .fab-send') && navigator.vibrate) { try { navigator.vibrate(8); } catch (err) {} }
     const f = act[b.dataset.act];
     if (f) f(b.dataset.arg);
   });
