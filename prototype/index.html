@@ -727,11 +727,41 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 /* Menu: white icon circles */
 .phone[data-theme="friendly"] .sheet-item .iconbtn { background: #FFF3C4; border: 0; color: #2A2340; }
 .phone[data-theme="friendly"] .sheet-item:hover { background: var(--soft); }
+
+/* ===== Ping strength options ===== */
+/* 1 Sonar rings: a dot with up to three arcs */
+.sig-sonar { width: 24px; height: 24px; flex-shrink: 0; }
+.sig-sonar circle { fill: none; stroke: #E6E2F0; stroke-width: 1.6; }
+.sig-sonar circle.on { stroke: var(--primary); }
+.sig-sonar circle.on + circle.on { opacity: .75; }
+.sig-sonar .dot { fill: var(--primary); stroke: none; }
+.sig-sonar.s1 .dot { fill: #B9B3CC; }
+.sig-sonar.s0 .dot { fill: none; stroke: #B9B3CC; stroke-width: 1.4; }
+/* 2 Ring on the icon: the circle's yellow rim thins, fades, then goes grey and dashed */
+.phone[data-sig="ring"] .avatar.sig4 { box-shadow: 0 0 0 3px #FFFFFF, 0 0 0 6px #FFD23F; }
+.phone[data-sig="ring"] .avatar.sig3 { box-shadow: 0 0 0 3px #FFFFFF, 0 0 0 4.5px #FFD23F; }
+.phone[data-sig="ring"] .avatar.sig2 { background: #FFEBA8; box-shadow: 0 0 0 3px #FFFFFF, 0 0 0 4px #FFE48A; }
+.phone[data-sig="ring"] .avatar.sig1, .phone[data-sig="ring"] .avatar.sig0 { background: #EFEDF5; color: #8C86A3; box-shadow: none; outline: 2px dashed #C9C4D8; outline-offset: 3px; }
+.phone[data-sig="ring"] .avatar.ink.sig2 { background: #3D5675; }
+/* 3 Glow: fresh Troves glow like a light that's on; stale ones go flat and grey */
+.phone[data-sig="glow"] .avatar.sig4 { box-shadow: 0 0 0 4px rgba(255,210,63,.35), 0 0 20px 2px rgba(255,200,40,.85); }
+.phone[data-sig="glow"] .avatar.sig3 { box-shadow: 0 0 12px rgba(255,200,40,.55); }
+.phone[data-sig="glow"] .avatar.sig2 { background: #FFE9A6; box-shadow: none; }
+.phone[data-sig="glow"] .avatar.sig1, .phone[data-sig="glow"] .avatar.sig0 { background: #ECEAF2; color: #8C86A3; box-shadow: none; }
+.phone[data-sig="glow"] .avatar.ink.sig2, .phone[data-sig="glow"] .avatar.ink.sig1 { background: #5A6B80; color: #E6E2F0; }
 </style>
 
 <div class="bar">
   <div class="brand">Sub1<small>clickable prototype</small></div>
-  <button type="button" class="link-btn" data-act="reset">Reset</button>
+  <div class="row">
+    <span class="sub" id="sg-label" style="font-weight:600">Ping strength</span>
+    <div class="seg" role="group" aria-labelledby="sg-label">
+      <button type="button" data-act="sigui" data-arg="sonar" id="sg-sonar">1 · Sonar rings</button>
+      <button type="button" data-act="sigui" data-arg="ring" id="sg-ring">2 · Ring on the icon</button>
+      <button type="button" data-act="sigui" data-arg="glow" id="sg-glow">3 · Glow</button>
+    </div>
+    <button type="button" class="link-btn" data-act="reset">Reset</button>
+  </div>
 </div>
 <div class="phone" id="phone">
   <div id="bgfx" aria-hidden="true"></div>
@@ -770,7 +800,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const km = (m) => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
 
   const fresh = () => ({
-    v: 30, trovesOn: false, hereUi: 'sonar', catOff: [], rangeUi: 'none', range: 2500, theme: 'friendly', concept: 'timeline', shelfSel: 'all', tab: 'now', radarOn: false, rstyle: 'a', win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
+    v: 31, sigUi: 'sonar', trovesOn: false, hereUi: 'sonar', catOff: [], rangeUi: 'none', range: 2500, theme: 'friendly', concept: 'timeline', shelfSel: 'all', tab: 'now', radarOn: false, rstyle: 'a', win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
     draft: { text: '', pri: 1, manual: false, ch: null }, subId: 'elm', scanLevel: 1, seq: 200,
     newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false, chat: [],
     connections: [
@@ -865,7 +895,15 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const owned = () => S.connections.filter((c) => c.owner);
   const subs = (c) => c.audience ? c.audience[1] + c.audience[4] + c.audience.ai : 0;
   const tag = (p) => p === 4 ? '<span class="tag t4">Urgent</span>' : '';
-  const meter = (s) => `<span class="meter s${s}" aria-hidden="true"><i></i><i></i><i></i><i></i></span>`;
+  // Ping strength marker. Three designs to compare: sonar rings, a ring on the icon, a glow.
+  const meter = (s) => {
+    if (S.sigUi === 'sonar') {
+      const rings = [4.6, 7.4, 10.2].map((r, k) => `<circle cx="11" cy="11" r="${r}" class="${k < s - 1 ? 'on' : ''}"/>`).join('');
+      return `<svg class="sig-sonar s${s}" viewBox="0 0 22 22" aria-hidden="true">${rings}<circle class="dot" cx="11" cy="11" r="2.2"/></svg>`;
+    }
+    return '';
+  };
+  const sigCls = (c) => ` sig${strength(c.verified || 0)}`;
   const pings = (p) => { const c = conn(p.conn); return !c.owner && c.on && !S.pullOnly && c.via !== 'My AI only' && p.pri >= c.level; };
   const myPosts = () => S.posts.filter((p) => conn(p.conn).joined).sort((a, b) => b.id - a.id);
   const scrollTop = () => { $('screen').scrollTop = 0; };
@@ -1071,7 +1109,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     const c = conn(S.troveId);
     const list = S.posts.filter((p) => p.conn === c.id).sort((a, b) => b.id - a.id);
     return `<button type="button" class="back" data-act="go" data-arg="feed">‹ Pings</button>
-      <div class="row" style="flex-wrap:nowrap"><span class="avatar big ${c.owner ? 'ink' : ''}">${svg(CAT[catOf(c)][1])}</span>
+      <div class="row" style="flex-wrap:nowrap"><span class="avatar big ${c.owner ? 'ink' : ''}${sigCls(c)}">${svg(CAT[catOf(c)][1])}</span>
         <div class="grow"><h2>${esc(c.name)}</h2><span class="row" style="gap:8px">${meter(strength(c.verified || 0))}<span class="sub">${c.owner ? 'You run this' : LINE[c.level] + (c.on ? '' : ' · paused')}</span></span></div>
         <button type="button" class="link-btn" data-act="${c.owner ? 'open-mine' : 'open-conn'}" data-arg="${c.id}">${c.owner ? 'Manage' : 'Settings'}</button></div>
       ${list.length ? `<div class="cardlist">${list.map((p) => rpRow(p)).join('')}</div>` : '<div class="empty">No pings yet.</div>'}`;
@@ -1087,7 +1125,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
       ${p.title ? `<h1 style="font-size:30px">${esc(p.title)}</h1>` : ''}
       <p class="ping-body" style="font-size:17px;color:var(--ink)">${esc(p.text)}</p>
       <button type="button" class="conn" data-act="${c.owner ? 'open-mine' : 'open-conn'}" data-arg="${c.id}" style="margin-top:8px">
-        <span class="avatar ${c.owner ? 'ink' : ''}">${svg(CAT[catOf(c)][1])}</span><span class="grow"><span class="name">${esc(c.name)}</span><span class="row" style="gap:8px">${meter(strength(c.verified || 0))}<span class="sub">${c.owner ? 'You run this' : LINE[c.level]}</span></span></span><span aria-hidden="true" style="color:var(--muted)">›</span></button>
+        <span class="avatar ${c.owner ? 'ink' : ''}${sigCls(c)}">${svg(CAT[catOf(c)][1])}</span><span class="grow"><span class="name">${esc(c.name)}</span><span class="row" style="gap:8px">${meter(strength(c.verified || 0))}<span class="sub">${c.owner ? 'You run this' : LINE[c.level]}</span></span></span><span aria-hidden="true" style="color:var(--muted)">›</span></button>
       <button type="button" class="btn ghost small" data-act="ask" data-arg="${esc('Tell me more about: ' + (p.title || p.text).slice(0, 60))}" style="align-self:flex-start">Ask about this</button>`;
   }
 
@@ -1265,7 +1303,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     const s = strength(c.verified);
     return `<div class="backdrop" data-act="sheet-close"></div>
       <div class="sheet" role="dialog" aria-label="${esc(c.name)}"><span class="grabber"></span>
-        <div class="row" style="flex-wrap:nowrap"><span class="avatar big">${svg(CAT[catOf(c)][1])}</span><div class="grow"><h2>${esc(c.name)}</h2><span class="sub">${km(c.dist)} away</span></div></div>
+        <div class="row" style="flex-wrap:nowrap"><span class="avatar big${sigCls(c)}">${svg(CAT[catOf(c)][1])}</span><div class="grow"><h2>${esc(c.name)}</h2><span class="sub">${km(c.dist)} away</span></div></div>
         <div class="setting" style="background:var(--soft)"><span class="row" style="gap:10px;flex-wrap:nowrap">${meter(s)}<span><b>${STRENGTH[s]}</b><br><span class="sub">Details confirmed by the owner ${ago(c.verified)}</span></span></span></div>
         ${c.docs.length ? `<p class="label">What's here</p>${c.docs.map((d) => `<details class="doc"><summary>${esc(d.t)}</summary><p>${esc(d.b)}</p></details>`).join('')}` : ''}
         ${c.joined
@@ -1278,13 +1316,13 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   function troves() {
     const mine = owned().map((c) => `
       <button type="button" class="conn mine" data-act="open-mine" data-arg="${c.id}">
-        <span class="avatar ink">${svg(CAT[catOf(c)][1])}</span>
+        <span class="avatar ink${sigCls(c)}">${svg(CAT[catOf(c)][1])}</span>
         <span class="grow"><span class="name">${esc(c.name)}</span>
           <span class="row" style="gap:6px"><span class="tag you">You run this</span><span class="tag plain"><span class="stat">${subs(c)}</span> subscribers</span></span></span>
         <span aria-hidden="true" style="color:var(--muted)">›</span></button>`).join('');
     const following = S.connections.filter((c) => c.joined && !c.owner).map((c) => `
       <button type="button" class="conn ${c.on ? '' : 'off'}" data-act="open-conn" data-arg="${c.id}">
-        <span class="avatar">${svg(CAT[catOf(c)][1])}</span>
+        <span class="avatar${sigCls(c)}">${svg(CAT[catOf(c)][1])}</span>
         <span class="grow"><span class="name">${esc(c.name)}</span>
           <span class="row" style="gap:6px"><span class="tag ${c.level === 4 ? 't4' : 'plain'}">${LINE[c.level]}</span><span class="tag plain">${c.on ? esc(c.via) : 'Paused'}</span></span></span>
         ${meter(strength(c.verified))}</button>`).join('');
@@ -1297,7 +1335,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     const c = conn(S.connId), s = strength(c.verified);
     const recent = S.posts.filter((p) => p.conn === c.id).sort((a, b) => b.id - a.id).slice(0, 3);
     return `<button type="button" class="back" data-act="go" data-arg="troves">‹ Your subs</button>
-      <div class="row" style="flex-wrap:nowrap"><span class="avatar big">${svg(CAT[catOf(c)][1])}</span><div class="grow"><h2>${esc(c.name)}</h2><span class="row" style="gap:8px">${meter(s)}<span class="sub">${s ? STRENGTH[s] : 'Too faint'} · verified ${ago(c.verified)}</span></span></div></div>
+      <div class="row" style="flex-wrap:nowrap"><span class="avatar big${sigCls(c)}">${svg(CAT[catOf(c)][1])}</span><div class="grow"><h2>${esc(c.name)}</h2><span class="row" style="gap:8px">${meter(s)}<span class="sub">${s ? STRENGTH[s] : 'Too faint'} · verified ${ago(c.verified)}</span></span></div></div>
       <div class="setting"><span><b>Notifications</b><br><span class="sub">${c.on ? 'On' : 'Paused. Pings still land in your feed.'}</span></span>
         <button type="button" class="switch" role="switch" aria-checked="${c.on}" aria-label="Notifications" data-act="toggle-conn"><span></span></button></div>
       <p class="label">Ping me for</p>
@@ -1340,7 +1378,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   function joined() {
     const c = conn(S.subId);
     return `<div style="margin:auto 0;display:flex;flex-direction:column;gap:16px;text-align:center;align-items:center">
-      <span class="avatar big">${svg(CAT[catOf(c)][1])}</span><h1>You're subscribed</h1>
+      <span class="avatar big${sigCls(c)}">${svg(CAT[catOf(c)][1])}</span><h1>You're subscribed</h1>
       <p class="sub" style="font-size:16px">${esc(c.name)} will ping you for <b>${LINE[c.level].toLowerCase()}</b>${c.via === 'My AI only' ? ', through your AI only' : ' by email'}. Change it any time in Your subs.</p>
       <button type="button" class="btn" data-act="go" data-arg="feed">See your pings</button>
       <p class="sub">Got something to share? <button type="button" class="link-btn" data-act="go" data-arg="start" style="padding:0">Start a Trove</button></p></div>`;
@@ -1368,7 +1406,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     const posts = S.posts.filter((p) => p.conn === c.id).sort((a, b) => b.id - a.id);
     const n = subs(c);
     return `<button type="button" class="back" data-act="go" data-arg="troves">‹ Your subs</button>
-      <div class="row" style="flex-wrap:nowrap"><span class="avatar big ink">${svg(CAT[catOf(c)][1])}</span>
+      <div class="row" style="flex-wrap:nowrap"><span class="avatar big ink${sigCls(c)}">${svg(CAT[catOf(c)][1])}</span>
         <div class="grow"><h2>${esc(c.name)}</h2><span class="row" style="gap:6px"><span class="tag you">You run this</span><span class="tag t1">${c.access === 'public' ? (c.checked ? 'On the radar' : 'Public · being checked') : 'Invite only'}</span></span></div></div>
       <button type="button" class="btn" data-act="share-to" data-arg="${c.id}">Send a ping</button>
       <div class="panel">
@@ -1499,6 +1537,8 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const SCREENS = { home, feed: feedPage, ping: pingView, trove: troveFeed, troves, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
   function render() {
+    $('phone').dataset.sig = S.sigUi;
+    ['sonar', 'ring', 'glow'].forEach((n) => $('sg-' + n).setAttribute('aria-pressed', S.sigUi === n));
     $('phone').dataset.theme = S.theme;
     const el = $('screen');
     const fab = S.screen === 'home' || S.screen === 'ask';
@@ -1599,6 +1639,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     'menu-go': (a) => act.go(a),
     'menu-mine': (a) => { S.sheet = null; act['open-mine'](a); },
     trove: (a) => { S.sheet = a; render(); },
+    sigui: (a) => { S.sigUi = a; S.screen = 'home'; S.sheet = null; S.radarOn = false; S.trovesOn = true; clearTimeout(scanTimer); S.scanning = false; render(); scrollTop(); },
     cat: (a) => { S.catOff = S.catOff.includes(a) ? S.catOff.filter((k) => k !== a) : S.catOff.concat(a); const y = $('screen').scrollTop; render(); $('screen').scrollTop = y; },
     'range-set': (a) => { S.range = +a; render(); if (S.rangeUi === 'pull') scrollTop(); },
     'pull-more': () => extendRange(),
@@ -1722,7 +1763,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const hot = window.claude && window.claude.hot;
   if (hot && hot.snapshot) hot.snapshot(() => S);
-  const boot = (data) => { if (data && data.v === 30) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
+  const boot = (data) => { if (data && data.v === 31) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
   if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>
