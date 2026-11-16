@@ -34,10 +34,11 @@ chips and category on/off toggles were tried and removed.
 
 ## Update 2026-11-16: Your Troves button
 
-The header has two round buttons on the right: **Your Troves** (a chest
+The header has two round buttons on the right: **Your subs** (a chest
 icon) and the **radar**. Each swaps the timeline for its own content in
 place and turns into a navy ✕ to close it; only one can be open at a time.
-Your Troves shows the Troves you run and subscribe to, plus Scan a code
+Your subs lists the Troves you subscribe to, with no "Subscribed" heading (if
+you run Troves, they appear first under "You run", then "You follow"), plus Scan a code
 and Start a Trove. Opening a Trove and pressing back returns to the panel.
 
 ## Options considered

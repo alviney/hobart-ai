@@ -942,22 +942,22 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     const unread = myPosts().filter((p) => !p.read).length, urgent = myPosts().some((p) => !p.read && p.pri === 4);
     return `<div class="topline"><button type="button" class="iconbtn" data-act="menu" aria-label="Menu">${icon.menu}</button>
         ${extra || '<span style="flex:1"></span>'}
-        ${S.concept === 'tabs' ? '' : `<button type="button" class="radar-btn troves-btn" data-act="troves-toggle" aria-pressed="${!!S.trovesOn}" aria-label="${S.trovesOn ? 'Close your Troves' : 'Your Troves'}">${S.trovesOn ? icon.close : icon.chest}</button><button type="button" class="radar-btn" data-act="radar-toggle" aria-pressed="${!!S.radarOn}" aria-label="${S.radarOn ? 'Close the radar' : 'Radar: Troves near you'}">${S.radarOn ? icon.close : icon.radar}</button>`}</div>`;
+        ${S.concept === 'tabs' ? '' : `<button type="button" class="radar-btn troves-btn" data-act="troves-toggle" aria-pressed="${!!S.trovesOn}" aria-label="${S.trovesOn ? 'Close your subs' : 'Your subs'}">${S.trovesOn ? icon.close : icon.chest}</button><button type="button" class="radar-btn" data-act="radar-toggle" aria-pressed="${!!S.radarOn}" aria-label="${S.radarOn ? 'Close the radar' : 'Radar: Troves near you'}">${S.radarOn ? icon.close : icon.radar}</button>`}</div>`;
   }
   function home() {
     if (S.concept === 'tabs') {
       const t = S.tab, tab = (id, label) => `<button type="button" role="tab" aria-selected="${t === id}" data-act="tab" data-arg="${id}">${label}</button>`;
       const unread = myPosts().filter((p) => !p.read).length;
-      const body = t === 'nearby' ? radar() : t === 'yours' ? troves().replace(/^<button type="button" class="back"[^>]*>[^<]*<\/button><h1>Your Troves<\/h1>/, '') : `${summaryLine()}${grouped(recentPings())}`;
+      const body = t === 'nearby' ? radar() : t === 'yours' ? troves().replace(/^<button type="button" class="back"[^>]*>[^<]*<\/button><h1>Your subs<\/h1>/, '') : `${summaryLine()}${grouped(recentPings())}`;
       return `${header(`<div class="tabs" role="tablist" aria-label="Home">${tab('now', `Now${unread ? ` · ${unread}` : ''}`)}${tab('nearby', 'Nearby')}${tab('yours', 'Yours')}</div>`)}${body}`;
     }
-    if (S.trovesOn) return `<div class="reveal" style="display:flex;flex-direction:column;gap:12px">${troves().replace(/^<button type="button" class="back"[^>]*>[^<]*<\/button><h1>Your Troves<\/h1>/, '<h2 class="dayh" style="padding-top:0">Your Troves</h2>')}</div>`;
+    if (S.trovesOn) return `<div class="reveal" style="display:flex;flex-direction:column;gap:12px">${troves().replace(/^<button type="button" class="back"[^>]*>[^<]*<\/button><h1>Your subs<\/h1>/, '<h2 class="dayh" style="padding-top:0">Your subs</h2>')}</div>`;
     if (S.radarOn) return radar();
     if (S.concept === 'shelf') {
       const troveList = [];
       for (const p of recentPings()) if (!troveList.includes(p.conn)) troveList.push(p.conn);
       const ring = (c) => { const ps = S.posts.filter((p) => p.conn === c.id && !p.read); return ps.some((p) => p.pri === 4) ? 'urgent' : ps.length ? 'unread' : ''; };
-      const shelf = `<div class="shelf" role="group" aria-label="Your Troves"><button type="button" aria-pressed="${S.shelfSel === 'all'}" data-act="shelf" data-arg="all"><span class="ring"><b>All</b></span><span class="lbl">Everything</span></button>${troveList.map((id) => { const c = conn(id); return `<button type="button" aria-pressed="${S.shelfSel === id}" data-act="shelf" data-arg="${id}"><span class="ring ${ring(c)}"><b>${esc(c.name[0])}</b></span><span class="lbl">${esc(c.short)}</span></button>`; }).join('')}</div>`;
+      const shelf = `<div class="shelf" role="group" aria-label="Your subs"><button type="button" aria-pressed="${S.shelfSel === 'all'}" data-act="shelf" data-arg="all"><span class="ring"><b>All</b></span><span class="lbl">Everything</span></button>${troveList.map((id) => { const c = conn(id); return `<button type="button" aria-pressed="${S.shelfSel === id}" data-act="shelf" data-arg="${id}"><span class="ring ${ring(c)}"><b>${esc(c.name[0])}</b></span><span class="lbl">${esc(c.short)}</span></button>`; }).join('')}</div>`;
       const list = recentPings().filter((p) => S.shelfSel === 'all' || p.conn === S.shelfSel);
       return `${header()}${shelf}${S.shelfSel !== 'all' ? `<div class="row" style="justify-content:space-between"><h2>${esc(conn(S.shelfSel).name)}</h2><button type="button" class="link-btn" data-act="open-trove" data-arg="${S.shelfSel}">Open ›</button></div>` : ''}<div>${grouped(list)}</div>`;
     }
@@ -1228,9 +1228,9 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
         <span class="grow"><span class="name">${esc(c.name)}</span>
           <span class="row" style="gap:6px"><span class="tag ${c.level === 4 ? 't4' : 'plain'}">${LINE[c.level]}</span><span class="tag plain">${c.on ? esc(c.via) : 'Paused'}</span></span></span>
         ${meter(strength(c.verified))}</button>`).join('');
-    return `<button type="button" class="back" data-act="go" data-arg="home">‹ Home</button><h1>Your Troves</h1>
-      ${mine ? `<p class="section-h">Yours</p>${mine}` : ''}
-      <p class="section-h">Subscribed</p>${following || '<div class="empty">No subscriptions yet. Try the radar.</div>'}
+    return `<button type="button" class="back" data-act="go" data-arg="home">‹ Home</button><h1>Your subs</h1>
+      ${mine ? `<p class="section-h">You run</p>${mine}<p class="section-h">You follow</p>` : ''}
+      ${following || '<div class="empty">No subscriptions yet. Try the radar.</div>'}
       <div class="row" style="margin-top:auto;flex-wrap:nowrap">
         <button type="button" class="btn dashed small" data-act="go" data-arg="scan" style="flex:1">+ Scan a code</button>
         <button type="button" class="btn dashed small" data-act="go" data-arg="start" style="flex:1">+ Start a Trove</button></div>`;
@@ -1239,7 +1239,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   function connDetail() {
     const c = conn(S.connId), s = strength(c.verified);
     const recent = S.posts.filter((p) => p.conn === c.id).sort((a, b) => b.id - a.id).slice(0, 3);
-    return `<button type="button" class="back" data-act="go" data-arg="troves">‹ Your Troves</button>
+    return `<button type="button" class="back" data-act="go" data-arg="troves">‹ Your subs</button>
       <div class="row" style="flex-wrap:nowrap"><span class="avatar big">${esc(c.name[0])}</span><div class="grow"><h2>${esc(c.name)}</h2><span class="row" style="gap:8px">${meter(s)}<span class="sub">${s ? STRENGTH[s] : 'Too faint'} · verified ${ago(c.verified)}</span></span></div></div>
       <div class="setting"><span><b>Notifications</b><br><span class="sub">${c.on ? 'On' : 'Paused. Pings still land in your feed.'}</span></span>
         <button type="button" class="switch" role="switch" aria-checked="${c.on}" aria-label="Notifications" data-act="toggle-conn"><span></span></button></div>
@@ -1256,7 +1256,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   function scan() {
     const c = conn('elm');
-    return `<button type="button" class="back" data-act="go" data-arg="troves">‹ Your Troves</button>
+    return `<button type="button" class="back" data-act="go" data-arg="troves">‹ Your subs</button>
       <h1>Scan a code</h1>
       <p class="sub">In real life you'd point your camera at a poster. Here, tap the one on the bakery counter.</p>
       <div class="counter"><p style="font-weight:700">On the counter at Elm St Bakehouse</p>
@@ -1284,7 +1284,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     const c = conn(S.subId);
     return `<div style="margin:auto 0;display:flex;flex-direction:column;gap:16px;text-align:center;align-items:center">
       <span class="avatar big">${esc(c.name[0])}</span><h1>You're subscribed</h1>
-      <p class="sub" style="font-size:16px">${esc(c.name)} will ping you for <b>${LINE[c.level].toLowerCase()}</b>${c.via === 'My AI only' ? ', through your AI only' : ' by email'}. Change it any time in Your Troves.</p>
+      <p class="sub" style="font-size:16px">${esc(c.name)} will ping you for <b>${LINE[c.level].toLowerCase()}</b>${c.via === 'My AI only' ? ', through your AI only' : ' by email'}. Change it any time in Your subs.</p>
       <button type="button" class="btn" data-act="go" data-arg="feed">See your pings</button>
       <p class="sub">Got something to share? <button type="button" class="link-btn" data-act="go" data-arg="start" style="padding:0">Start a Trove</button></p></div>`;
   }
@@ -1310,7 +1310,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     const c = conn(S.connId), s = strength(c.verified);
     const posts = S.posts.filter((p) => p.conn === c.id).sort((a, b) => b.id - a.id);
     const n = subs(c);
-    return `<button type="button" class="back" data-act="go" data-arg="troves">‹ Your Troves</button>
+    return `<button type="button" class="back" data-act="go" data-arg="troves">‹ Your subs</button>
       <div class="row" style="flex-wrap:nowrap"><span class="avatar big ink">${esc(c.name[0])}</span>
         <div class="grow"><h2>${esc(c.name)}</h2><span class="row" style="gap:6px"><span class="tag you">You run this</span><span class="tag t1">${c.access === 'public' ? (c.checked ? 'On the radar' : 'Public · being checked') : 'Invite only'}</span></span></div></div>
       <button type="button" class="btn" data-act="share-to" data-arg="${c.id}">Send a ping</button>
@@ -1364,7 +1364,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     : S.draft.manual && S.draft.pri !== s.pri ? `You picked <b>${LEVELS[S.draft.pri].toLowerCase()}</b>. We'd have said ${LEVELS[s.pri].toLowerCase()}, because ${s.why}.`
     : `We think it's <b>${LEVELS[s.pri].toLowerCase()}</b>: ${s.why}. Change it if we're wrong.`;
   const reachText = (r) => r.pinged + r.quiet + r.ai === 0
-    ? 'Nobody has subscribed yet, so this will wait in your Trove. Invite people from Your Troves.'
+    ? 'Nobody has subscribed yet, so this will wait in your Trove. Invite people from Your subs.'
     : `<b class="stat">${r.pinged} ${r.pinged === 1 ? 'person' : 'people'}</b> will get a ping. <span class="stat">${r.quiet}</span> more will see it next time they look. <span class="stat">${r.ai}</span> have their AI keeping watch.`;
 
   // ---------- Ask and your AI ----------
@@ -1432,7 +1432,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
       <div class="sheet" role="dialog" aria-label="Menu"><span class="grabber"></span>
         ${item('menu-go', 'feed', icon.people.replace('people', 'people'), 'All pings', `<span class="sub">${myPosts().filter((p) => !p.read).length} unread</span>`)}
         ${owned().length ? item('menu-go', 'share', icon.pen, 'Send a ping') : ''}
-        ${item('menu-go', 'troves', icon.people, 'Your Troves', `<span class="sub">${S.connections.filter((c) => c.joined && !c.owner).length} subscribed</span>`)}
+        ${item('menu-go', 'troves', icon.people, 'Your subs', `<span class="sub">${S.connections.filter((c) => c.joined && !c.owner).length} subscribed</span>`)}
         ${mine ? `<p class="section-h" style="padding:0 10px">Troves you run</p>${mine}` : ''}
         ${item('menu-go', 'start', icon.plus, 'Start a Trove')}
         ${item('menu-go', 'scan', icon.scan, 'Scan a code')}
