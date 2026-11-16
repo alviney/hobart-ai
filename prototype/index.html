@@ -44,7 +44,7 @@ button { cursor: pointer; }
 .brand small { font-family: var(--text); font-weight: 500; font-size: 13px; color: var(--muted); margin-left: 6px; }
 .link-btn { border: 0; background: none; color: var(--primary); font-weight: 600; font-size: 14px; padding: 8px 4px; }
 
-.phone { position: relative; width: min(390px, 100%); height: min(844px, calc(100% - 76px)); min-height: 560px; background: var(--surface); border-radius: 40px; border: 1px solid var(--line); overflow: hidden; display: flex; flex-direction: column; margin-bottom: 16px; }
+.phone { position: relative; width: min(390px, 100%); height: min(844px, calc(100% - 76px)); min-height: 560px; background: var(--app, #FFFFFF); color: var(--ink); border-radius: 40px; border: 1px solid var(--line); overflow: hidden; display: flex; flex-direction: column; margin-bottom: 16px; }
 @media (max-width: 480px) { .phone { border-radius: 24px; height: calc(100% - 70px); } }
 .screen { flex: 1; overflow-y: auto; padding: 22px 20px 24px; display: flex; flex-direction: column; gap: 14px; }
 .screen.flush { padding: 0 0 24px; }
@@ -70,22 +70,72 @@ p { margin: 0; }
 .ping-title { font-family: var(--display); font-weight: 600; font-size: 20px; line-height: 1.2; margin: 2px 0 0; text-wrap: balance; }
 .ping-body { font-size: 16px; line-height: 1.55; white-space: pre-line; color: var(--body); }
 .ping-body.clamp { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
-.filters { display: flex; gap: 8px; overflow-x: auto; margin: 0 -20px; padding: 2px 20px 4px; scrollbar-width: none; flex-shrink: 0; }
-.filters::-webkit-scrollbar { display: none; }
-.fchip { flex-shrink: 0; min-height: 40px; padding: 0 14px; border-radius: 99px; border: 2px solid var(--line); background: var(--surface); font-weight: 700; font-size: 14px; color: var(--body); display: inline-flex; align-items: center; gap: 6px; }
-.fchip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #FFFFFF; }
-.fchip .n { font-variant-numeric: tabular-nums; font-weight: 600; opacity: .7; }
 .below { font-size: 12px; font-weight: 600; color: var(--muted); }
-.plist { display: flex; flex-direction: column; border-radius: 22px; background: var(--soft); overflow: hidden; flex-shrink: 0; }
-.prow { height: 68px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: center; gap: 5px; padding: 0 16px; border: 0; border-bottom: 1px solid #E4E9EC; background: transparent; text-align: left; width: 100%; color: var(--ink); }
-.prow:last-child { border-bottom: 0; }
-.prow:hover { background: #EDF2F5; }
-.prow .top { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); min-width: 0; }
-.prow .who { font-weight: 600; color: var(--body); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
-.prow .when { margin-left: auto; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.prow .tag { padding: 2px 8px; font-size: 11px; }
-.prow .ttl { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.prow.dim .ttl { color: var(--body); font-weight: 500; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.seg { display: flex; background: var(--surface); border-radius: 99px; padding: 3px; border: 1px solid var(--line); flex-wrap: wrap; }
+.seg button { border: 0; background: transparent; padding: 7px 12px; border-radius: 99px; font-weight: 600; font-size: 13px; color: var(--body); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: #FFFFFF; }
+
+/* Feed section header: title on the left, compact filter on the right */
+.fhead { display: flex; align-items: center; justify-content: space-between; gap: 10px; position: relative; }
+.fhead h2 { font-size: 20px; font-weight: 800; }
+
+/* Feed rows: same height; rating marker | title + Trove | time */
+.plist { display: flex; flex-direction: column; flex-shrink: 0; }
+.prow { height: 64px; flex-shrink: 0; display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 0 4px; border: 0; background: transparent; text-align: left; width: 100%; color: var(--ink); }
+.pmain { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.ttl { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pmeta { font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.when { font-size: 12px; color: var(--muted); align-self: start; margin-top: 15px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.prow.dim .ttl { font-weight: 500; color: var(--body); }
+.prow.dim .rate { opacity: .45; }
+.rate { --rc: #8C99A3; justify-self: center; width: 10px; height: 10px; border-radius: 5px; background: var(--rc); display: inline-flex; align-items: flex-end; gap: 2px; }
+.rate.r4 { --rc: #D9480F; } .rate.r3 { --rc: #1D5C86; } .rate.r2 { --rc: #2F9E44; } .rate.r1 { --rc: #8C99A3; }
+.rate i { display: none; }
+.newdot { display: inline-block; width: 7px; height: 7px; border-radius: 4px; background: var(--primary); margin-right: 6px; vertical-align: 2px; }
+
+/* Look 1 · Harbour: light, hairline list, dot markers, one filter menu */
+.phone[data-look="harbour"] .prow { border-bottom: 1px solid var(--line); }
+.phone[data-look="harbour"] .prow:hover { background: var(--soft); }
+.fpick { min-height: 36px; padding: 0 14px; border-radius: 99px; border: 1px solid var(--line); background: var(--surface); font-weight: 600; font-size: 13px; color: var(--body); display: inline-flex; align-items: center; gap: 6px; }
+.fmenu { position: absolute; right: 0; top: 42px; z-index: 2; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 6px; min-width: 190px; box-shadow: 0 12px 30px rgba(20,33,43,.16); display: flex; flex-direction: column; }
+.fmenu button { display: flex; align-items: center; gap: 10px; border: 0; background: none; padding: 10px 12px; border-radius: 12px; text-align: left; font-weight: 600; font-size: 14px; min-height: 44px; color: var(--ink); }
+.fmenu button[aria-pressed="true"], .fmenu button:hover { background: var(--soft); }
+.fmenu .n { margin-left: auto; color: var(--muted); font-variant-numeric: tabular-nums; font-weight: 500; }
+
+/* Look 2 · Yellow Submarine: yellow hull, white porthole cards, round filter toggles */
+.phone[data-look="sub"] { --app: #FFD23F; --soft: #FFF3C4; --line: #E3B917; --muted: #5C4A0E; --body: #3B300A; --ink: #10202C; --primary: #0B2545; --primary-ink: #071830; --tint: #FFF0B0; --tint-2: #FFE47A; }
+.phone[data-look="sub"] .plist { gap: 8px; }
+.phone[data-look="sub"] .prow { background: #FFFFFF; border-radius: 20px; padding: 0 14px; box-shadow: 0 3px 0 rgba(16,32,44,.12); }
+.phone[data-look="sub"] .pmeta, .phone[data-look="sub"] .when { color: #5B6670; }
+.phone[data-look="sub"] .rate { width: 12px; height: 12px; border-radius: 6px; box-shadow: 0 0 0 3px #FFFFFF, 0 0 0 5px #10202C; }
+.phone[data-look="sub"] .iconbtn { background: rgba(255,255,255,.55); }
+.phone[data-look="sub"] .radar-btn { background: #0B2545; color: #FFD23F; }
+.phone[data-look="sub"] .wordmark svg { color: #0B2545; }
+.phone[data-look="sub"] .quiet-btn { background: rgba(255,255,255,.55); border-color: transparent; }
+.phone[data-look="sub"] .fab-ask { border-color: #10202C; }
+.fdots { display: flex; gap: 6px; }
+.fdot { position: relative; width: 36px; height: 36px; border-radius: 18px; border: 0; background: var(--rc, #10202C); color: #FFFFFF; font-weight: 800; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; font-variant-numeric: tabular-nums; }
+.fdot.all { background: #10202C; font-size: 11px; }
+.fdot[aria-pressed="true"] { box-shadow: 0 0 0 3px #FFFFFF, 0 0 0 5px #10202C; }
+.fdot.r4 { --rc: #C2410C; } .fdot.r3 { --rc: #1D5C86; } .fdot.r2 { --rc: #237534; } .fdot.r1 { --rc: #5F6B74; }
+
+/* Look 3 · Deep Sonar: dark, signal-bar markers, slim segmented filter */
+.phone[data-look="sonar"] { --app: #0B1A24; --surface: #13242F; --soft: #172B38; --ink: #E6F1F7; --body: #C5D4DD; --muted: #8FA6B4; --line: #23404F; --primary: #1E78A8; --primary-ink: #9CD6F0; --tint: #163246; --tint-2: #1E4058; --input: #0F202B; }
+.phone[data-look="sonar"] .prow { border-bottom: 1px solid var(--line); }
+.phone[data-look="sonar"] .prow:hover { background: var(--soft); }
+.phone[data-look="sonar"] .rate { width: auto; height: 16px; background: none; border-radius: 0; }
+.phone[data-look="sonar"] .rate i { display: block; width: 4px; border-radius: 1px; background: #2C4A5A; }
+.phone[data-look="sonar"] .rate i:nth-child(1) { height: 5px; } .phone[data-look="sonar"] .rate i:nth-child(2) { height: 8px; } .phone[data-look="sonar"] .rate i:nth-child(3) { height: 12px; } .phone[data-look="sonar"] .rate i:nth-child(4) { height: 16px; }
+.phone[data-look="sonar"] .rate.r4 i, .phone[data-look="sonar"] .rate.r3 i:nth-child(-n+3), .phone[data-look="sonar"] .rate.r2 i:nth-child(-n+2), .phone[data-look="sonar"] .rate.r1 i:nth-child(1) { background: var(--rc); }
+.phone[data-look="sonar"] .rate.r4 { --rc: #FF8A5B; } .phone[data-look="sonar"] .rate.r3 { --rc: #6FC3EC; } .phone[data-look="sonar"] .rate.r2 { --rc: #7BD88F; } .phone[data-look="sonar"] .rate.r1 { --rc: #9FB4C2; }
+.phone[data-look="sonar"] .radar-btn { background: #1E78A8; color: #FFFFFF; }
+.phone[data-look="sonar"] .wordmark svg { color: #9CD6F0; }
+.phone[data-look="sonar"] .quiet-btn { border-color: var(--line); }
+.phone[data-look="sonar"] .fab-ask { box-shadow: 0 10px 30px rgba(0,0,0,.4); }
+.fseg { display: flex; flex: 1; max-width: 250px; background: var(--soft); border-radius: 10px; padding: 3px; }
+.fseg button { flex: 1; border: 0; background: none; border-radius: 8px; height: 30px; font-size: 12px; font-weight: 700; color: var(--muted); padding: 0; }
+.fseg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,.3); }
 .more-btn { align-self: flex-start; border: 0; background: none; padding: 4px 0; min-height: 36px; color: var(--primary); font-weight: 700; font-size: 14px; }
 .meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
 .tag { padding: 4px 10px; border-radius: 99px; font-size: 12px; font-weight: 700; white-space: nowrap; }
@@ -113,7 +163,7 @@ p { margin: 0; }
 .pill { min-height: 44px; padding: 0 16px; border-radius: 99px; border: 2px solid var(--line); background: transparent; font-weight: 700; color: var(--body); font-size: 14px; }
 .pill[aria-pressed="true"] { border-color: var(--primary); background: var(--tint); color: var(--primary-ink); }
 
-.input { height: 50px; border-radius: 99px; border: 2px solid var(--line); background: #F8FAFB; padding: 0 18px; width: 100%; }
+.input { height: 50px; border-radius: 99px; border: 2px solid var(--line); background: var(--input, #F8FAFB); color: var(--ink); padding: 0 18px; width: 100%; }
 textarea.input { height: 150px; border-radius: 22px; padding: 16px; resize: none; line-height: 1.5; font-size: 17px; }
 .input:focus { border-color: var(--primary); outline: none; }
 select.input { appearance: none; background: #F8FAFB url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%2314212B' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 18px center; padding-right: 40px; font-weight: 600; }
@@ -209,9 +259,17 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
 
 <div class="bar">
   <div class="brand">Sub1<small>clickable prototype</small></div>
-  <button type="button" class="link-btn" data-act="reset">Reset</button>
+  <div class="row">
+    <span class="sub" id="look-label" style="font-weight:600">Look</span>
+    <div class="seg" role="group" aria-labelledby="look-label">
+      <button type="button" data-act="look" data-arg="harbour" id="look-harbour">1 · Harbour</button>
+      <button type="button" data-act="look" data-arg="sub" id="look-sub">2 · Yellow Submarine</button>
+      <button type="button" data-act="look" data-arg="sonar" id="look-sonar">3 · Deep Sonar</button>
+    </div>
+    <button type="button" class="link-btn" data-act="reset">Reset</button>
+  </div>
 </div>
-<div class="phone">
+<div class="phone" id="phone" data-look="sub">
   <main class="screen" id="screen" aria-live="polite"></main>
   <div id="float"></div>
   <div id="sheet"></div>
@@ -234,7 +292,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
   const km = (m) => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
 
   const fresh = () => ({
-    v: 6, pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
+    v: 7, look: 'sub', fmenu: false, pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
     draft: { text: '', pri: 2, manual: false, ch: null }, subId: 'elm', scanLevel: 3, seq: 100,
     newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false, chat: [],
     connections: [
@@ -335,8 +393,9 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
   }
   const isLong = (p) => !!p.title || p.text.length > 240;
   const pingRow = (p, dim) => `<button type="button" class="prow ${dim ? 'dim' : ''}" data-act="open-ping" data-arg="${p.id}">
-      <span class="top">${tag(p.pri)}${p.isNew ? '<span class="tag new">New</span>' : ''}${conn(p.conn).owner ? '<span class="tag you">You</span>' : ''}<span class="who">${esc(conn(p.conn).short)}</span><span class="when">${esc(p.time)}</span></span>
-      <span class="ttl">${esc(p.title || p.text)}</span></button>`;
+      <span class="rate r${p.pri}"><i></i><i></i><i></i><i></i><span class="sr">${LEVELS[p.pri]}</span></span>
+      <span class="pmain"><span class="ttl">${p.isNew ? '<span class="newdot" aria-label="New"></span>' : ''}${esc(p.title || p.text)}</span><span class="pmeta">${conn(p.conn).owner ? 'You · ' : ''}${esc(conn(p.conn).short)} · ${LEVELS[p.pri]}</span></span>
+      <span class="when">${esc(p.time)}</span></button>`;
   const pingList = (list, dimFn) => `<div class="plist">${list.map((p) => pingRow(p, dimFn && dimFn(p))).join('')}</div>`;
   const pingCard = (p, belowLine) => {
     const meta = `<div class="meta">${tag(p.pri)}${belowLine ? '<span class="below">Below your line</span>' : ''}${conn(p.conn).owner ? '<span class="tag you">You</span>' : ''}${p.isNew ? '<span class="tag new">New</span>' : ''}<span>${esc(conn(p.conn).short)} · ${esc(p.time)}</span></div>`;
@@ -352,14 +411,24 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
     const mine = myPosts();
     const loud = mine.filter((p) => pings(p) || conn(p.conn).owner), quiet = mine.filter((p) => !pings(p) && !conn(p.conn).owner);
     const count = (l) => mine.filter((p) => p.pri === l).length;
-    const chip = (v, label) => `<button type="button" class="fchip" aria-pressed="${String(S.filter) === String(v)}" data-act="filter" data-arg="${v}">${label}</button>`;
-    const filters = `<div class="filters" role="group" aria-label="Filter by rating">${chip('all', 'All')}${[4, 3, 2, 1].map((l) => chip(l, `${LEVELS[l]} <span class="n">${count(l)}</span>`)).join('')}</div>`;
+    const sel = (v) => String(S.filter) === String(v);
+    const SHORT = { 4: 'Urg', 3: 'Imp', 2: 'Good', 1: 'FYI' };
+    let filters;
+    if (S.look === 'sub') {
+      filters = `<div class="fdots" role="group" aria-label="Filter by rating"><button type="button" class="fdot all" aria-pressed="${sel('all')}" data-act="filter" data-arg="all">All</button>${[4, 3, 2, 1].map((l) => `<button type="button" class="fdot r${l}" aria-pressed="${sel(l)}" data-act="filter" data-arg="${l}" aria-label="${LEVELS[l]}, ${count(l)} pings">${count(l)}</button>`).join('')}</div>`;
+    } else if (S.look === 'sonar') {
+      filters = `<div class="fseg" role="group" aria-label="Filter by rating"><button type="button" aria-pressed="${sel('all')}" data-act="filter" data-arg="all">All</button>${[4, 3, 2, 1].map((l) => `<button type="button" aria-pressed="${sel(l)}" data-act="filter" data-arg="${l}" aria-label="${LEVELS[l]}">${SHORT[l]}</button>`).join('')}</div>`;
+    } else {
+      filters = `<button type="button" class="fpick" data-act="fmenu" aria-expanded="${!!S.fmenu}">${S.filter === 'all' ? 'All ratings' : LEVELS[S.filter]} <span aria-hidden="true">▾</span></button>
+        ${S.fmenu ? `<div class="fmenu" role="menu"><button type="button" aria-pressed="${sel('all')}" data-act="filter" data-arg="all">All ratings<span class="n">${mine.length}</span></button>${[4, 3, 2, 1].map((l) => `<button type="button" aria-pressed="${sel(l)}" data-act="filter" data-arg="${l}"><span class="rate r${l}"><i></i><i></i><i></i><i></i></span>${LEVELS[l]}<span class="n">${count(l)}</span></button>`).join('')}</div>` : ''}`;
+    }
+    filters = `<div class="fhead"><h2>${S.filter === 'all' ? 'Pings' : LEVELS[S.filter]}</h2>${filters}</div>`;
     const header = `<div class="topline"><button type="button" class="iconbtn" data-act="menu" aria-label="Menu">${icon.menu}</button>
         <span class="wordmark" style="flex:1">${icon.sonar}Sub1</span>
         <button type="button" class="radar-btn" data-act="go" data-arg="radar" aria-label="Radar: Troves near you">${icon.radar}</button></div>${filters}`;
     if (S.filter !== 'all') {
       const l = +S.filter, list = mine.filter((p) => p.pri === l);
-      return `${header}<p class="sub">All ${LEVELS[l]} pings, newest first, including ones below your line (shown lighter).</p>
+      return `${header}<p class="sub">Newest first, including ones below your line (shown lighter).</p>
         ${list.length ? pingList(list, (p) => !pings(p) && !conn(p.conn).owner) : `<div class="empty">No ${LEVELS[l]} pings right now.</div>`}`;
     }
     return `${header}
@@ -648,6 +717,8 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
 
   const SCREENS = { home, feed: home, ping: pingView, radar, troves, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
   function render() {
+    $('phone').dataset.look = S.look;
+    ['harbour', 'sub', 'sonar'].forEach((n) => $('look-' + n).setAttribute('aria-pressed', S.look === n));
     const el = $('screen');
     const fab = ['home', 'feed', 'ask'].includes(S.screen);
     el.className = 'screen' + (S.screen === 'subscribe' ? ' flush' : '') + (fab ? ' has-fab' : '') + (S.screen === 'radar' ? ' radar-screen' : '');
@@ -680,7 +751,9 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
     trove: (a) => { S.sheet = a; render(); },
     quiet: () => { const y = $('screen').scrollTop; S.showQuiet = !S.showQuiet; render(); $('screen').scrollTop = y; },
     'open-ping': (a) => { S.pingId = +a; const p = S.posts.find((x) => x.id === +a); if (p) p.isNew = false; S.screen = 'ping'; render(); scrollTop(); },
-    filter: (a) => { S.filter = a === 'all' ? 'all' : +a; render(); },
+    filter: (a) => { S.filter = a === 'all' ? 'all' : +a; S.fmenu = false; render(); },
+    fmenu: () => { S.fmenu = !S.fmenu; render(); },
+    look: (a) => { S.look = a; S.fmenu = false; render(); },
     expand: (a) => { S.open[a] = !S.open[a]; const y = $('screen').scrollTop; render(); $('screen').scrollTop = y; },
     'open-conn': (a) => { S.connId = a; S.screen = 'conn'; S.sheet = null; render(); scrollTop(); },
     'open-mine': (a) => { S.connId = a; S.screen = 'mine'; S.addingDoc = false; render(); scrollTop(); },
@@ -768,7 +841,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
 
   const hot = window.claude && window.claude.hot;
   if (hot && hot.snapshot) hot.snapshot(() => S);
-  const boot = (data) => { if (data && data.v === 6) S = Object.assign(fresh(), data, { sheet: null }); render(); };
+  const boot = (data) => { if (data && data.v === 7) S = Object.assign(fresh(), data, { sheet: null }); render(); };
   if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>
