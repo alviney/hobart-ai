@@ -94,48 +94,34 @@ p { margin: 0; }
 .rate i { display: none; }
 .newdot { display: inline-block; width: 7px; height: 7px; border-radius: 4px; background: var(--primary); margin-right: 6px; vertical-align: 2px; }
 
-/* Look 1 · Harbour: light, hairline list, dot markers, one filter menu */
-.phone[data-look="harbour"] .prow { border-bottom: 1px solid var(--line); }
-.phone[data-look="harbour"] .prow:hover { background: var(--soft); }
-.fpick { min-height: 36px; padding: 0 14px; border-radius: 99px; border: 1px solid var(--line); background: var(--surface); font-weight: 600; font-size: 13px; color: var(--body); display: inline-flex; align-items: center; gap: 6px; }
-.fmenu { position: absolute; right: 0; top: 42px; z-index: 2; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 6px; min-width: 190px; box-shadow: 0 12px 30px rgba(20,33,43,.16); display: flex; flex-direction: column; }
+/* Deep Sonar (D-010): dark hull, glowing accents */
+.phone { --app: #0B1A24; --surface: #13242F; --soft: #172B38; --ink: #E6F1F7; --body: #C5D4DD; --muted: #8FA6B4; --line: #23404F; --primary: #1E78A8; --primary-ink: #9CD6F0; --tint: #163246; --tint-2: #1E4058; --input: #0F202B; }
+.rate.r4 { --rc: #FF8A5B; } .rate.r3 { --rc: #6FC3EC; } .rate.r2 { --rc: #7BD88F; } .rate.r1 { --rc: #9FB4C2; }
+.radar-btn { background: #1E78A8 !important; color: #FFFFFF !important; }
+.wordmark svg { color: #9CD6F0 !important; }
+.fab-ask { box-shadow: 0 10px 30px rgba(0,0,0,.4) !important; }
+.fpick { min-height: 36px; padding: 0 14px; border-radius: 99px; border: 1px solid var(--line); background: var(--surface); font-weight: 600; font-size: 13px; color: var(--body); display: inline-flex; align-items: center; gap: 8px; }
+.fpick .rate { width: 8px; height: 8px; }
+.fmenu { position: absolute; right: 0; top: 42px; z-index: 2; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 6px; min-width: 200px; box-shadow: 0 14px 34px rgba(0,0,0,.45); display: flex; flex-direction: column; }
 .fmenu button { display: flex; align-items: center; gap: 10px; border: 0; background: none; padding: 10px 12px; border-radius: 12px; text-align: left; font-weight: 600; font-size: 14px; min-height: 44px; color: var(--ink); }
 .fmenu button[aria-pressed="true"], .fmenu button:hover { background: var(--soft); }
 .fmenu .n { margin-left: auto; color: var(--muted); font-variant-numeric: tabular-nums; font-weight: 500; }
 
-/* Look 2 · Yellow Submarine: yellow hull, white porthole cards, round filter toggles */
-.phone[data-look="sub"] { --app: #FFD23F; --soft: #FFF3C4; --line: #E3B917; --muted: #5C4A0E; --body: #3B300A; --ink: #10202C; --primary: #0B2545; --primary-ink: #071830; --tint: #FFF0B0; --tint-2: #FFE47A; }
-.phone[data-look="sub"] .plist { gap: 8px; }
-.phone[data-look="sub"] .prow { background: #FFFFFF; border-radius: 20px; padding: 0 14px; box-shadow: 0 3px 0 rgba(16,32,44,.12); }
-.phone[data-look="sub"] .pmeta, .phone[data-look="sub"] .when { color: #5B6670; }
-.phone[data-look="sub"] .rate { width: 12px; height: 12px; border-radius: 6px; box-shadow: 0 0 0 3px #FFFFFF, 0 0 0 5px #10202C; }
-.phone[data-look="sub"] .iconbtn { background: rgba(255,255,255,.55); }
-.phone[data-look="sub"] .radar-btn { background: #0B2545; color: #FFD23F; }
-.phone[data-look="sub"] .wordmark svg { color: #0B2545; }
-.phone[data-look="sub"] .quiet-btn { background: rgba(255,255,255,.55); border-color: transparent; }
-.phone[data-look="sub"] .fab-ask { border-color: #10202C; }
-.fdots { display: flex; gap: 6px; }
-.fdot { position: relative; width: 36px; height: 36px; border-radius: 18px; border: 0; background: var(--rc, #10202C); color: #FFFFFF; font-weight: 800; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; font-variant-numeric: tabular-nums; }
-.fdot.all { background: #10202C; font-size: 11px; }
-.fdot[aria-pressed="true"] { box-shadow: 0 0 0 3px #FFFFFF, 0 0 0 5px #10202C; }
-.fdot.r4 { --rc: #C2410C; } .fdot.r3 { --rc: #1D5C86; } .fdot.r2 { --rc: #237534; } .fdot.r1 { --rc: #5F6B74; }
-
-/* Look 3 · Deep Sonar: dark, signal-bar markers, slim segmented filter */
-.phone[data-look="sonar"] { --app: #0B1A24; --surface: #13242F; --soft: #172B38; --ink: #E6F1F7; --body: #C5D4DD; --muted: #8FA6B4; --line: #23404F; --primary: #1E78A8; --primary-ink: #9CD6F0; --tint: #163246; --tint-2: #1E4058; --input: #0F202B; }
-.phone[data-look="sonar"] .prow { border-bottom: 1px solid var(--line); }
-.phone[data-look="sonar"] .prow:hover { background: var(--soft); }
-.phone[data-look="sonar"] .rate { width: auto; height: 16px; background: none; border-radius: 0; }
-.phone[data-look="sonar"] .rate i { display: block; width: 4px; border-radius: 1px; background: #2C4A5A; }
-.phone[data-look="sonar"] .rate i:nth-child(1) { height: 5px; } .phone[data-look="sonar"] .rate i:nth-child(2) { height: 8px; } .phone[data-look="sonar"] .rate i:nth-child(3) { height: 12px; } .phone[data-look="sonar"] .rate i:nth-child(4) { height: 16px; }
-.phone[data-look="sonar"] .rate.r4 i, .phone[data-look="sonar"] .rate.r3 i:nth-child(-n+3), .phone[data-look="sonar"] .rate.r2 i:nth-child(-n+2), .phone[data-look="sonar"] .rate.r1 i:nth-child(1) { background: var(--rc); }
-.phone[data-look="sonar"] .rate.r4 { --rc: #FF8A5B; } .phone[data-look="sonar"] .rate.r3 { --rc: #6FC3EC; } .phone[data-look="sonar"] .rate.r2 { --rc: #7BD88F; } .phone[data-look="sonar"] .rate.r1 { --rc: #9FB4C2; }
-.phone[data-look="sonar"] .radar-btn { background: #1E78A8; color: #FFFFFF; }
-.phone[data-look="sonar"] .wordmark svg { color: #9CD6F0; }
-.phone[data-look="sonar"] .quiet-btn { border-color: var(--line); }
-.phone[data-look="sonar"] .fab-ask { box-shadow: 0 10px 30px rgba(0,0,0,.4); }
-.fseg { display: flex; flex: 1; max-width: 250px; background: var(--soft); border-radius: 10px; padding: 3px; }
-.fseg button { flex: 1; border: 0; background: none; border-radius: 8px; height: 30px; font-size: 12px; font-weight: 700; color: var(--muted); padding: 0; }
-.fseg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,.3); }
+/* Trove rows: one per Trove. rating circle | Trove name + latest ping | time + unread */
+.trow { height: 66px; flex-shrink: 0; display: grid; grid-template-columns: 14px minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 0 4px; border: 0; border-bottom: 1px solid var(--line); background: transparent; text-align: left; width: 100%; color: var(--ink); }
+.trow:hover { background: var(--soft); }
+.trow .tname { font-size: 16px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.trow .tlast { font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.trow.read .tname { font-weight: 600; color: var(--body); }
+.trow.muted .tname { color: var(--muted); }
+.tside { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.tside .when { margin: 0; align-self: auto; }
+.unread { min-width: 22px; height: 22px; padding: 0 7px; border-radius: 11px; background: #6FC3EC; color: #0B1A24; font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; font-variant-numeric: tabular-nums; }
+.unread.zero { visibility: hidden; }
+.rate { width: 12px; height: 12px; border-radius: 6px; }
+.prow { border-bottom: 1px solid var(--line); }
+.prow:hover { background: var(--soft); }
+.tagline { font-size: 12px; font-weight: 600; color: var(--muted); }
 .more-btn { align-self: flex-start; border: 0; background: none; padding: 4px 0; min-height: 36px; color: var(--primary); font-weight: 700; font-size: 14px; }
 .meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
 .tag { padding: 4px 10px; border-radius: 99px; font-size: 12px; font-weight: 700; white-space: nowrap; }
@@ -259,17 +245,9 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
 
 <div class="bar">
   <div class="brand">Sub1<small>clickable prototype</small></div>
-  <div class="row">
-    <span class="sub" id="look-label" style="font-weight:600">Look</span>
-    <div class="seg" role="group" aria-labelledby="look-label">
-      <button type="button" data-act="look" data-arg="harbour" id="look-harbour">1 · Harbour</button>
-      <button type="button" data-act="look" data-arg="sub" id="look-sub">2 · Yellow Submarine</button>
-      <button type="button" data-act="look" data-arg="sonar" id="look-sonar">3 · Deep Sonar</button>
-    </div>
-    <button type="button" class="link-btn" data-act="reset">Reset</button>
-  </div>
+  <button type="button" class="link-btn" data-act="reset">Reset</button>
 </div>
-<div class="phone" id="phone" data-look="sub">
+<div class="phone" id="phone">
   <main class="screen" id="screen" aria-live="polite"></main>
   <div id="float"></div>
   <div id="sheet"></div>
@@ -292,7 +270,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
   const km = (m) => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
 
   const fresh = () => ({
-    v: 7, look: 'sub', fmenu: false, pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
+    v: 8, fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
     draft: { text: '', pri: 2, manual: false, ch: null }, subId: 'elm', scanLevel: 3, seq: 100,
     newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false, chat: [],
     connections: [
@@ -327,13 +305,13 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
     posts: [
       { id: 1, conn: 'netball', pri: 3, text: 'Saturday games move to 9am at the Domain courts. Same team sheet.', time: '7:40am' },
       { id: 2, conn: 'pf', pri: 4, title: "Friday closure: what's open and what isn't", text: "School is closed this Friday while Aurora upgrades the power to the new building. The upgrade can't happen with students on site, so it's a full closure, not a pupil-free day.\n\nBefore-care and after-care are still running in the hall from 7:30am to 6pm. Book through the office by Thursday at 3pm so we have enough staff.\n\nThe canteen is closed, so pack lunch if your child is in care. The uniform shop will open on Monday instead.\n\nIf you can't find care, reply to this ping and we'll try to match you with another family. Thanks for your patience; the new building opens in Term 1.", time: 'Yesterday' },
-      { id: 3, conn: 'elm', pri: 2, text: 'Hot cross buns are back from Monday. Pre-orders open now.', time: 'Yesterday' },
+      { id: 3, read: true, conn: 'elm', pri: 2, text: 'Hot cross buns are back from Monday. Pre-orders open now.', time: 'Yesterday' },
       { id: 4, conn: 'landcare', pri: 2, title: 'The creek, one year on', text: "A year ago the bank along Mt Stuart Rd was blackberry and broken glass. Since then 41 of you have planted 1,860 natives over eleven working bees.\n\nThe survival rate is 82%, well above the 60% we hoped for. The wattles are head height and the tussocks have closed the gaps that were washing out in every storm. Last month someone spotted a platypus below the footbridge for the first time in years.\n\nNext up is the steep section near the gate. It needs jute matting before we plant, so this Sunday is a matting day: gloves and sturdy shoes, and we'll have the stakes and mallets. 9am at the gate, morning tea at 11.", time: 'Yesterday' },
-      { id: 5, conn: 'netball', pri: 1, text: 'Photos from last week are up in the club gallery.', time: 'Mon' },
+      { id: 5, read: true, conn: 'netball', pri: 1, text: 'Photos from last week are up in the club gallery.', time: 'Mon' },
       { id: 6, conn: 'pf', pri: 2, text: 'Second-hand uniform sale next Wednesday after school.', time: 'Mon' },
-      { id: 7, conn: 'bodycorp', pri: 1, text: 'Gardeners are in on Thursday morning.', time: 'Mon' },
-      { id: 8, conn: 'elm', pri: 1, text: 'New sourdough rye on the shelves this week.', time: 'Sun' },
-      { id: 9, conn: 'garden', pri: 2, text: 'Seedling swap at the shed this Saturday, 10am.', time: 'Sun' },
+      { id: 7, read: true, conn: 'bodycorp', pri: 1, text: 'Gardeners are in on Thursday morning.', time: 'Mon' },
+      { id: 8, read: true, conn: 'elm', pri: 1, text: 'New sourdough rye on the shelves this week.', time: 'Sun' },
+      { id: 9, read: true, conn: 'garden', pri: 2, text: 'Seedling swap at the shed this Saturday, 10am.', time: 'Sun' },
       { id: 10, conn: 'netball', pri: 3, title: 'Finals day: everything you need to know', text: "We made the grand final! It's on Saturday 29 November at the Domain courts, court 3, at 10:20am. Please have players there by 9:50 for warm-up.\n\nUniforms: full club kit, including the navy socks. If your child has lost theirs, we have spares at the canteen.\n\nParking fills up fast on finals day. The Queens Walk car park is the best bet, or the 9:30 bus from the city stops right outside.\n\nAfter the game we're doing a team breakfast at Elm St Bakehouse. The club is covering the players; parents pay their own. Let me know by Thursday if you're coming so I can give them numbers.\n\nWin or lose, it's been a brilliant season. Thanks for every early morning, every lift and every orange quarter.", time: '8:15am' }
     ]
   });
@@ -394,7 +372,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
   const isLong = (p) => !!p.title || p.text.length > 240;
   const pingRow = (p, dim) => `<button type="button" class="prow ${dim ? 'dim' : ''}" data-act="open-ping" data-arg="${p.id}">
       <span class="rate r${p.pri}"><i></i><i></i><i></i><i></i><span class="sr">${LEVELS[p.pri]}</span></span>
-      <span class="pmain"><span class="ttl">${p.isNew ? '<span class="newdot" aria-label="New"></span>' : ''}${esc(p.title || p.text)}</span><span class="pmeta">${conn(p.conn).owner ? 'You · ' : ''}${esc(conn(p.conn).short)} · ${LEVELS[p.pri]}</span></span>
+      <span class="pmain"><span class="ttl">${p.wasUnread ? '<span class="newdot" aria-label="Unread"></span>' : ''}${esc(p.title || p.text)}</span><span class="pmeta">${LEVELS[p.pri]}${!pings(p) && !conn(p.conn).owner ? ' · below your line' : ''}</span></span>
       <span class="when">${esc(p.time)}</span></button>`;
   const pingList = (list, dimFn) => `<div class="plist">${list.map((p) => pingRow(p, dimFn && dimFn(p))).join('')}</div>`;
   const pingCard = (p, belowLine) => {
@@ -408,41 +386,48 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
 
   // ---------- Home: the full feed ----------
   function home() {
-    const mine = myPosts();
-    const loud = mine.filter((p) => pings(p) || conn(p.conn).owner), quiet = mine.filter((p) => !pings(p) && !conn(p.conn).owner);
-    const count = (l) => mine.filter((p) => p.pri === l).length;
-    const sel = (v) => String(S.filter) === String(v);
-    const SHORT = { 4: 'Urg', 3: 'Imp', 2: 'Good', 1: 'FYI' };
-    let filters;
-    if (S.look === 'sub') {
-      filters = `<div class="fdots" role="group" aria-label="Filter by rating"><button type="button" class="fdot all" aria-pressed="${sel('all')}" data-act="filter" data-arg="all">All</button>${[4, 3, 2, 1].map((l) => `<button type="button" class="fdot r${l}" aria-pressed="${sel(l)}" data-act="filter" data-arg="${l}" aria-label="${LEVELS[l]}, ${count(l)} pings">${count(l)}</button>`).join('')}</div>`;
-    } else if (S.look === 'sonar') {
-      filters = `<div class="fseg" role="group" aria-label="Filter by rating"><button type="button" aria-pressed="${sel('all')}" data-act="filter" data-arg="all">All</button>${[4, 3, 2, 1].map((l) => `<button type="button" aria-pressed="${sel(l)}" data-act="filter" data-arg="${l}" aria-label="${LEVELS[l]}">${SHORT[l]}</button>`).join('')}</div>`;
-    } else {
-      filters = `<button type="button" class="fpick" data-act="fmenu" aria-expanded="${!!S.fmenu}">${S.filter === 'all' ? 'All ratings' : LEVELS[S.filter]} <span aria-hidden="true">▾</span></button>
-        ${S.fmenu ? `<div class="fmenu" role="menu"><button type="button" aria-pressed="${sel('all')}" data-act="filter" data-arg="all">All ratings<span class="n">${mine.length}</span></button>${[4, 3, 2, 1].map((l) => `<button type="button" aria-pressed="${sel(l)}" data-act="filter" data-arg="${l}"><span class="rate r${l}"><i></i><i></i><i></i><i></i></span>${LEVELS[l]}<span class="n">${count(l)}</span></button>`).join('')}</div>` : ''}`;
-    }
-    filters = `<div class="fhead"><h2>${S.filter === 'all' ? 'Pings' : LEVELS[S.filter]}</h2>${filters}</div>`;
-    const header = `<div class="topline"><button type="button" class="iconbtn" data-act="menu" aria-label="Menu">${icon.menu}</button>
+    const f = S.filter;
+    const mine = myPosts().filter((p) => f === 'all' || p.pri === f);
+    const count = (l) => myPosts().filter((p) => p.pri === l).length;
+    const groups = [];
+    for (const p of mine) { let g = groups.find((x) => x.c.id === p.conn); if (!g) groups.push(g = { c: conn(p.conn), list: [] }); g.list.push(p); }
+    const sel = (v) => String(f) === String(v);
+    const label = f === 'all' ? 'All ratings' : LEVELS[f];
+    const menu = S.fmenu ? `<div class="fmenu" role="menu"><button type="button" aria-pressed="${sel('all')}" data-act="filter" data-arg="all">All ratings<span class="n">${myPosts().length}</span></button>${[4, 3, 2, 1].map((l) => `<button type="button" aria-pressed="${sel(l)}" data-act="filter" data-arg="${l}"><span class="rate r${l}"></span>${LEVELS[l]}<span class="n">${count(l)}</span></button>`).join('')}</div>` : '';
+    const rows = groups.map(({ c, list }) => {
+      const latest = list[0], unread = list.filter((p) => !p.read).length, top = list.filter((p) => !p.read).reduce((m, p) => Math.max(m, p.pri), 0) || latest.pri;
+      const muted = !c.owner && (!c.on || c.via === 'My AI only' || S.pullOnly);
+      return `<button type="button" class="trow ${unread ? '' : 'read'} ${muted ? 'muted' : ''}" data-act="open-trove" data-arg="${c.id}">
+        <span class="rate r${top}"><span class="sr">${LEVELS[top]}</span></span>
+        <span class="pmain"><span class="tname">${c.owner ? 'You · ' : ''}${esc(c.name)}</span><span class="tlast">${esc(latest.title || latest.text)}</span></span>
+        <span class="tside"><span class="when">${esc(latest.time)}</span><span class="unread ${unread ? '' : 'zero'}" aria-label="${unread} unread">${unread}</span></span></button>`;
+    }).join('');
+    return `<div class="topline"><button type="button" class="iconbtn" data-act="menu" aria-label="Menu">${icon.menu}</button>
         <span class="wordmark" style="flex:1">${icon.sonar}Sub1</span>
-        <button type="button" class="radar-btn" data-act="go" data-arg="radar" aria-label="Radar: Troves near you">${icon.radar}</button></div>${filters}`;
-    if (S.filter !== 'all') {
-      const l = +S.filter, list = mine.filter((p) => p.pri === l);
-      return `${header}<p class="sub">Newest first, including ones below your line (shown lighter).</p>
-        ${list.length ? pingList(list, (p) => !pings(p) && !conn(p.conn).owner) : `<div class="empty">No ${LEVELS[l]} pings right now.</div>`}`;
-    }
-    return `${header}
+        <button type="button" class="radar-btn" data-act="go" data-arg="radar" aria-label="Radar: Troves near you">${icon.radar}</button></div>
+      <div class="fhead"><h2>Pings</h2><button type="button" class="fpick" data-act="fmenu" aria-expanded="${!!S.fmenu}">${f === 'all' ? '' : `<span class="rate r${f}"></span>`}${label} <span aria-hidden="true">▾</span></button>${menu}</div>
       ${S.pullOnly ? '<p class="sub">Pull only is on, so nothing pings you. Everything is here when you or your AI look.</p>' : ''}
-      ${loud.length ? pingList(loud) : '<div class="empty">Nothing important right now.</div>'}
-      ${quiet.length ? `<button type="button" class="quiet-btn" data-act="quiet" aria-expanded="${S.showQuiet}"><span><b>${quiet.length} quiet pings</b> <span class="sub">below your line</span></span><span aria-hidden="true">${S.showQuiet ? '▴' : '▾'}</span></button>` : ''}
-      ${S.showQuiet ? pingList(quiet, () => true) : ''}`;
+      ${rows ? `<div class="plist">${rows}</div>` : `<div class="empty">No ${f === 'all' ? '' : LEVELS[f] + ' '}pings right now.</div>`}
+      <p class="tagline">The circle shows the most important unread ping. Dimmed Troves don't notify you.</p>`;
   }
+
+  // ---------- One Trove's pings ----------
+  function troveFeed() {
+    const c = conn(S.troveId);
+    const list = S.posts.filter((p) => p.conn === c.id).sort((a, b) => b.id - a.id);
+    return `<button type="button" class="back" data-act="go" data-arg="home">‹ Pings</button>
+      <div class="row" style="flex-wrap:nowrap"><span class="avatar big ${c.owner ? 'ink' : ''}">${esc(c.name[0])}</span>
+        <div class="grow"><h2>${esc(c.name)}</h2><span class="row" style="gap:8px">${meter(strength(c.verified || 0))}<span class="sub">${c.owner ? 'You run this' : LINE[c.level] + (c.on ? '' : ' · paused')}</span></span></div>
+        <button type="button" class="link-btn" data-act="${c.owner ? 'open-mine' : 'open-conn'}" data-arg="${c.id}">${c.owner ? 'Manage' : 'Settings'}</button></div>
+      ${list.length ? `<div class="plist">${list.map((p) => pingRow(p)).join('')}</div>` : '<div class="empty">No pings yet.</div>'}`;
+  }
+
 
 
   // ---------- One ping ----------
   function pingView() {
     const p = S.posts.find((x) => x.id === S.pingId), c = conn(p.conn);
-    return `<button type="button" class="back" data-act="go" data-arg="home">‹ Pings</button>
+    return `<button type="button" class="back" data-act="${S.back === 'trove' ? 'open-trove' : 'go'}" data-arg="${S.back === 'trove' ? S.troveId : 'home'}">‹ ${S.back === 'trove' ? esc(c.short) : 'Pings'}</button>
       <div class="meta">${tag(p.pri)}${!pings(p) && !c.owner ? '<span class="below">Below your line</span>' : ''}<span>${esc(p.time)}</span></div>
       ${p.title ? `<h1 style="font-size:30px">${esc(p.title)}</h1>` : ''}
       <p class="ping-body" style="font-size:17px;color:var(--ink)">${esc(p.text)}</p>
@@ -715,10 +700,8 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
       </div>`;
   }
 
-  const SCREENS = { home, feed: home, ping: pingView, radar, troves, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
+  const SCREENS = { home, feed: home, ping: pingView, trove: troveFeed, radar, troves, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
   function render() {
-    $('phone').dataset.look = S.look;
-    ['harbour', 'sub', 'sonar'].forEach((n) => $('look-' + n).setAttribute('aria-pressed', S.look === n));
     const el = $('screen');
     const fab = ['home', 'feed', 'ask'].includes(S.screen);
     el.className = 'screen' + (S.screen === 'subscribe' ? ' flush' : '') + (fab ? ' has-fab' : '') + (S.screen === 'radar' ? ' radar-screen' : '');
@@ -742,7 +725,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
     reset: () => { S = fresh(); render(); toast('Prototype reset'); },
     go: (a) => {
       S.screen = a; S.addingDoc = false; S.sheet = null; render(); scrollTop();
-      if (a === 'feed' || a === 'home') setTimeout(() => S.posts.forEach((p) => { p.isNew = false; }), 0);
+      if (a === 'feed' || a === 'home') S.posts.forEach((p) => { p.isNew = false; p.wasUnread = false; });
     },
     menu: () => { S.sheet = 'menu'; render(); },
     'sheet-close': () => { S.sheet = null; render(); },
@@ -750,10 +733,14 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
     'menu-mine': (a) => { S.sheet = null; act['open-mine'](a); },
     trove: (a) => { S.sheet = a; render(); },
     quiet: () => { const y = $('screen').scrollTop; S.showQuiet = !S.showQuiet; render(); $('screen').scrollTop = y; },
-    'open-ping': (a) => { S.pingId = +a; const p = S.posts.find((x) => x.id === +a); if (p) p.isNew = false; S.screen = 'ping'; render(); scrollTop(); },
+    'open-ping': (a) => { S.back = S.screen === 'trove' ? 'trove' : 'home'; S.pingId = +a; const p = S.posts.find((x) => x.id === +a); if (p) { p.isNew = false; p.read = true; } S.screen = 'ping'; render(); scrollTop(); },
+    'open-trove': (a) => {
+      S.troveId = a; S.screen = 'trove';
+      S.posts.forEach((p) => { if (p.conn === a) { p.wasUnread = !p.read; p.read = true; } });
+      render(); scrollTop();
+    },
     filter: (a) => { S.filter = a === 'all' ? 'all' : +a; S.fmenu = false; render(); },
     fmenu: () => { S.fmenu = !S.fmenu; render(); },
-    look: (a) => { S.look = a; S.fmenu = false; render(); },
     expand: (a) => { S.open[a] = !S.open[a]; const y = $('screen').scrollTop; render(); $('screen').scrollTop = y; },
     'open-conn': (a) => { S.connId = a; S.screen = 'conn'; S.sheet = null; render(); scrollTop(); },
     'open-mine': (a) => { S.connId = a; S.screen = 'mine'; S.addingDoc = false; render(); scrollTop(); },
@@ -796,7 +783,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
     share: () => {
       const d = S.draft; if (!d.text.trim()) return;
       const c = conn(d.ch), r = reachFor(c, d.pri);
-      S.posts.push({ id: ++S.seq, conn: c.id, pri: d.pri, text: d.text.trim(), time: 'Just now', isNew: true, reach: `${r.pinged} pinged · ${r.quiet} in feed · ${r.ai} AI` });
+      S.posts.push({ id: ++S.seq, read: true, conn: c.id, pri: d.pri, text: d.text.trim(), time: 'Just now', isNew: true, reach: `${r.pinged} pinged · ${r.quiet} in feed · ${r.ai} AI` });
       Object.assign(S.draft, { text: '', pri: 2, manual: false });
       c.verified = 0;
       S.screen = 'home';
@@ -841,7 +828,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
 
   const hot = window.claude && window.claude.hot;
   if (hot && hot.snapshot) hot.snapshot(() => S);
-  const boot = (data) => { if (data && data.v === 7) S = Object.assign(fresh(), data, { sheet: null }); render(); };
+  const boot = (data) => { if (data && data.v === 8) S = Object.assign(fresh(), data, { sheet: null }); render(); };
   if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>

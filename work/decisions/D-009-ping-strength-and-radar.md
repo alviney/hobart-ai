@@ -19,8 +19,7 @@ ones mean possibly out of date.
 - **Ping strength** comes from that date. In the prototype: Strong up to 7
   days, Good up to 30, Weak up to 90, Faint up to 180, then too faint to
   show on the radar. The thresholds are a starting point to tune.
-- **Home** is the full feed of pings as compact, equal-height rows
-  (rating, Trove, time, one-line title); tapping a row opens the full ping. A round **radar button** sits at the top right of
+- **Home** is the feed (laid out per D-010). A round **radar button** sits at the top right of
   home; the Ask bar runs full width at the bottom.
 - **The radar** shows public Troves within about 2.5 km. Each blip's size
   and brightness show its strength, and Troves you subscribe to are marked.

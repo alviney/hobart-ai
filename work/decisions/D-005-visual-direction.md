@@ -1,7 +1,7 @@
 # D-005: Visual direction: Harbour colours with Market day shapes
 
 - **Date:** 2026-11-15
-- **Status:** accepted
+- **Status:** superseded by D-010 (colours only; type, shapes and tone still apply)
 - **Projects:** [ui-mockups](../projects/ui-mockups.md), [notify-core](../projects/notify-core.md), [pilot-publishers](../projects/pilot-publishers.md)
 
 ## Context
