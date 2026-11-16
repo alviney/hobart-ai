@@ -30,12 +30,15 @@ space on the screen.
   the names, info pages and recent pings of every public Trove nearby,
   including ones you don't subscribe to (see Q-006).
 
-## Update 2026-11-16: range
+## Update 2026-11-16: range ("pull further")
 
-The radar has a **"Within" control** at the top: minus and plus buttons
-either side of the current range. It steps through 250 m, 500 m, 1 km
-(default), 2.5 km, 5 km, 10 km and All of Hobart, so people can narrow or
-widen it. It limits the list, the "You're here" check and nearby search.
+There is no range control. The radar starts with what's right around you
+(250 m) and shows a "Reaching 250 m" line. Reaching the bottom of the list
+scans the next ring out (500 m, 1 km, 2.5 km, 5 km, 10 km, all of Hobart);
+a button at the bottom does the same for people who can't scroll to
+trigger it. "Start again nearby" resets it, and turning the radar on always
+starts nearby. Chosen over a stretchable ring, walking-time stepper, dial
+and named places.
 
 ## Options considered
 

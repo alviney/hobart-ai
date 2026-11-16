@@ -585,17 +585,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
 <div class="bar">
   <div class="brand">Sub1<small>clickable prototype</small></div>
-  <div class="row">
-    <span class="sub" id="ru-label" style="font-weight:600">Range control</span>
-    <div class="seg" role="group" aria-labelledby="ru-label">
-      <button type="button" data-act="rui" data-arg="ring" id="ru-ring">1 · Stretch the ring</button>
-      <button type="button" data-act="rui" data-arg="walk" id="ru-walk">2 · Walking time</button>
-      <button type="button" data-act="rui" data-arg="dial" id="ru-dial">3 · Dial</button>
-      <button type="button" data-act="rui" data-arg="pull" id="ru-pull">4 · Pull further</button>
-      <button type="button" data-act="rui" data-arg="places" id="ru-places">5 · Places</button>
-    </div>
-    <button type="button" class="link-btn" data-act="reset">Reset</button>
-  </div>
+  <button type="button" class="link-btn" data-act="reset">Reset</button>
 </div>
 <div class="phone" id="phone">
   <div id="bgfx" aria-hidden="true"></div>
@@ -633,7 +623,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const km = (m) => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
 
   const fresh = () => ({
-    v: 21, rangeUi: 'ring', range: 1000, theme: 'friendly', concept: 'timeline', shelfSel: 'all', tab: 'now', radarOn: false, rstyle: 'a', win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
+    v: 22, rangeUi: 'pull', range: 250, theme: 'friendly', concept: 'timeline', shelfSel: 'all', tab: 'now', radarOn: false, rstyle: 'a', win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
     draft: { text: '', pri: 1, manual: false, ch: null }, subId: 'elm', scanLevel: 1, seq: 100,
     newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false, chat: [],
     connections: [
@@ -1325,7 +1315,6 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const SCREENS = { home, feed: feedPage, ping: pingView, trove: troveFeed, troves, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
   function render() {
-    ['ring', 'walk', 'dial', 'pull', 'places'].forEach((n) => $('ru-' + n).setAttribute('aria-pressed', S.rangeUi === n));
     $('phone').dataset.theme = S.theme;
     const el = $('screen');
     const fab = S.screen === 'home' || S.screen === 'ask';
@@ -1423,13 +1412,12 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     'menu-go': (a) => act.go(a),
     'menu-mine': (a) => { S.sheet = null; act['open-mine'](a); },
     trove: (a) => { S.sheet = a; render(); },
-    rui: (a) => { S.rangeUi = a; S.range = a === 'pull' ? 250 : a === 'places' ? 2500 : 1000; S.screen = 'home'; S.sheet = null; S.nearQ = ''; S.radarOn = true; clearTimeout(scanTimer); S.scanning = false; render(); scrollTop(); },
     'range-set': (a) => { S.range = +a; render(); if (S.rangeUi === 'pull') scrollTop(); },
     'pull-more': () => extendRange(),
     'range-step': (a) => { const i = Math.min(RANGES.length - 1, Math.max(0, RANGES.indexOf(S.range) + +a)); S.range = RANGES[i]; const y = $('screen').scrollTop; render(); $('screen').scrollTop = y; },
     shelf: (a) => { S.shelfSel = a; render(); },
     tab: (a) => { S.tab = a; S.nearQ = ''; S.radarOn = a === 'nearby'; if (a === 'nearby') startScan(); render(); scrollTop(); },
-    'radar-toggle': () => { S.radarOn = !S.radarOn; S.nearQ = ''; if (S.radarOn) startScan(); else { clearTimeout(scanTimer); S.scanning = false; } render(); scrollTop(); },
+    'radar-toggle': () => { S.radarOn = !S.radarOn; S.nearQ = ''; S.range = RANGES[0]; if (S.radarOn) startScan(); else { clearTimeout(scanTimer); S.scanning = false; } render(); scrollTop(); },
     'win-set': (a) => { S.win = +a; $('near-results').innerHTML = radarBody(); document.querySelectorAll('.tw button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.arg === a)); },
     'near-try': (a) => { S.nearQ = a; render(); },
     'near-clear': () => { S.nearQ = ''; render(); const i = $('near-q'); if (i) i.focus(); },
@@ -1545,7 +1533,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const hot = window.claude && window.claude.hot;
   if (hot && hot.snapshot) hot.snapshot(() => S);
-  const boot = (data) => { if (data && data.v === 21) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
+  const boot = (data) => { if (data && data.v === 22) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
   if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>
