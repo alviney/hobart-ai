@@ -763,6 +763,16 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 .phone[data-theme="friendly"] .conn.conn { overflow: visible; }
 .conn .sig-bar { position: absolute; left: 0; right: 0; bottom: 0; width: auto; height: 4px; border-radius: 0; background: #F3F1F8; }
 .conn .sig-bar i { border-radius: 0 2px 2px 0; }
+
+/* Ping strength as a loading ring around the icon circle: full when strong, a short arc when faint */
+.phone[data-sig="loading"] .avatar { position: relative; overflow: visible; }
+.phone[data-sig="loading"] .avatar::before { content: ""; position: absolute; inset: -6px; border-radius: 50%; background: conic-gradient(var(--rc, #F2B600) calc(var(--p, 100) * 1%), #ECE9F4 0); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px)); mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px)); }
+.phone[data-sig="loading"] .avatar.sig4 { --p: 100; }
+.phone[data-sig="loading"] .avatar.sig3 { --p: 70; }
+.phone[data-sig="loading"] .avatar.sig2 { --p: 40; --rc: #C9C4D8; }
+.phone[data-sig="loading"] .avatar.sig1 { --p: 15; --rc: #C9C4D8; }
+.phone[data-sig="loading"] .avatar.sig0 { --p: 4; --rc: #C9C4D8; }
+.phone[data-sig="loading"] .avatar.big::before { inset: -7px; }
 </style>
 
 <div class="bar">
@@ -806,7 +816,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const km = (m) => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
 
   const fresh = () => ({
-    v: 35, sigUi: 'sonar', trovesOn: false, hereUi: 'sonar', catOff: [], rangeUi: 'none', range: 2500, theme: 'friendly', concept: 'timeline', shelfSel: 'all', tab: 'now', radarOn: false, rstyle: 'a', win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
+    v: 36, sigUi: 'loading', trovesOn: false, hereUi: 'sonar', catOff: [], rangeUi: 'none', range: 2500, theme: 'friendly', concept: 'timeline', shelfSel: 'all', tab: 'now', radarOn: false, rstyle: 'a', win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
     draft: { text: '', pri: 1, manual: false, ch: null }, subId: 'elm', scanLevel: 1, seq: 200,
     newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false, chat: [],
     connections: [
@@ -1768,7 +1778,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const hot = window.claude && window.claude.hot;
   if (hot && hot.snapshot) hot.snapshot(() => S);
-  const boot = (data) => { if (data && data.v === 35) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
+  const boot = (data) => { if (data && data.v === 36) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
   if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>

@@ -115,3 +115,4 @@ screens, from which the owner picks one (recorded as a decision).
 - 2026-11-16: ping strength as a horizontal bar along the bottom of Trove cards (D-009 updated)
 - 2026-11-16: horizontal bar too busy; back to sonar rings (D-009 updated)
 - 2026-11-16: sonar rings larger and moved to the bottom right of Trove cards (D-009 updated)
+- 2026-11-16: ping strength as a loading ring around the icon circle (D-009 updated)
