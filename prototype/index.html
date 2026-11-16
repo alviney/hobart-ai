@@ -1,6 +1,6 @@
 <title>Sub1 Prototype</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;700&family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap">
 <style>
 /* Layout: one phone-sized app column, centred on desktop, filling the width on a phone. Single light look by choice (D-005); the radar is a dark sonar screen. */
 :root {
@@ -44,7 +44,7 @@ button { cursor: pointer; }
 .brand small { font-family: var(--text); font-weight: 500; font-size: 13px; color: var(--muted); margin-left: 6px; }
 .link-btn { border: 0; background: none; color: var(--primary); font-weight: 600; font-size: 14px; padding: 8px 4px; }
 
-.phone { position: relative; width: min(390px, 100%); height: min(844px, calc(100% - 76px)); min-height: 560px; background: var(--app, #FFFFFF); color: var(--ink); border-radius: 40px; border: 1px solid var(--line); overflow: hidden; display: flex; flex-direction: column; margin-bottom: 16px; }
+.phone { font-family: var(--text); position: relative; width: min(390px, 100%); height: min(844px, calc(100% - 76px)); min-height: 560px; background: var(--app, #FFFFFF); color: var(--ink); border-radius: 40px; border: 1px solid var(--line); overflow: hidden; display: flex; flex-direction: column; margin-bottom: 16px; }
 @media (max-width: 480px) { .phone { border-radius: 24px; height: calc(100% - 70px); } }
 .screen { flex: 1; overflow-y: auto; padding: 22px 20px 24px; display: flex; flex-direction: column; gap: 14px; }
 .screen.flush { padding: 0 0 24px; }
@@ -141,6 +141,7 @@ p { margin: 0; }
 .rp .tx { grid-column: 1 / -1; font-size: 14px; line-height: 1.4; color: var(--body); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .rp.read .who { font-weight: 600; color: var(--body); }
 .rp.read .tx { color: var(--muted); }
+.rp .rav { display: none; }
 .udot { width: 8px; height: 8px; border-radius: 4px; background: #6FC3EC; flex-shrink: 0; }
 .udot.urgent { background: #FF8A5B; }
 .utag { font-size: 11px; font-weight: 700; color: #FF8A5B; flex-shrink: 0; }
@@ -408,11 +409,89 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 @media (prefers-reduced-motion: reduce) { .reveal { animation: none; } }
 @media (prefers-reduced-motion: reduce) { .here .eyebrow i, .pulse-head span { animation: none; } .pulse-head span:first-child { opacity: .5; transform: scale(3); } }
 @media (prefers-reduced-motion: reduce) { .sweep, .blip.s4 span::after { animation: none; } .sweep { opacity: .6; } }
+
+/* ===== Theme options ===== */
+/* Techy: terminal-dark, mono type, mint signal */
+.phone[data-theme="tech"] { --app: #06090B; --surface: #0C1114; --soft: #10171B; --ink: #D8F3EA; --body: #A9C2BA; --muted: #6E8780; --line: #1C2A2E; --primary: #0E8F68; --primary-ink: #5CF2C8; --tint: #0F2A23; --input: #080C0E; --sonar-glow: #5CF2C8; --display: 'Space Grotesk', 'JetBrains Mono', monospace; --text: 'JetBrains Mono', ui-monospace, monospace; font-size: 14px; }
+.phone[data-theme="tech"] .iconbtn, .phone[data-theme="tech"] .radar-btn { border-radius: 8px !important; }
+.phone[data-theme="tech"] .radar-btn { background: transparent !important; color: #5CF2C8 !important; border: 1px solid #1F4D40 !important; box-shadow: none !important; }
+.phone[data-theme="tech"] .radar-btn[aria-pressed="true"] { background: #5CF2C8 !important; color: #06090B !important; }
+.phone[data-theme="tech"] .iconbtn { background: transparent; border: 1px solid var(--line); }
+.phone[data-theme="tech"] .fab-ask { border-radius: 8px; border: 1px solid #1F4D40; background: #080C0E; box-shadow: none !important; }
+.phone[data-theme="tech"] .fab-send { border-radius: 6px; background: #5CF2C8; color: #06090B; }
+.phone[data-theme="tech"] .rp { border-bottom: 1px dashed #1C2A2E; }
+.phone[data-theme="tech"] .rp .who { font-family: var(--text); font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
+.phone[data-theme="tech"] .rp .tx { font-size: 13px; }
+.phone[data-theme="tech"] .dayh { font-family: var(--text); letter-spacing: .1em; color: #5CF2C8; }
+.phone[data-theme="tech"] .dayh::before { content: "// "; color: #2E6B59; }
+.phone[data-theme="tech"] .udot { border-radius: 1px; background: #5CF2C8; box-shadow: 0 0 8px rgba(92,242,200,.6); }
+.phone[data-theme="tech"] .udot.urgent, .phone[data-theme="tech"] .unread.urgent { background: #FF5C5C; box-shadow: 0 0 8px rgba(255,92,92,.6); }
+.phone[data-theme="tech"] .utag { color: #FF7A7A; text-transform: uppercase; letter-spacing: .06em; }
+.phone[data-theme="tech"] .sumline { font-size: 13px; border-left: 0; }
+.phone[data-theme="tech"] .sumline b { color: #5CF2C8; }
+.phone[data-theme="tech"] .pillbtn { border-radius: 6px; border-color: #5CF2C8; color: #5CF2C8; text-transform: uppercase; font-size: 12px; letter-spacing: .06em; }
+.phone[data-theme="tech"] .btn, .phone[data-theme="tech"] .pill, .phone[data-theme="tech"] .input, .phone[data-theme="tech"] .sheet, .phone[data-theme="tech"] .card { border-radius: 8px; }
+.phone[data-theme="tech"] .btn { color: #FFFFFF; }
+.phone[data-theme="tech"] mark { background: rgba(92,242,200,.22); color: #D8F3EA; }
+
+/* Friendly: bright, soft, rounded, playful avatars */
+.phone[data-theme="friendly"] { --app: #F7F5FF; --surface: #FFFFFF; --soft: #EFEBFF; --ink: #2A2340; --body: #4A4363; --muted: #6E6888; --line: #E3DEF5; --primary: #6C4CE0; --primary-ink: #4B2FBF; --tint: #ECE6FF; --input: #FFFFFF; --sonar-glow: #8D73F0; --display: 'Fredoka', 'Nunito', system-ui, sans-serif; --text: 'Nunito', system-ui, sans-serif; }
+.phone[data-theme="friendly"] .rp { grid-template-columns: 44px minmax(0, 1fr) auto; column-gap: 12px; background: #FFFFFF; border: 0; border-radius: 22px; padding: 12px 14px; margin-bottom: 8px; box-shadow: 0 2px 10px rgba(76,47,191,.07); }
+.phone[data-theme="friendly"] .rp .rav { display: flex; grid-row: 1 / span 2; width: 44px; height: 44px; border-radius: 22px; align-items: center; justify-content: center; font-family: var(--display); font-weight: 600; font-size: 19px; background: var(--ravbg); color: var(--ravfg); }
+.phone[data-theme="friendly"] .rp .tx { grid-column: 2 / -1; }
+.phone[data-theme="friendly"] .rp .who { font-weight: 800; }
+.phone[data-theme="friendly"] .dayh { font-family: var(--display); text-transform: none; letter-spacing: 0; font-size: 17px; font-weight: 600; color: var(--ink); padding-left: 4px; }
+.phone[data-theme="friendly"] .udot { background: #6C4CE0; }
+.phone[data-theme="friendly"] .udot.urgent { background: #E8590C; }
+.phone[data-theme="friendly"] .utag { color: #C2410C; }
+.phone[data-theme="friendly"] .radar-btn { background: #6C4CE0 !important; color: #FFFFFF !important; box-shadow: 0 6px 16px rgba(108,76,224,.3) !important; }
+.phone[data-theme="friendly"] .radar-btn[aria-pressed="true"] { background: #FFFFFF !important; color: #6C4CE0 !important; box-shadow: 0 0 0 3px #6C4CE0 !important; }
+.phone[data-theme="friendly"] .iconbtn { background: #FFFFFF; box-shadow: 0 2px 8px rgba(76,47,191,.08); }
+.phone[data-theme="friendly"] .fab-ask { border-color: #E3DEF5; box-shadow: 0 10px 30px rgba(76,47,191,.14) !important; }
+.phone[data-theme="friendly"] .sumline { background: #FFFFFF; border-radius: 20px; padding: 14px 16px; box-shadow: 0 2px 10px rgba(76,47,191,.07); }
+.phone[data-theme="friendly"] .sumline b { color: #6C4CE0; }
+
+/* Yellow Submarine: yellow hull, white porthole cards */
+.phone[data-theme="sub"] { --app: #FFD23F; --surface: #FFFFFF; --soft: #FFE58A; --ink: #0B2545; --body: #1F3554; --muted: #5A4A12; --line: #E8BC1E; --primary: #0B2545; --primary-ink: #0B2545; --tint: #FFF1B8; --input: #FFFFFF; --sonar-glow: #0B2545; --display: 'Bricolage Grotesque', 'Inter', sans-serif; --text: 'Inter', system-ui, sans-serif; }
+.phone[data-theme="sub"] .rp { grid-template-columns: 42px minmax(0, 1fr) auto; column-gap: 12px; background: #FFFFFF; border: 0; border-radius: 20px; padding: 12px 14px; margin-bottom: 8px; box-shadow: 0 3px 0 rgba(11,37,69,.18); }
+.phone[data-theme="sub"] .rp .rav { display: flex; grid-row: 1 / span 2; width: 38px; height: 38px; margin: 2px; border-radius: 19px; align-items: center; justify-content: center; font-family: var(--display); font-weight: 800; font-size: 16px; background: #FFFFFF; color: #0B2545; box-shadow: 0 0 0 3px #FFD23F, 0 0 0 5px #0B2545; }
+.phone[data-theme="sub"] .rp .tx { grid-column: 2 / -1; }
+.phone[data-theme="sub"] .rp.read { opacity: .8; }
+.phone[data-theme="sub"] .rp .tm { color: #5B6670; }
+.phone[data-theme="sub"] .dayh { color: #0B2545; }
+.phone[data-theme="sub"] .udot { background: #0B2545; }
+.phone[data-theme="sub"] .udot.urgent { background: #D9480F; }
+.phone[data-theme="sub"] .utag { color: #B42318; }
+.phone[data-theme="sub"] .radar-btn { background: #0B2545 !important; color: #FFD23F !important; box-shadow: 0 4px 0 rgba(11,37,69,.25) !important; }
+.phone[data-theme="sub"] .radar-btn[aria-pressed="true"] { background: #FFFFFF !important; color: #0B2545 !important; box-shadow: 0 0 0 3px #0B2545 !important; }
+.phone[data-theme="sub"] .iconbtn { background: rgba(255,255,255,.6); }
+.phone[data-theme="sub"] .fab-ask { border-color: #0B2545; box-shadow: 0 4px 0 rgba(11,37,69,.25) !important; }
+.phone[data-theme="sub"] .sumline b { color: #0B2545; }
+
+/* Shared fixes for the two light themes */
+.phone[data-theme="friendly"] .qhere, .phone[data-theme="sub"] .qhere { color: var(--body); }
+.phone[data-theme="friendly"] .qhere b, .phone[data-theme="sub"] .qhere b { color: var(--ink); }
+.phone[data-theme="friendly"] .pillbtn, .phone[data-theme="sub"] .pillbtn { border-color: var(--primary); color: var(--primary-ink); }
+.phone[data-theme="friendly"] .qrow, .phone[data-theme="sub"] .qrow { color: var(--ink); }
+.phone[data-theme="friendly"] .qd, .phone[data-theme="friendly"] .qp, .phone[data-theme="friendly"] .quiet-n, .phone[data-theme="sub"] .qd, .phone[data-theme="sub"] .qp, .phone[data-theme="sub"] .quiet-n { color: var(--muted); }
+.phone[data-theme="friendly"] mark, .phone[data-theme="sub"] mark { color: inherit; background: rgba(108,76,224,.18); }
+.phone[data-theme="sub"] .scan .radar svg.grid g, .phone[data-theme="friendly"] .scan .radar svg.grid g { stroke: rgba(11,37,69,.12); }
+.phone[data-theme="sub"] .you-dot { background: #0B2545; }
+.phone[data-theme="friendly"] .you-dot { background: #6C4CE0; }
 </style>
 
 <div class="bar">
   <div class="brand">Sub1<small>clickable prototype</small></div>
-  <button type="button" class="link-btn" data-act="reset">Reset</button>
+  <div class="row">
+    <span class="sub" id="th-label" style="font-weight:600">Look</span>
+    <div class="seg" role="group" aria-labelledby="th-label">
+      <button type="button" data-act="theme" data-arg="sonar" id="th-sonar">Deep Sonar (now)</button>
+      <button type="button" data-act="theme" data-arg="tech" id="th-tech">Techy</button>
+      <button type="button" data-act="theme" data-arg="friendly" id="th-friendly">Friendly</button>
+      <button type="button" data-act="theme" data-arg="sub" id="th-sub">Yellow Submarine</button>
+    </div>
+    <button type="button" class="link-btn" data-act="reset">Reset</button>
+  </div>
 </div>
 <div class="phone" id="phone">
   <div id="bgfx" aria-hidden="true"></div>
@@ -438,7 +517,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const km = (m) => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
 
   const fresh = () => ({
-    v: 16, concept: 'timeline', shelfSel: 'all', tab: 'now', radarOn: false, rstyle: 'a', win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
+    v: 17, theme: 'tech', concept: 'timeline', shelfSel: 'all', tab: 'now', radarOn: false, rstyle: 'a', win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
     draft: { text: '', pri: 1, manual: false, ch: null }, subId: 'elm', scanLevel: 1, seq: 100,
     newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false, chat: [],
     connections: [
@@ -600,11 +679,14 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   }
 
 
+  const RAV = [['#FFE3D6', '#9A3412'], ['#DDF5E7', '#1F6B3E'], ['#E6E0FF', '#4B2FBF'], ['#DCEFFF', '#1B4F8A'], ['#FFF0C2', '#7A5300']];
+  const hashId = (id) => [...id].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) >>> 0, 7);
   const recentPings = () => myPosts().slice().sort((a, b) => a.age - b.age || b.id - a.id);
   const dayLabel = (age) => age === 0 ? 'Today' : age === 1 ? 'Yesterday' : age <= 7 ? 'Earlier this week' : 'Older';
   function rpRow(p, near) {
     const c = conn(p.conn), unread = !p.read;
     return `<button type="button" class="rp ${unread ? '' : 'read'}" data-act="open-ping" data-arg="${p.id}" ${near ? `style="opacity:${OP[pingSig(p.age)]}"` : ''}>
+      <span class="rav" aria-hidden="true" style="--ravbg:${RAV[hashId(c.id) % RAV.length][0]};--ravfg:${RAV[hashId(c.id) % RAV.length][1]}">${esc(c.name[0])}</span>
       <span class="who">${unread ? `<span class="udot ${p.pri === 4 ? 'urgent' : ''}" aria-label="Unread"></span>` : ''}<span class="nm">${c.owner ? 'You · ' : ''}${esc(c.name)}</span>${p.pri === 4 ? '<span class="utag">Urgent</span>' : ''}</span>
       <span class="tm">${near ? km(c.dist) + ' · ' : ''}${esc(p.time)}</span>
       <span class="tx">${p.title ? `<b style="color:var(--ink);font-weight:600">${esc(p.title)}.</b> ` : ''}${esc(p.text)}</span></button>`;
@@ -1069,6 +1151,8 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const SCREENS = { home, feed: feedPage, ping: pingView, trove: troveFeed, troves, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
   function render() {
+    $('phone').dataset.theme = S.theme;
+    ['sonar', 'tech', 'friendly', 'sub'].forEach((n) => $('th-' + n).setAttribute('aria-pressed', S.theme === n));
     const el = $('screen');
     const fab = S.screen === 'home' || S.screen === 'ask';
     el.className = 'screen' + (S.screen === 'subscribe' ? ' flush' : '') + (fab ? ' has-fab' : '') + '';
@@ -1110,6 +1194,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     'menu-go': (a) => act.go(a),
     'menu-mine': (a) => { S.sheet = null; act['open-mine'](a); },
     trove: (a) => { S.sheet = a; render(); },
+    theme: (a) => { S.theme = a; render(); },
     shelf: (a) => { S.shelfSel = a; render(); },
     tab: (a) => { S.tab = a; S.nearQ = ''; S.radarOn = a === 'nearby'; if (a === 'nearby') startScan(); render(); scrollTop(); },
     'radar-toggle': () => { S.radarOn = !S.radarOn; S.nearQ = ''; if (S.radarOn) startScan(); else { clearTimeout(scanTimer); S.scanning = false; } render(); scrollTop(); },
@@ -1226,7 +1311,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const hot = window.claude && window.claude.hot;
   if (hot && hot.snapshot) hot.snapshot(() => S);
-  const boot = (data) => { if (data && data.v === 16) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
+  const boot = (data) => { if (data && data.v === 17) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
   if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>
