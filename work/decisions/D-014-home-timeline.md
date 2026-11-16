@@ -32,6 +32,14 @@ the Troves you subscribe to. Noise is controlled by subscribing: if a
 Trove posts things you don't want, you unsubscribe (or pause it). Category
 chips and category on/off toggles were tried and removed.
 
+## Update 2026-11-16: Your Troves button
+
+The header has two round buttons on the right: **Your Troves** (a chest
+icon) and the **radar**. Each swaps the timeline for its own content in
+place and turns into a navy ✕ to close it; only one can be open at a time.
+Your Troves shows the Troves you run and subscribe to, plus Scan a code
+and Start a Trove. Opening a Trove and pressing back returns to the panel.
+
 ## Options considered
 
 - **Timeline**: the most direct way to see what's new.
