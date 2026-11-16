@@ -22,7 +22,8 @@ subscriber picked a threshold among them. The owner wants it simpler.
   feed). Pausing and "My AI only" still work as before.
 - When writing a ping, the app suggests urgent or not; the sender can
   change it. Urgent notifies every subscriber.
-- The feed filter is **All** or **Urgent only**.
+- There is no feed filter for now; the home screen goes straight from the
+  header to the list of Troves.
 
 ## Options considered
 

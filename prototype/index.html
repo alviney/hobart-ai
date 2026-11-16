@@ -385,14 +385,10 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
 
   // ---------- Home: the full feed ----------
   function home() {
-    const f = S.filter;
+    const f = 'all';
     const mine = myPosts().filter((p) => f === 'all' || p.pri === f);
-    const count = (l) => myPosts().filter((p) => p.pri === l).length;
     const groups = [];
     for (const p of mine) { let g = groups.find((x) => x.c.id === p.conn); if (!g) groups.push(g = { c: conn(p.conn), list: [] }); g.list.push(p); }
-    const sel = (v) => String(f) === String(v);
-    const label = f === 'all' ? 'All' : 'Urgent';
-    const menu = S.fmenu ? `<div class="fmenu" role="menu"><button type="button" aria-pressed="${sel('all')}" data-act="filter" data-arg="all">All pings<span class="n">${myPosts().length}</span></button><button type="button" aria-pressed="${sel(4)}" data-act="filter" data-arg="4"><span class="rate r4"></span>Urgent only<span class="n">${count(4)}</span></button></div>` : '';
     const rows = groups.map(({ c, list }) => {
       const latest = list[0], unread = list.filter((p) => !p.read).length, top = list.filter((p) => !p.read).reduce((m, p) => Math.max(m, p.pri), 0) || latest.pri;
       const muted = !c.owner && (!c.on || c.via === 'My AI only' || S.pullOnly);
@@ -403,7 +399,6 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
     return `<div class="topline"><button type="button" class="iconbtn" data-act="menu" aria-label="Menu">${icon.menu}</button>
         <span class="wordmark" style="flex:1">${icon.sonar}Sub1</span>
         <button type="button" class="radar-btn" data-act="go" data-arg="radar" aria-label="Radar: Troves near you">${icon.radar}</button></div>
-      <div class="fhead"><h2>Pings</h2><button type="button" class="fpick" data-act="fmenu" aria-expanded="${!!S.fmenu}">${f === 'all' ? '' : `<span class="rate r${f}"></span>`}${label} <span aria-hidden="true">▾</span></button>${menu}</div>
       ${S.pullOnly ? '<p class="sub">Pull only is on, so nothing pings you. Everything is here when you or your AI look.</p>' : ''}
       ${rows ? `<div class="plist">${rows}</div>` : `<div class="empty">No ${f === 'all' ? '' : 'urgent '}pings right now.</div>`}
       <p class="tagline">An orange count means one of the unread pings is urgent. Dimmed Troves don't notify you.</p>`;

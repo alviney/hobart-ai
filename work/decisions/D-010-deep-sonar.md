@@ -26,8 +26,8 @@ also wanted a more compact feed.
   don't notify you (paused, AI only) are dimmed.
 - **Opening a row** shows that Trove's pings and marks them read; opening a
   ping shows it in full.
-- **Filter:** one "All ratings ▾" menu next to the "Pings" heading, with
-  counts per rating.
+- **No heading or filter row** above the feed (removed 2026-11-16; see
+  D-011).
 
 ## Options considered
 
