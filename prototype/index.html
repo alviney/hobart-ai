@@ -609,6 +609,12 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 .phone[data-theme="friendly"] .switch span { border: 1px solid #DDD8EC; }
 .phone[data-theme="friendly"] .switch[aria-checked="true"] span { border-color: transparent; }
 .phone[data-theme="friendly"] .fab-ask { box-shadow: 0 6px 20px rgba(42,35,64,.08) !important; }
+
+/* Radar is one round button: yellow when off, navy with a yellow icon when on */
+.phone[data-theme="friendly"] .radar-btn.radar-btn { width: 48px; height: 48px; padding: 0; border-radius: 24px; justify-content: center; background: #FFD23F !important; color: #2A2340 !important; }
+.phone[data-theme="friendly"] .radar-btn.radar-btn svg { width: 26px; height: 26px; padding: 0; background: none; border-radius: 0; color: inherit; transform: none !important; transition: none; }
+.phone[data-theme="friendly"] .radar-btn.radar-btn[aria-pressed="true"] { background: var(--hull) !important; color: #FFD23F !important; box-shadow: 0 0 0 4px rgba(255,210,63,.35) !important; }
+.phone[data-theme="friendly"] .radar-btn.radar-btn:active { transform: scale(.94); }
 </style>
 
 <div class="bar">

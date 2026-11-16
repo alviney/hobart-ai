@@ -98,3 +98,4 @@ screens, from which the owner picks one (recorded as a decision).
 - 2026-11-16: category filter becomes a small row of on/off icons (D-014 updated)
 - 2026-11-16: filters removed; noise is handled by subscribing or not. Cafe dummy data cut to two pings (Tidal Bakery, Pressed Coffee) (D-014 updated)
 - 2026-11-16: 3D buttons removed; controls are flat with a slight press-in (D-016 updated)
+- 2026-11-16: radar toggle is a single round button again, not a switch (D-016 updated)
