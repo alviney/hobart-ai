@@ -759,6 +759,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const svg = (d, extra = '') => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra}>${d}</svg>`;
   const icon = {
+    close: svg('<path d="M6 6l12 12M18 6L6 18"/>', 'stroke-width="2.6"'),
     menu: svg('<path d="M4 7h16M4 12h16M4 17h16"/>'),
     people: svg('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.8c1.8.7 3 2.4 3.5 5.2"/>'),
     plus: svg('<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>'),
@@ -887,7 +888,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     const unread = myPosts().filter((p) => !p.read).length, urgent = myPosts().some((p) => !p.read && p.pri === 4);
     return `<div class="topline"><button type="button" class="iconbtn" data-act="menu" aria-label="Menu">${icon.menu}</button>
         ${extra || '<span style="flex:1"></span>'}
-        ${S.concept === 'tabs' ? '' : `<button type="button" class="radar-btn" data-act="radar-toggle" aria-pressed="${!!S.radarOn}" aria-label="Radar: Troves near you">${icon.radar}</button>`}</div>`;
+        ${S.concept === 'tabs' ? '' : `<button type="button" class="radar-btn" data-act="radar-toggle" aria-pressed="${!!S.radarOn}" aria-label="${S.radarOn ? 'Close the radar' : 'Radar: Troves near you'}">${S.radarOn ? icon.close : icon.radar}</button>`}</div>`;
   }
   function home() {
     if (S.concept === 'tabs') {

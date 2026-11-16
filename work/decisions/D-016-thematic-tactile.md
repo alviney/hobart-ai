@@ -31,8 +31,8 @@ Three ideas, used with restraint (a fourth, portholes, was dropped):
   press) were tried and dropped. Buttons, switches and the radar toggle are
   flat, with no drop shadows; pressing shrinks them slightly, with a short
   vibration where the phone allows. The radar toggle is one round
-  button: yellow with a dark icon when off, navy with a yellow icon and a
-  soft yellow halo when on. "Urgent" is a flip switch.
+  button: yellow with a dark icon when off, navy with a yellow ✕ and a soft
+  yellow halo when on, so tapping it reads as closing the radar. "Urgent" is a flip switch.
 - **The ripple.** One motion everywhere: sending a ping sends rings out
   across the screen, a new ping's card ripples, and the radar scan is
   the same rings. People who ask for reduced motion don't get it.
