@@ -76,3 +76,4 @@ screens, from which the owner picks one (recorded as a decision).
 - 2026-11-16: radar is a toggle on home that swaps the briefing for the radar; no separate screen (D-012 updated)
 - 2026-11-16: header and bottom bar stay in place while the radar scans
 - 2026-11-16: bottom bar always says 'Ask anything'; with the radar on it searches nearby Troves
+- 2026-11-16: radar scan made small and inline so the toggle swaps content in place

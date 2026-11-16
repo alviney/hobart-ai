@@ -361,9 +361,9 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 .bgradar { position: absolute; width: 640px; height: 640px; left: 50%; top: 34%; margin: -320px 0 0 -320px; opacity: .55; }
 .bgradar .radar { max-width: none !important; width: 640px; border: 0; background: radial-gradient(circle, #14334A 0%, #0B1A24 68%); }
 .bgradar .blip { pointer-events: none; }
-.scan { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; text-align: center; min-height: 420px; }
+.scan { display: flex; align-items: center; gap: 16px; padding: 8px 2px 0; }
 .radar-screen { background: var(--app) !important; }
-.scan .radar { max-width: 300px; background: none; border: 0; }
+.scan .radar { width: 120px; max-width: 120px !important; flex-shrink: 0; background: none; border: 0; }
 .scan .radar svg.grid g { stroke: rgba(156,195,222,.09); }
 .scan .radar svg.grid text { display: none; }
 .scan .sweep { background: conic-gradient(from 0deg, rgba(156,214,240,0) 0deg, rgba(156,214,240,0) 310deg, rgba(156,214,240,.10) 360deg); }
@@ -741,7 +741,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     return `${hereMin()}${live.length ? live.map((c) => styledRow(c, latestIn(c))).join('') : `<p class="sub">Nothing nearby ${when}.</p>`}${quiet ? `<p class="quiet-n">${quiet} more quiet ${when}</p>` : ''}`;
   }
   function radar() {
-    if (S.scanning) return `<div class="scan">${radarCircle(300)}<p>Scanning nearby…</p></div>`;
+    if (S.scanning) return `<div class="scan">${radarCircle(120)}<p>Scanning nearby…</p></div>`;
     const back = '';
     const slider = (cls) => `<input type="range" id="win" class="${cls || ''}" min="0" max="${WINDOWS.length - 1}" step="1" value="${S.win}" aria-label="How far back to listen" aria-valuetext="${WINDOWS[S.win].label}">`;
     let top;
@@ -999,7 +999,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   function render() {
     const el = $('screen');
     const fab = S.screen === 'home' || S.screen === 'ask';
-    el.className = 'screen' + (S.screen === 'subscribe' ? ' flush' : '') + (fab ? ' has-fab' : '') + (S.screen === 'home' && S.radarOn ? ' radar-screen' : '');
+    el.className = 'screen' + (S.screen === 'subscribe' ? ' flush' : '') + (fab ? ' has-fab' : '') + '';
     el.innerHTML = (SCREENS[S.screen] || home)();
     $('float').innerHTML = fab ? floatBar() : '';
     $('sheet').innerHTML = S.sheet === 'menu' ? menuSheet() : S.sheet === 'prompt' ? promptSheet() : S.sheet ? troveSheet(conn(S.sheet)) : '';
