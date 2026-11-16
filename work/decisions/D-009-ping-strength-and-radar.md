@@ -29,8 +29,8 @@ ones mean possibly out of date.
 
 Ping strength is shown as **sonar rings**: a small purple dot with up to
 three full rings around it (three rings is strong, a lone grey dot is
-faint, a hollow dot is too faint). In Trove lists it sits small in the
-top-right corner of each card; elsewhere it sits next to the
+faint, a hollow dot is too faint). In Trove lists it sits in the
+bottom-right corner of each card (about 26px); elsewhere it sits next to the
 "verified…" text.
 
 Tried and set aside the same day: wifi-style bars, a ring on the icon, a
