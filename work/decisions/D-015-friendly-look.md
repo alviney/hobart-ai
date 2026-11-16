@@ -13,13 +13,14 @@ submarine yellow brought in.
 
 ## Decision
 
-- **Base:** light and soft. Background `#FFFCF2`, cards `#FFFFFF`, text
+- **Base:** light and soft. Background `#F8F7FB` (neutral; a warm yellow background read as too cute), cards `#FFFFFF`, text
   `#2A2340`, secondary text `#4A4363` / `#6E6888`, lines `#E3DEF5`.
 - **Type:** Fredoka for headings, Nunito for text.
 - **Yellow (`#FFD23F`) is the signature accent:** the radar button (dark
   icon on yellow; dark with a yellow icon when on), the Ask send button,
-  the Subscribe pill, the "Today:" summary card (`#FFE476`) and a short
-  yellow stroke after each day heading.
+  the Subscribe pill, a highlighter stroke behind "Today:" in the white
+  summary card (`#FFE476`), and a short yellow stroke after each day
+  heading. Yellow is for highlights only, never large backgrounds.
 - **Purple (`#6C4CE0`)** is the working colour: buttons, links and unread
   dots. Urgent stays orange (`#E8590C` dot, `#C2410C` text).
 - **Pings are soft white cards** with a pastel letter avatar per Trove,

@@ -82,3 +82,4 @@ screens, from which the owner picks one (recorded as a decision).
 - 2026-11-16: radar drops the slider; nearby pings show as a timeline like home (D-012, D-013 updated)
 - 2026-11-16: three new looks to compare against Deep Sonar: Techy, Friendly, Yellow Submarine (theme switcher over the real screens)
 - 2026-11-16: Friendly look with submarine-yellow accents (D-015)
+- 2026-11-16: yellow kept to highlights; neutral background and white summary card (D-015 updated)
