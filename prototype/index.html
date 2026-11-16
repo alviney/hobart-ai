@@ -82,7 +82,7 @@ p { margin: 0; }
 
 /* Feed rows: same height; rating marker | title + Trove | time */
 .plist { display: flex; flex-direction: column; flex-shrink: 0; }
-.prow { height: 64px; flex-shrink: 0; display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 0 4px; border: 0; background: transparent; text-align: left; width: 100%; color: var(--ink); }
+.prow { height: 64px; flex-shrink: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 0 4px; border: 0; background: transparent; text-align: left; width: 100%; color: var(--ink); }
 .pmain { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
 .ttl { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .pmeta { font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -108,7 +108,7 @@ p { margin: 0; }
 .fmenu .n { margin-left: auto; color: var(--muted); font-variant-numeric: tabular-nums; font-weight: 500; }
 
 /* Trove rows: one per Trove. rating circle | Trove name + latest ping | time + unread */
-.trow { height: 66px; flex-shrink: 0; display: grid; grid-template-columns: 14px minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 0 4px; border: 0; border-bottom: 1px solid var(--line); background: transparent; text-align: left; width: 100%; color: var(--ink); }
+.trow { height: 66px; flex-shrink: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 0 4px; border: 0; border-bottom: 1px solid var(--line); background: transparent; text-align: left; width: 100%; color: var(--ink); }
 .trow:hover { background: var(--soft); }
 .trow .tname { font-size: 16px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .trow .tlast { font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -118,6 +118,8 @@ p { margin: 0; }
 .tside .when { margin: 0; align-self: auto; }
 .unread { min-width: 22px; height: 22px; padding: 0 7px; border-radius: 11px; background: #6FC3EC; color: #0B1A24; font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; font-variant-numeric: tabular-nums; }
 .unread.zero { visibility: hidden; }
+.unread.urgent { background: #FF8A5B; }
+.urg { color: #FF8A5B; font-weight: 700; }
 .rate { width: 12px; height: 12px; border-radius: 6px; }
 .prow { border-bottom: 1px solid var(--line); }
 .prow:hover { background: var(--soft); }
@@ -369,8 +371,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
   }
   const isLong = (p) => !!p.title || p.text.length > 240;
   const pingRow = (p, dim) => `<button type="button" class="prow ${dim ? 'dim' : ''}" data-act="open-ping" data-arg="${p.id}">
-      <span>${p.pri === 4 ? '<span class="rate r4"><span class="sr">Urgent</span></span>' : ''}</span>
-      <span class="pmain"><span class="ttl">${p.wasUnread ? '<span class="newdot" aria-label="Unread"></span>' : ''}${esc(p.title || p.text)}</span><span class="pmeta">${[p.pri === 4 ? 'Urgent' : '', !pings(p) && !conn(p.conn).owner ? 'Didn’t notify you' : '', p.title ? esc(p.text) : ''].filter(Boolean).join(' · ') || esc(p.time)}</span></span>
+      <span class="pmain"><span class="ttl">${p.wasUnread ? '<span class="newdot" aria-label="Unread"></span>' : ''}${esc(p.title || p.text)}</span><span class="pmeta">${[p.pri === 4 ? '<span class="urg">Urgent</span>' : '', !pings(p) && !conn(p.conn).owner ? 'Didn’t notify you' : '', p.title ? esc(p.text) : ''].filter(Boolean).join(' · ') || esc(p.time)}</span></span>
       <span class="when">${esc(p.time)}</span></button>`;
   const pingList = (list, dimFn) => `<div class="plist">${list.map((p) => pingRow(p, dimFn && dimFn(p))).join('')}</div>`;
   const pingCard = (p, belowLine) => {
@@ -396,9 +397,8 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
       const latest = list[0], unread = list.filter((p) => !p.read).length, top = list.filter((p) => !p.read).reduce((m, p) => Math.max(m, p.pri), 0) || latest.pri;
       const muted = !c.owner && (!c.on || c.via === 'My AI only' || S.pullOnly);
       return `<button type="button" class="trow ${unread ? '' : 'read'} ${muted ? 'muted' : ''}" data-act="open-trove" data-arg="${c.id}">
-        <span>${top === 4 && unread ? '<span class="rate r4"><span class="sr">Unread urgent ping</span></span>' : ''}</span>
         <span class="pmain"><span class="tname">${c.owner ? 'You · ' : ''}${esc(c.name)}</span><span class="tlast">${esc(latest.title || latest.text)}</span></span>
-        <span class="tside"><span class="when">${esc(latest.time)}</span><span class="unread ${unread ? '' : 'zero'}" aria-label="${unread} unread">${unread}</span></span></button>`;
+        <span class="tside"><span class="when">${esc(latest.time)}</span><span class="unread ${unread ? '' : 'zero'} ${top === 4 && unread ? 'urgent' : ''}" aria-label="${unread} unread${top === 4 && unread ? ', including urgent' : ''}">${unread}</span></span></button>`;
     }).join('');
     return `<div class="topline"><button type="button" class="iconbtn" data-act="menu" aria-label="Menu">${icon.menu}</button>
         <span class="wordmark" style="flex:1">${icon.sonar}Sub1</span>
@@ -406,7 +406,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
       <div class="fhead"><h2>Pings</h2><button type="button" class="fpick" data-act="fmenu" aria-expanded="${!!S.fmenu}">${f === 'all' ? '' : `<span class="rate r${f}"></span>`}${label} <span aria-hidden="true">▾</span></button>${menu}</div>
       ${S.pullOnly ? '<p class="sub">Pull only is on, so nothing pings you. Everything is here when you or your AI look.</p>' : ''}
       ${rows ? `<div class="plist">${rows}</div>` : `<div class="empty">No ${f === 'all' ? '' : 'urgent '}pings right now.</div>`}
-      <p class="tagline">An orange circle means an unread urgent ping. Dimmed Troves don't notify you.</p>`;
+      <p class="tagline">An orange count means one of the unread pings is urgent. Dimmed Troves don't notify you.</p>`;
   }
 
   // ---------- One Trove's pings ----------

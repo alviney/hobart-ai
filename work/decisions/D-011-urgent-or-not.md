@@ -13,8 +13,10 @@ subscriber picked a threshold among them. The owner wants it simpler.
 ## Decision
 
 - A ping is either **urgent** or **not urgent**. Not urgent is the default.
-- Only urgent pings carry a marker (an orange circle or an "Urgent" tag).
-  Not-urgent pings show no indicator at all.
+- Only urgent pings are marked. In the feed, a Trove's unread count turns
+  orange when one of its unread pings is urgent; inside a Trove, urgent
+  pings say "Urgent" in orange. Not-urgent pings show no indicator, and
+  rows run full width with no marker column.
 - Each subscription is either **Everything** (every ping notifies you) or
   **Urgent only** (only urgent pings notify you; the rest wait in your
   feed). Pausing and "My AI only" still work as before.
