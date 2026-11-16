@@ -66,3 +66,4 @@ screens, from which the owner picks one (recorded as a decision).
 - 2026-11-16: briefing cut to a few lines of plain text with a small 'Edit prompt' link
 - 2026-11-16: briefing rewritten as neutral summaries of what's on; it doesn't tell people what to do. Paused Troves are left out
 - 2026-11-16: All pings moves to a round header button (inbox icon, unread badge, orange if urgent), next to the radar
+- 2026-11-16: wordmark and logo removed from the home header

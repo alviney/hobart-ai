@@ -458,7 +458,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
   function home() {
     const unread = myPosts().filter((p) => !p.read).length, urgent = myPosts().some((p) => !p.read && p.pri === 4);
     return `<div class="topline"><button type="button" class="iconbtn" data-act="menu" aria-label="Menu">${icon.menu}</button>
-        <span class="wordmark" style="flex:1">${icon.sonar}Sub1</span>
+        <span style="flex:1"></span>
         <button type="button" class="pings-btn" data-act="go" data-arg="feed" aria-label="All pings${unread ? `, ${unread} unread` : ''}">${icon.inbox}${unread ? `<span class="badge ${urgent ? 'urgent' : ''}">${unread}</span>` : ''}</button>
         <button type="button" class="radar-btn" data-act="go" data-arg="radar" aria-label="Radar: Troves near you">${icon.radar}</button></div>
       <section class="brief2" aria-label="Your briefing">
