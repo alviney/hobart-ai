@@ -760,7 +760,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 .sig-bar { display: inline-block; width: 44px; height: 6px; border-radius: 3px; background: #EFEDF5; overflow: hidden; flex-shrink: 0; vertical-align: middle; }
 .sig-bar i { display: block; height: 100%; border-radius: 3px; background: #F2B600; }
 .sig-bar.s2 i, .sig-bar.s1 i, .sig-bar.s0 i { background: #CFC9E0; }
-.phone[data-theme="friendly"] .conn { overflow: hidden; padding-right: 16px; }
+.phone[data-theme="friendly"] .conn.conn { overflow: visible; }
 .conn .sig-bar { position: absolute; left: 0; right: 0; bottom: 0; width: auto; height: 4px; border-radius: 0; background: #F3F1F8; }
 .conn .sig-bar i { border-radius: 0 2px 2px 0; }
 </style>
@@ -806,7 +806,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const km = (m) => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
 
   const fresh = () => ({
-    v: 34, sigUi: 'bar', trovesOn: false, hereUi: 'sonar', catOff: [], rangeUi: 'none', range: 2500, theme: 'friendly', concept: 'timeline', shelfSel: 'all', tab: 'now', radarOn: false, rstyle: 'a', win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
+    v: 35, sigUi: 'sonar', trovesOn: false, hereUi: 'sonar', catOff: [], rangeUi: 'none', range: 2500, theme: 'friendly', concept: 'timeline', shelfSel: 'all', tab: 'now', radarOn: false, rstyle: 'a', win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
     draft: { text: '', pri: 1, manual: false, ch: null }, subId: 'elm', scanLevel: 1, seq: 200,
     newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false, chat: [],
     connections: [
@@ -1768,7 +1768,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const hot = window.claude && window.claude.hot;
   if (hot && hot.snapshot) hot.snapshot(() => S);
-  const boot = (data) => { if (data && data.v === 34) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
+  const boot = (data) => { if (data && data.v === 35) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
   if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>
