@@ -241,6 +241,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
 .fab-send { width: 44px; height: 44px; flex-shrink: 0; border-radius: 22px; border: 0; background: var(--primary); color: #FFFFFF; font-weight: 800; font-size: 20px; }
 .radar-btn { width: 48px; height: 48px; flex-shrink: 0; border-radius: 24px; border: 0; background: var(--sonar); color: var(--sonar-glow); display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 18px rgba(20,33,43,.22); }
 .radar-btn svg { width: 26px; height: 26px; }
+.radar-btn[aria-pressed="true"] { background: #9CD6F0 !important; color: #0B1A24 !important; box-shadow: 0 0 0 4px rgba(156,214,240,.18); }
 
 /* Strength meter */
 .meter { display: inline-flex; gap: 2px; align-items: flex-end; height: 14px; flex-shrink: 0; }
@@ -360,7 +361,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 .bgradar { position: absolute; width: 640px; height: 640px; left: 50%; top: 34%; margin: -320px 0 0 -320px; opacity: .55; }
 .bgradar .radar { max-width: none !important; width: 640px; border: 0; background: radial-gradient(circle, #14334A 0%, #0B1A24 68%); }
 .bgradar .blip { pointer-events: none; }
-.scan { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; text-align: center; min-height: 100%; }
+.scan { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; text-align: center; min-height: 420px; }
 .radar-screen { background: var(--app) !important; }
 .scan .radar { max-width: 300px; background: none; border: 0; }
 .scan .radar svg.grid g { stroke: rgba(156,195,222,.09); }
@@ -409,7 +410,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const km = (m) => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
 
   const fresh = () => ({
-    v: 14, rstyle: 'a', win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
+    v: 15, radarOn: false, rstyle: 'a', win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
     draft: { text: '', pri: 1, manual: false, ch: null }, subId: 'elm', scanLevel: 1, seq: 100,
     newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false, chat: [],
     connections: [
@@ -576,12 +577,12 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     return `<div class="topline"><button type="button" class="iconbtn" data-act="menu" aria-label="Menu">${icon.menu}</button>
         <span style="flex:1"></span>
         <button type="button" class="pings-btn" data-act="go" data-arg="feed" aria-label="All pings${unread ? `, ${unread} unread` : ''}">${icon.inbox}${unread ? `<span class="badge ${urgent ? 'urgent' : ''}">${unread}</span>` : ''}</button>
-        <button type="button" class="radar-btn" data-act="go" data-arg="radar" aria-label="Radar: Troves near you">${icon.radar}</button></div>
-      <section class="brief2" aria-label="Your briefing">
+        <button type="button" class="radar-btn" data-act="radar-toggle" aria-pressed="${!!S.radarOn}" aria-label="Radar: Troves near you">${icon.radar}</button></div>
+      ${S.radarOn ? radar() : `<section class="brief2 reveal" aria-label="Your briefing">
         <span class="eyebrow">${TODAY}</span>
         ${briefing()}
         <button type="button" class="editp" data-act="edit-prompt">${icon.pen}Edit prompt</button>
-      </section>`;
+      </section>`}`;
   }
   function promptSheet() {
     return `<div class="backdrop" data-act="sheet-close"></div>
@@ -741,7 +742,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   }
   function radar() {
     if (S.scanning) return `<div class="scan">${radarCircle(300)}<p>Scanning nearby…</p></div>`;
-    const back = '<button type="button" class="rback" data-act="go" data-arg="home" aria-label="Back to home">‹</button>';
+    const back = '';
     const slider = (cls) => `<input type="range" id="win" class="${cls || ''}" min="0" max="${WINDOWS.length - 1}" step="1" value="${S.win}" aria-label="How far back to listen" aria-valuetext="${WINDOWS[S.win].label}">`;
     let top;
     if (S.rstyle === 'b') {
@@ -750,7 +751,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     } else if (S.rstyle === 'c') {
       top = `<div class="rtop">${back}</div><div style="display:flex;flex-direction:column;gap:6px"><span class="bwin" id="win-val">${WINDOWS[S.win].label}</span>${slider('bslider')}</div>`;
     } else {
-      top = `<div class="rtop">${back}<div class="slim"><span id="win-val">${WINDOWS[S.win].label}</span>${slider()}</div></div>`;
+      top = `<div class="rtop"><div class="slim"><span id="win-val">${WINDOWS[S.win].label}</span>${slider()}</div></div>`;
     }
     return `<div class="${S.rlayout === 'scan' ? 'reveal' : ''}" style="display:flex;flex-direction:column;gap:${S.rstyle === 'c' ? 18 : 10}px">${top}
       <div id="near-results" style="display:flex;flex-direction:column;gap:${S.rstyle === 'c' ? 10 : 0}px">${radarBody()}</div></div>`;
@@ -968,7 +969,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   // ---------- Shell ----------
   function floatBar() {
-    if (S.screen === 'radar') return `<div class="fab">
+    if (S.screen === 'home' && S.radarOn) return `<div class="fab">
       <form class="fab-ask near" data-form="near">
         <label for="near-q" class="sr">Search nearby Troves and their pings</label>
         <input class="input" id="near-q" placeholder="Search nearby" autocomplete="off" value="${esc(S.nearQ)}">
@@ -994,14 +995,13 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
       </div>`;
   }
 
-  const SCREENS = { home, feed: feedPage, ping: pingView, trove: troveFeed, radar, troves, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
+  const SCREENS = { home, feed: feedPage, ping: pingView, trove: troveFeed, troves, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
   function render() {
     const el = $('screen');
-    const fab = ['home', 'ask'].includes(S.screen) || (S.screen === 'radar' && !S.scanning);
-    el.className = 'screen' + (S.screen === 'subscribe' ? ' flush' : '') + (fab ? ' has-fab' : '') + (S.screen === 'radar' ? ' radar-screen' : '') + (S.screen === 'radar' && S.rlayout === 'bg' ? ' bgmode' : '');
+    const fab = (S.screen === 'home' && !(S.radarOn && S.scanning)) || S.screen === 'ask';
+    el.className = 'screen' + (S.screen === 'subscribe' ? ' flush' : '') + (fab ? ' has-fab' : '') + (S.screen === 'home' && S.radarOn ? ' radar-screen' : '');
     el.innerHTML = (SCREENS[S.screen] || home)();
     $('float').innerHTML = fab ? floatBar() : '';
-    $('bgfx').innerHTML = S.screen === 'radar' && S.rlayout === 'bg' ? `<div class="bgradar">${radarCircle(640)}</div>` : '';
     $('sheet').innerHTML = S.sheet === 'menu' ? menuSheet() : S.sheet === 'prompt' ? promptSheet() : S.sheet ? troveSheet(conn(S.sheet)) : '';
     if (S.screen === 'ask') el.scrollTop = el.scrollHeight;
   }
@@ -1010,7 +1010,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     clearTimeout(scanTimer);
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     S.scanning = S.rlayout === 'scan' && !reduce;
-    if (S.scanning) scanTimer = setTimeout(() => { S.scanning = false; if (S.screen === 'radar') render(); }, 1700);
+    if (S.scanning) scanTimer = setTimeout(() => { S.scanning = false; if (S.screen === 'home' && S.radarOn) render(); }, 1700);
   }
   let toastTimer;
   function toast(msg) {
@@ -1026,8 +1026,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const act = {
     reset: () => { S = fresh(); render(); toast('Prototype reset'); },
     go: (a) => {
-      if (a !== 'radar') S.nearQ = '';
-      if (a === 'radar' && S.screen !== 'radar') startScan();
+      if (a === 'radar') { S.radarOn = true; a = 'home'; startScan(); }
       S.screen = a; S.addingDoc = false; S.sheet = null; render(); scrollTop();
       if (a === 'feed' || a === 'home') S.posts.forEach((p) => { p.isNew = false; p.wasUnread = false; });
     },
@@ -1039,6 +1038,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     'menu-go': (a) => act.go(a),
     'menu-mine': (a) => { S.sheet = null; act['open-mine'](a); },
     trove: (a) => { S.sheet = a; render(); },
+    'radar-toggle': () => { S.radarOn = !S.radarOn; S.nearQ = ''; if (S.radarOn) startScan(); else { clearTimeout(scanTimer); S.scanning = false; } render(); scrollTop(); },
     'win-set': (a) => { S.win = +a; $('near-results').innerHTML = radarBody(); document.querySelectorAll('.tw button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.arg === a)); },
     'near-try': (a) => { S.nearQ = a; render(); },
     'near-clear': () => { S.nearQ = ''; render(); const i = $('near-q'); if (i) i.focus(); },
@@ -1152,7 +1152,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const hot = window.claude && window.claude.hot;
   if (hot && hot.snapshot) hot.snapshot(() => S);
-  const boot = (data) => { if (data && data.v === 14) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
+  const boot = (data) => { if (data && data.v === 15) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
   if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>

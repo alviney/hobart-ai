@@ -73,3 +73,4 @@ screens, from which the owner picks one (recorded as a decision).
 - 2026-11-16: ping signal fades with age; radar 'Listening back' slider from today to a month (D-013)
 - 2026-11-16: three minimal radar designs to compare (Quiet list, Signal dots, Big names); signal shown by fading rather than meters
 - 2026-11-16: Quiet list chosen for the radar; other designs removed (D-012 updated)
+- 2026-11-16: radar is a toggle on home that swaps the briefing for the radar; no separate screen (D-012 updated)

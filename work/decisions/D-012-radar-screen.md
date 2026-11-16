@@ -13,18 +13,21 @@ space on the screen.
 
 ## Decision
 
-- Opening the radar shows a short, minimal **scan**: faint rings and a slow
+- The radar is not its own screen. The radar button on home is a **toggle**:
+  on, it swaps the home content (the briefing) for the radar; off, the
+  briefing comes back. The button stays lit while the radar is on.
+- Turning the radar on shows a short, minimal **scan**: faint rings and a slow
   sweep in the same colour as the page, with "Scanning nearby…", for under
   two seconds. People with reduced motion skip it.
 - Then the results appear as a **quiet list** (chosen 2026-11-16 over
   "Signal dots" and "Big names"):
-  - A top row with a back button and the time slider (D-013).
+  - A top row with the time slider (D-013).
   - **"You're here"**: one line, "You're at <Trove>", with a Subscribe pill,
     when you're within about 50 m of a Trove you don't subscribe to.
   - The other nearby public Troves that pinged in the time window, closest
     first: name and distance, then the latest ping on a second line. Older
     pings fade; there are no meters, headings or dividers.
-- On the radar screen the bottom bar becomes **Search nearby**: it searches
+- While the radar is on, the bottom bar becomes **Search nearby**: it searches
   the names, info pages and recent pings of every public Trove nearby,
   including ones you don't subscribe to (see Q-006).
 
