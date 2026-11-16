@@ -7,6 +7,7 @@ requests, and readable by Claude at the start of any session.
 ```
 work/
   README.md      this file: the process and the board
+  vision.md      the end dream and how the first product leads to it
   questions.md   what is waiting on the owner
   ideas.md       inbox: one line per raw idea
   signals.md     where the data is, and what it last said
@@ -23,6 +24,10 @@ Update this table whenever a project changes status. Every file in
 
 | Project | Status | Next step |
 | --- | --- | --- |
+| [UI mockups](projects/ui-mockups.md) | shipped | Direction chosen (D-005) |
+| [Notify core](projects/notify-core.md) | scoping | Pick the stack, build to D-005's look |
+| [Agent access](projects/agent-access.md) | scoping | Settle MCP auth; waits on the notify-core data model |
+| [Pilot publishers](projects/pilot-publishers.md) | scoping | Landing page and ad drafts, after mockups |
 
 ## Lifecycle
 

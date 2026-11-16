@@ -1,0 +1,56 @@
+# D-014: Home is a timeline of recent pings
+
+- **Date:** 2026-11-16
+- **Status:** accepted
+- **Projects:** [ui-mockups](../projects/ui-mockups.md), [notify-core](../projects/notify-core.md)
+- **Supersedes:** the home layout in [D-010](D-010-deep-sonar.md) (one row per Trove) and the briefing-only home tried after it
+
+## Context
+
+The owner went back to the drawing board on the home screen with one goal:
+easily see recent pings. Three concepts were prototyped: Timeline, Trove
+shelf (story-style circles) and Now / Nearby / Yours tabs.
+
+## Decision
+
+- **Home is a timeline**: every recent ping from Troves you subscribe to,
+  newest first, grouped under Today, Yesterday, Earlier this week and Older.
+- Each row: the Trove's name (bold), the time on the right, and two lines
+  of the ping (its title in bold if it has one). Unread pings have a dot,
+  orange if urgent; urgent pings also say "Urgent". Read pings go grey.
+- Above the timeline, one **"Today:" summary line** from the briefing
+  prompt; tapping it edits the prompt.
+- The header has the menu and the **radar toggle** (D-012), which swaps the
+  timeline for the radar in place. The "Ask anything" bar stays at the
+  bottom.
+- ~~The per-Trove list (D-010) stays as the "All pings" page in the menu.~~
+  Removed 2026-11-16: the timeline already shows every ping, and Your subs
+  covers the per-Trove view.
+
+## Update 2026-11-16: no filters
+
+There are no filters on the timeline or the radar: it shows everything from
+the Troves you subscribe to. Noise is controlled by subscribing: if a
+Trove posts things you don't want, you unsubscribe (or pause it). Category
+chips and category on/off toggles were tried and removed.
+
+## Update 2026-11-16: Your Troves button
+
+The header has two round buttons on the right: **Your subs** (a chest
+icon) and the **radar**. Each swaps the timeline for its own content in
+place and turns into a navy ✕ to close it; only one can be open at a time.
+Your subs lists the Troves you subscribe to, with no "Subscribed" heading (if
+you run Troves, they appear first under "You run", then "You follow"). Scan a code and
+Start a Trove live in the ☰ menu, not in this panel. Opening a Trove and pressing back returns to the panel.
+
+## Options considered
+
+- **Timeline**: the most direct way to see what's new.
+- **Trove shelf**: quick per-Trove filtering, but adds a row of chrome.
+- **Tabs**: everything one tap away, but splits attention three ways.
+
+## Consequences
+
+The briefing shrinks to one line; a fuller briefing can come back later as
+the daily digest idea. Revisit if people with many Troves find the timeline
+too noisy (the shelf is the fallback).

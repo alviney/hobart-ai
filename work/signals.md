@@ -6,12 +6,17 @@ not connected yet.
 
 ## What "working" means
 
-<The one number that says the project is doing its job, and the steps that
-lead to it. For a product with a funnel, list the steps in order with the
-event that marks each one.>
+**Active publishers:** publishers who posted at least once in each of the
+last four weeks, and whose subscribers haven't muted them.
 
 | Step | Event or measure | Source |
 | --- | --- | --- |
+| Publisher creates a channel | `channel_created` | product database |
+| Invites go out | `invite_sent` | product database |
+| Subscribers accept | `invite_accepted` | product database |
+| Publisher posts weekly | `notification_published`, by week | product database |
+| Subscribers stay | connections still on after 4 weeks; mutes and unsubscribes | product database |
+| Agents use it | MCP and API reads per week | API logs |
 
 ## Sources
 

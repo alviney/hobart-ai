@@ -1,6 +1,6 @@
 # D-001: Sessions propose, the owner merges
 
-- **Date:** YYYY-MM-DD
+- **Date:** 2026-11-15
 - **Status:** accepted
 - **Projects:** all
 

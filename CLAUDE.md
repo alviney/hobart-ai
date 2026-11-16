@@ -1,7 +1,12 @@
-# <Project name>
+# Sub1 (working name, D-008; entities are Stations, D-017)
 
-<One paragraph: what this is, who it is for, and how we know it is working.
-Bootstrap (`work/loops/bootstrap.md`) fills this in.>
+An intelligent notification system for Hobart: anyone can start a Station (a
+club, school, café, community group) and send Pings to subscribers,
+and subscribers decide what is important enough to reach them by email,
+webhook or SMS, or pull everything through their own AI via an MCP server.
+It's the first step towards a live, AI-ready hub of Hobart data
+(`work/vision.md`). It's working when real publishers keep posting weekly
+and their subscribers stay connected (`work/signals.md`).
 
 ## How to build and test
 
@@ -46,6 +51,5 @@ Set by [D-001](work/decisions/D-001-how-this-project-runs.md):
 
 ## Things not to undo
 
-<Project-specific rules go here as they are learned: the one place a shared
-value lives, the thing that looks redundant but isn't. Add a line whenever a
-session breaks something a rule would have saved.>
+- Marketing copy follows `marketing/positioning.md` (D-003): sell the dream,
+  but never claim a feature that isn't live.
