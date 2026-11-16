@@ -72,3 +72,11 @@ or to `withdrawn` with a reason; it is never deleted.
 - **Blocks:** [notify-core](projects/notify-core.md) (radar)
 - **Options:** A: distances worked out on the phone; we never store where people are / B: store an approximate suburb to improve results / C: store precise location history
 - **Recommendation:** A, because it's the strongest privacy promise and the radar doesn't need anything more. It also fits "your connections are yours" in the marketing.
+
+## Q-006: Are pings from public Troves visible to people who don't subscribe?
+
+- **Status:** open
+- **Asked:** 2026-11-16, by brainstorm session
+- **Blocks:** nearby search on the radar ([D-012](decisions/D-012-radar-screen.md))
+- **Options:** A: public Troves' pings are public and searchable; invite-only Troves never appear anywhere / B: only a public Trove's name and info pages are searchable, pings are for subscribers / C: each Trove owner chooses
+- **Recommendation:** A, because it makes nearby search useful from day one, and owners who want privacy already have invite-only Troves.

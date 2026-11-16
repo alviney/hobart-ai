@@ -320,8 +320,15 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 .bgradar .radar { max-width: none !important; width: 640px; border: 0; background: radial-gradient(circle, #14334A 0%, #0B1A24 68%); }
 .bgradar .blip { pointer-events: none; }
 .scan { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; text-align: center; min-height: 100%; }
-.scan .radar { max-width: 280px; }
-.scan p { font-family: var(--display); font-weight: 600; font-size: 20px; color: #E6F1F7; }
+.radar-screen { background: var(--app) !important; }
+.scan .radar { max-width: 300px; background: none; border: 0; }
+.scan .radar svg.grid g { stroke: rgba(156,195,222,.09); }
+.scan .radar svg.grid text { display: none; }
+.scan .sweep { background: conic-gradient(from 0deg, rgba(156,214,240,0) 0deg, rgba(156,214,240,0) 310deg, rgba(156,214,240,.10) 360deg); }
+.scan .you-dot { width: 8px; height: 8px; margin: -4px; box-shadow: none; opacity: .8; }
+.scan .blip span { box-shadow: none; }
+.scan .blip.s4 span::after { display: none; }
+.scan p { font-family: var(--text); font-weight: 500; font-size: 15px; color: var(--muted); }
 .scan .sub { font-family: var(--text); font-weight: 500; font-size: 14px; }
 .reveal { animation: reveal .45s ease-out both; }
 @keyframes reveal { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
@@ -335,15 +342,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
 <div class="bar">
   <div class="brand">Sub1<small>clickable prototype</small></div>
-  <div class="row">
-    <span class="sub" id="rl-label" style="font-weight:600">Radar style</span>
-    <div class="seg" role="group" aria-labelledby="rl-label">
-      <button type="button" data-act="rlayout" data-arg="scan" id="rl-scan">1 · Scan first</button>
-      <button type="button" data-act="rlayout" data-arg="bg" id="rl-bg">2 · Background</button>
-      <button type="button" data-act="rlayout" data-arg="accent" id="rl-accent">3 · Header accent</button>
-    </div>
-    <button type="button" class="link-btn" data-act="reset">Reset</button>
-  </div>
+  <button type="button" class="link-btn" data-act="reset">Reset</button>
 </div>
 <div class="phone" id="phone">
   <div id="bgfx" aria-hidden="true"></div>
@@ -665,7 +664,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     return `${hereCard(true)}${band('A short walk · under 500 m', others.filter((c) => c.dist < 500))}${band('Walkable · under 1.5 km', others.filter((c) => c.dist >= 500 && c.dist < 1500))}${band('Further out', others.filter((c) => c.dist >= 1500))}`;
   }
   function radar() {
-    if (S.scanning) return `<div class="scan">${radarCircle(280)}<p>Scanning nearby…<br><span class="sub">Looking for Troves within ${km(RANGE)}</span></p></div>`;
+    if (S.scanning) return `<div class="scan">${radarCircle(300)}<p>Scanning nearby…</p></div>`;
     const faint = S.connections.filter((c) => !c.owner && c.dist != null && strength(c.verified) === 0).length;
     const head = `${S.rlayout === 'accent' ? `<div class="arc" aria-hidden="true">${radarCircle(340)}</div>` : ''}
       <h1 ${S.rlayout === 'accent' ? 'style="margin-top:-28px;position:relative"' : ''}>Nearby</h1><p class="sub">${nearby().length} Troves within ${km(RANGE)}, closest first</p>`;
@@ -917,7 +916,6 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const SCREENS = { home, feed: feedPage, ping: pingView, trove: troveFeed, radar, troves, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
   function render() {
-    ['scan', 'bg', 'accent'].forEach((n) => $('rl-' + n).setAttribute('aria-pressed', S.rlayout === n));
     const el = $('screen');
     const fab = ['home', 'ask'].includes(S.screen) || (S.screen === 'radar' && !S.scanning);
     el.className = 'screen' + (S.screen === 'subscribe' ? ' flush' : '') + (fab ? ' has-fab' : '') + (S.screen === 'radar' ? ' radar-screen' : '') + (S.screen === 'radar' && S.rlayout === 'bg' ? ' bgmode' : '');
@@ -961,7 +959,6 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     'menu-go': (a) => act.go(a),
     'menu-mine': (a) => { S.sheet = null; act['open-mine'](a); },
     trove: (a) => { S.sheet = a; render(); },
-    rlayout: (a) => { S.rlayout = a; S.screen = 'radar'; S.sheet = null; S.nearQ = ''; startScan(); render(); scrollTop(); },
     'near-try': (a) => { S.nearQ = a; render(); },
     'near-clear': () => { S.nearQ = ''; render(); const i = $('near-q'); if (i) i.focus(); },
     quiet: () => { const y = $('screen').scrollTop; S.showQuiet = !S.showQuiet; render(); $('screen').scrollTop = y; },
