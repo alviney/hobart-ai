@@ -106,3 +106,4 @@ screens, from which the owner picks one (recorded as a decision).
 - 2026-11-16: Your Troves button next to the radar; swaps the timeline in place and becomes an X (D-014 updated)
 - 2026-11-16: 'Your Troves' renamed 'Your subs'; 'Subscribed' heading dropped (D-014 updated)
 - 2026-11-16: Scan a code and Start a Trove buttons removed from Your subs (still in the menu)
+- 2026-11-16: home design language carried through every screen (D-015 updated)

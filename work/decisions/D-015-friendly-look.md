@@ -26,6 +26,23 @@ submarine yellow brought in.
 - **Pings are soft white cards** with a pastel letter avatar per Trove,
   in a colour that stays the same for that Trove.
 
+## Update 2026-11-16: one design language on every screen
+
+The rest of the app now follows the home screen:
+
+- White cards with a soft shadow on the pale background; no lavender fills.
+- Section labels in Fredoka with the short yellow stroke, like day headings.
+- Troves are shown by their category icon in a yellow circle (navy circle
+  for Troves you run), not letter avatars.
+- Yellow is the main action (Subscribe, Send ping, Copy invite link);
+  secondary actions are white with an outline; selected options turn
+  yellow.
+- Back links are white pills, like the menu button.
+- Moments (subscribing to a Trove, "You're here") use navy with a yellow
+  eyebrow.
+- Lists of pings on Trove pages and All pings use the home cards with
+  category icons.
+
 ## Options considered
 
 - **Friendly with yellow**: approachable for everyday people, and the yellow
