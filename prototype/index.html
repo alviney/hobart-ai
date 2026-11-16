@@ -76,6 +76,16 @@ p { margin: 0; }
 .fchip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #FFFFFF; }
 .fchip .n { font-variant-numeric: tabular-nums; font-weight: 600; opacity: .7; }
 .below { font-size: 12px; font-weight: 600; color: var(--muted); }
+.plist { display: flex; flex-direction: column; border-radius: 22px; background: var(--soft); overflow: hidden; flex-shrink: 0; }
+.prow { height: 68px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: center; gap: 5px; padding: 0 16px; border: 0; border-bottom: 1px solid #E4E9EC; background: transparent; text-align: left; width: 100%; color: var(--ink); }
+.prow:last-child { border-bottom: 0; }
+.prow:hover { background: #EDF2F5; }
+.prow .top { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); min-width: 0; }
+.prow .who { font-weight: 600; color: var(--body); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.prow .when { margin-left: auto; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.prow .tag { padding: 2px 8px; font-size: 11px; }
+.prow .ttl { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.prow.dim .ttl { color: var(--body); font-weight: 500; }
 .more-btn { align-self: flex-start; border: 0; background: none; padding: 4px 0; min-height: 36px; color: var(--primary); font-weight: 700; font-size: 14px; }
 .meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
 .tag { padding: 4px 10px; border-radius: 99px; font-size: 12px; font-weight: 700; white-space: nowrap; }
@@ -224,7 +234,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
   const km = (m) => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
 
   const fresh = () => ({
-    v: 5, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
+    v: 6, pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
     draft: { text: '', pri: 2, manual: false, ch: null }, subId: 'elm', scanLevel: 3, seq: 100,
     newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false, chat: [],
     connections: [
@@ -324,6 +334,10 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
     return { pinged, quiet, ai: a.ai };
   }
   const isLong = (p) => !!p.title || p.text.length > 240;
+  const pingRow = (p, dim) => `<button type="button" class="prow ${dim ? 'dim' : ''}" data-act="open-ping" data-arg="${p.id}">
+      <span class="top">${tag(p.pri)}${p.isNew ? '<span class="tag new">New</span>' : ''}${conn(p.conn).owner ? '<span class="tag you">You</span>' : ''}<span class="who">${esc(conn(p.conn).short)}</span><span class="when">${esc(p.time)}</span></span>
+      <span class="ttl">${esc(p.title || p.text)}</span></button>`;
+  const pingList = (list, dimFn) => `<div class="plist">${list.map((p) => pingRow(p, dimFn && dimFn(p))).join('')}</div>`;
   const pingCard = (p, belowLine) => {
     const meta = `<div class="meta">${tag(p.pri)}${belowLine ? '<span class="below">Below your line</span>' : ''}${conn(p.conn).owner ? '<span class="tag you">You</span>' : ''}${p.isNew ? '<span class="tag new">New</span>' : ''}<span>${esc(conn(p.conn).short)} · ${esc(p.time)}</span></div>`;
     if (!isLong(p)) return `<article class="card">${meta}<p class="msg">${esc(p.text)}</p></article>`;
@@ -345,16 +359,28 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
         <button type="button" class="radar-btn" data-act="go" data-arg="radar" aria-label="Radar: Troves near you">${icon.radar}</button></div>${filters}`;
     if (S.filter !== 'all') {
       const l = +S.filter, list = mine.filter((p) => p.pri === l);
-      return `${header}<p class="sub">All ${LEVELS[l]} pings, newest first, including ones below your line.</p>
-        ${list.length ? list.map((p) => pingCard(p, !pings(p) && !conn(p.conn).owner)).join('') : `<div class="empty">No ${LEVELS[l]} pings right now.</div>`}`;
+      return `${header}<p class="sub">All ${LEVELS[l]} pings, newest first, including ones below your line (shown lighter).</p>
+        ${list.length ? pingList(list, (p) => !pings(p) && !conn(p.conn).owner) : `<div class="empty">No ${LEVELS[l]} pings right now.</div>`}`;
     }
     return `${header}
       ${S.pullOnly ? '<p class="sub">Pull only is on, so nothing pings you. Everything is here when you or your AI look.</p>' : ''}
-      ${loud.length ? loud.map((p) => pingCard(p)).join('') : '<div class="empty">Nothing important right now.</div>'}
+      ${loud.length ? pingList(loud) : '<div class="empty">Nothing important right now.</div>'}
       ${quiet.length ? `<button type="button" class="quiet-btn" data-act="quiet" aria-expanded="${S.showQuiet}"><span><b>${quiet.length} quiet pings</b> <span class="sub">below your line</span></span><span aria-hidden="true">${S.showQuiet ? '▴' : '▾'}</span></button>` : ''}
-      ${S.showQuiet ? quiet.map((p) => pingCard(p)).join('') : ''}`;
+      ${S.showQuiet ? pingList(quiet, () => true) : ''}`;
   }
 
+
+  // ---------- One ping ----------
+  function pingView() {
+    const p = S.posts.find((x) => x.id === S.pingId), c = conn(p.conn);
+    return `<button type="button" class="back" data-act="go" data-arg="home">‹ Pings</button>
+      <div class="meta">${tag(p.pri)}${!pings(p) && !c.owner ? '<span class="below">Below your line</span>' : ''}<span>${esc(p.time)}</span></div>
+      ${p.title ? `<h1 style="font-size:30px">${esc(p.title)}</h1>` : ''}
+      <p class="ping-body" style="font-size:17px;color:var(--ink)">${esc(p.text)}</p>
+      <button type="button" class="conn" data-act="${c.owner ? 'open-mine' : 'open-conn'}" data-arg="${c.id}" style="margin-top:8px">
+        <span class="avatar ${c.owner ? 'ink' : ''}">${esc(c.name[0])}</span><span class="grow"><span class="name">${esc(c.name)}</span><span class="row" style="gap:8px">${meter(strength(c.verified || 0))}<span class="sub">${c.owner ? 'You run this' : LINE[c.level]}</span></span></span><span aria-hidden="true" style="color:var(--muted)">›</span></button>
+      <button type="button" class="btn ghost small" data-act="ask" data-arg="${esc('Tell me more about: ' + (p.title || p.text).slice(0, 60))}" style="align-self:flex-start">Ask about this</button>`;
+  }
 
   // ---------- Radar ----------
   function radar() {
@@ -620,7 +646,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
       </div>`;
   }
 
-  const SCREENS = { home, feed: home, radar, troves, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
+  const SCREENS = { home, feed: home, ping: pingView, radar, troves, conn: connDetail, mine: mineDetail, scan, subscribe, joined, start, share: compose, ask, ai };
   function render() {
     const el = $('screen');
     const fab = ['home', 'feed', 'ask'].includes(S.screen);
@@ -653,6 +679,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
     'menu-mine': (a) => { S.sheet = null; act['open-mine'](a); },
     trove: (a) => { S.sheet = a; render(); },
     quiet: () => { const y = $('screen').scrollTop; S.showQuiet = !S.showQuiet; render(); $('screen').scrollTop = y; },
+    'open-ping': (a) => { S.pingId = +a; const p = S.posts.find((x) => x.id === +a); if (p) p.isNew = false; S.screen = 'ping'; render(); scrollTop(); },
     filter: (a) => { S.filter = a === 'all' ? 'all' : +a; render(); },
     expand: (a) => { S.open[a] = !S.open[a]; const y = $('screen').scrollTop; render(); $('screen').scrollTop = y; },
     'open-conn': (a) => { S.connId = a; S.screen = 'conn'; S.sheet = null; render(); scrollTop(); },
@@ -741,7 +768,7 @@ details.doc p { margin-top: 8px; color: var(--body); line-height: 1.5; font-size
 
   const hot = window.claude && window.claude.hot;
   if (hot && hot.snapshot) hot.snapshot(() => S);
-  const boot = (data) => { if (data && data.v === 5) S = Object.assign(fresh(), data, { sheet: null }); render(); };
+  const boot = (data) => { if (data && data.v === 6) S = Object.assign(fresh(), data, { sheet: null }); render(); };
   if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>

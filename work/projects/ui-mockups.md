@@ -58,3 +58,4 @@ screens, from which the owner picks one (recorded as a decision).
 - 2026-11-15: menu sheet chosen (D-007); other navigation options and the switcher removed
 - 2026-11-15: prototype rebuilt as Sub1 (D-008): Troves and Pings, home shows only the latest ping, radar of nearby Troves with ping strength (D-009)
 - 2026-11-15: rating filter chips under the header (All, Urgent, Important, Good to know, FYI); feed is newest first
+- 2026-11-16: home feed is compact equal-height rows (rating, Trove, time, one-line title); tapping opens the full ping
