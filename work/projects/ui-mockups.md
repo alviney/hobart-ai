@@ -3,7 +3,7 @@
 - **Status:** shipped
 - **Size guess:** M
 - **Touches:** design files or clickable HTML prototypes only, no product code
-- **Related decisions:** [D-012](../decisions/D-012-radar-screen.md), [D-011](../decisions/D-011-urgent-or-not.md), [D-010](../decisions/D-010-deep-sonar.md), [D-008](../decisions/D-008-sub1-troves-pings.md), [D-009](../decisions/D-009-ping-strength-and-radar.md), [D-004](../decisions/D-004-mockups-first-and-ads.md), [D-003](../decisions/D-003-marketing-sells-the-dream.md), [D-005](../decisions/D-005-visual-direction.md), [D-007](../decisions/D-007-feed-first-menu-sheet.md)
+- **Related decisions:** [D-013](../decisions/D-013-ping-signal-fades.md), [D-012](../decisions/D-012-radar-screen.md), [D-011](../decisions/D-011-urgent-or-not.md), [D-010](../decisions/D-010-deep-sonar.md), [D-008](../decisions/D-008-sub1-troves-pings.md), [D-009](../decisions/D-009-ping-strength-and-radar.md), [D-004](../decisions/D-004-mockups-first-and-ads.md), [D-003](../decisions/D-003-marketing-sells-the-dream.md), [D-005](../decisions/D-005-visual-direction.md), [D-007](../decisions/D-007-feed-first-menu-sheet.md)
 
 ## Why
 
@@ -70,3 +70,4 @@ screens, from which the owner picks one (recorded as a decision).
 - 2026-11-16: three radar layouts to compare (Sonar, Here first, Distance rings); all have a 'You're here' recommendation for an unsubscribed Trove at your location and a bottom bar that searches nearby public Troves and their recent pings
 - 2026-11-16: radar visual no longer takes up space; three treatments to compare (scan-first loading screen, background, header accent) over the same 'You're here' card and walking-distance list
 - 2026-11-16: radar screen settled: minimal scan, then You're here and a nearby list with search (D-012); visibility of public pings asked as Q-006
+- 2026-11-16: ping signal fades with age; radar 'Listening back' slider from today to a month (D-013)

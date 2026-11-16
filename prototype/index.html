@@ -308,6 +308,12 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 .pulse-head span:nth-child(2) { animation-delay: 1s; } .pulse-head span:nth-child(3) { animation-delay: 2s; }
 .pulse-head b { position: relative; width: 14px; height: 14px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 0 0 5px rgba(255,255,255,.15); }
 @keyframes ring { 0% { transform: scale(1); opacity: .8; } 100% { transform: scale(7); opacity: 0; } }
+.win { display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border-radius: 18px; background: rgba(255,255,255,.04); border: 1px solid rgba(156,195,222,.14); flex-shrink: 0; }
+.win-top { display: flex; justify-content: space-between; align-items: baseline; }
+.win-label { font-size: 12px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: #9FB4C2; }
+.win-val { font-weight: 700; font-size: 15px; color: #E6F1F7; }
+.win input[type=range] { width: 100%; accent-color: #6FC3EC; height: 28px; margin: 0; }
+.win-ends { display: flex; justify-content: space-between; font-size: 11px; color: #7F95A4; }
 .qchips { display: flex; gap: 8px; flex-wrap: wrap; }
 .qchip { border: 1px solid #2E5266; background: rgba(255,255,255,.05); color: #C5D4DD; border-radius: 99px; padding: 7px 12px; font-size: 13px; font-weight: 600; min-height: 36px; }
 .fab-ask.near { border-color: #2E5266; background: #13242F; }
@@ -368,7 +374,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   const km = (m) => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
 
   const fresh = () => ({
-    v: 12, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
+    v: 13, win: 0, rlayout: 'scan', scanning: false, nearQ: '', prompt: "Give me a quick summary of what's on today, based on my pings.", fmenu: false, troveId: null, back: 'home', pingId: null, screen: 'home', open: {}, filter: 'all', connId: null, showQuiet: false, pullOnly: false, sheet: null,
     draft: { text: '', pri: 1, manual: false, ch: null }, subId: 'elm', scanLevel: 1, seq: 100,
     newCh: { name: '', kind: 'Club or team', access: 'invite' }, addingDoc: false, chat: [],
     connections: [
@@ -407,20 +413,24 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
       { id: 'pantry', name: 'Corner Pantry', short: 'Corner Pantry', level: 1, via: 'Email', on: true, joined: false, verified: 230, dist: 400, bearing: 140, docs: [] }
     ],
     posts: [
-      { id: 1, conn: 'netball', pri: 1, text: 'Saturday games move to 9am at the Domain courts. Same team sheet.', time: '7:40am' },
-      { id: 2, conn: 'pf', pri: 4, title: "Friday closure: what's open and what isn't", text: "School is closed this Friday while Aurora upgrades the power to the new building. The upgrade can't happen with students on site, so it's a full closure, not a pupil-free day.\n\nBefore-care and after-care are still running in the hall from 7:30am to 6pm. Book through the office by Thursday at 3pm so we have enough staff.\n\nThe canteen is closed, so pack lunch if your child is in care. The uniform shop will open on Monday instead.\n\nIf you can't find care, reply to this ping and we'll try to match you with another family. Thanks for your patience; the new building opens in Term 1.", time: 'Yesterday' },
-      { id: 3, read: true, conn: 'elm', pri: 1, text: 'Hot cross buns are back from Monday. Pre-orders open now.', time: 'Yesterday' },
-      { id: 4, conn: 'landcare', pri: 1, title: 'The creek, one year on', text: "A year ago the bank along Mt Stuart Rd was blackberry and broken glass. Since then 41 of you have planted 1,860 natives over eleven working bees.\n\nThe survival rate is 82%, well above the 60% we hoped for. The wattles are head height and the tussocks have closed the gaps that were washing out in every storm. Last month someone spotted a platypus below the footbridge for the first time in years.\n\nNext up is the steep section near the gate. It needs jute matting before we plant, so this Sunday is a matting day: gloves and sturdy shoes, and we'll have the stakes and mallets. 9am at the gate, morning tea at 11.", time: 'Yesterday' },
-      { id: 5, read: true, conn: 'netball', pri: 1, text: 'Photos from last week are up in the club gallery.', time: 'Mon' },
-      { id: 6, conn: 'pf', pri: 1, text: 'Second-hand uniform sale next Wednesday after school.', time: 'Mon' },
-      { id: 7, read: true, conn: 'bodycorp', pri: 1, text: 'Gardeners are in on Thursday morning.', time: 'Mon' },
-      { id: 8, read: true, conn: 'elm', pri: 1, text: 'New sourdough rye on the shelves this week.', time: 'Sun' },
-      { id: 9, read: true, conn: 'garden', pri: 1, text: 'Seedling swap at the shed this Saturday, 10am.', time: 'Sun' },
-      { id: 11, read: true, conn: 'school', pri: 1, text: 'The swimming carnival has moved to Thursday 4 December at the Aquatic Centre.', time: 'Today' },
-      { id: 12, read: true, conn: 'bagels', pri: 1, title: 'Everything bagels are back', text: 'Our everything bagels are back after the sesame shortage. Hot from 7am; they usually sell out by 10. Good bagels take time, so we boil every one by hand.', time: 'Today' },
-      { id: 13, read: true, conn: 'coffee', pri: 1, text: 'Parked at the rivulet track entrance all weekend. Bagels from Rise & Roll on the counter while they last.', time: 'Yesterday' },
-      { id: 14, read: true, conn: 'records', pri: 1, text: 'Crate of 70s Australian pressings just in. Saturday listening session from 2pm.', time: 'Tue' },
-      { id: 10, conn: 'netball', pri: 1, title: 'Finals day: everything you need to know', text: "We made the grand final! It's on Saturday 29 November at the Domain courts, court 3, at 10:20am. Please have players there by 9:50 for warm-up.\n\nUniforms: full club kit, including the navy socks. If your child has lost theirs, we have spares at the canteen.\n\nParking fills up fast on finals day. The Queens Walk car park is the best bet, or the 9:30 bus from the city stops right outside.\n\nAfter the game we're doing a team breakfast at Elm St Bakehouse. The club is covering the players; parents pay their own. Let me know by Thursday if you're coming so I can give them numbers.\n\nWin or lose, it's been a brilliant season. Thanks for every early morning, every lift and every orange quarter.", time: '8:15am' }
+      { id: 1, conn: 'netball', pri: 1, text: 'Saturday games move to 9am at the Domain courts. Same team sheet.', time: '7:40am', age: 0 },
+      { id: 2, conn: 'pf', pri: 4, title: "Friday closure: what's open and what isn't", text: "School is closed this Friday while Aurora upgrades the power to the new building. The upgrade can't happen with students on site, so it's a full closure, not a pupil-free day.\n\nBefore-care and after-care are still running in the hall from 7:30am to 6pm. Book through the office by Thursday at 3pm so we have enough staff.\n\nThe canteen is closed, so pack lunch if your child is in care. The uniform shop will open on Monday instead.\n\nIf you can't find care, reply to this ping and we'll try to match you with another family. Thanks for your patience; the new building opens in Term 1.", time: 'Yesterday', age: 1 },
+      { id: 3, read: true, conn: 'elm', pri: 1, text: 'Hot cross buns are back from Monday. Pre-orders open now.', time: 'Yesterday', age: 1 },
+      { id: 4, conn: 'landcare', pri: 1, title: 'The creek, one year on', text: "A year ago the bank along Mt Stuart Rd was blackberry and broken glass. Since then 41 of you have planted 1,860 natives over eleven working bees.\n\nThe survival rate is 82%, well above the 60% we hoped for. The wattles are head height and the tussocks have closed the gaps that were washing out in every storm. Last month someone spotted a platypus below the footbridge for the first time in years.\n\nNext up is the steep section near the gate. It needs jute matting before we plant, so this Sunday is a matting day: gloves and sturdy shoes, and we'll have the stakes and mallets. 9am at the gate, morning tea at 11.", time: 'Yesterday', age: 1 },
+      { id: 5, read: true, conn: 'netball', pri: 1, text: 'Photos from last week are up in the club gallery.', time: 'Mon', age: 3 },
+      { id: 6, conn: 'pf', pri: 1, text: 'Second-hand uniform sale next Wednesday after school.', time: 'Mon', age: 3 },
+      { id: 7, read: true, conn: 'bodycorp', pri: 1, text: 'Gardeners are in on Thursday morning.', time: 'Mon', age: 3 },
+      { id: 8, read: true, conn: 'elm', pri: 1, text: 'New sourdough rye on the shelves this week.', time: 'Sun', age: 4 },
+      { id: 9, read: true, conn: 'garden', pri: 1, text: 'Seedling swap at the shed this Saturday, 10am.', time: 'Sun', age: 4 },
+      { id: 11, read: true, conn: 'school', pri: 1, text: 'The swimming carnival has moved to Thursday 4 December at the Aquatic Centre.', time: 'Today', age: 0 },
+      { id: 12, read: true, conn: 'bagels', pri: 1, title: 'Everything bagels are back', text: 'Our everything bagels are back after the sesame shortage. Hot from 7am; they usually sell out by 10. Good bagels take time, so we boil every one by hand.', time: 'Today', age: 0 },
+      { id: 13, read: true, conn: 'coffee', pri: 1, text: 'Parked at the rivulet track entrance all weekend. Bagels from Rise & Roll on the counter while they last.', time: 'Yesterday', age: 1 },
+      { id: 14, read: true, conn: 'records', pri: 1, text: 'Crate of 70s Australian pressings just in. Saturday listening session from 2pm.', time: 'Tue', age: 2 },
+      { id: 15, read: true, conn: 'garden', pri: 1, text: 'Tomato seedlings are ready to plant out. Help yourself from the shed.', time: '19 Nov', age: 8 },
+      { id: 16, read: true, conn: 'records', pri: 1, text: 'Closed this Saturday for stocktake.', time: '14 Nov', age: 13 },
+      { id: 17, read: true, conn: 'rivulet', pri: 1, text: 'Thanks to the 23 people who came to the clean-up. 14 bags of rubbish out of the rivulet.', time: '1 Nov', age: 26 },
+      { id: 18, read: true, conn: 'coffee', pri: 1, text: 'New winter hours: from 7am until the end of August.', time: '29 Oct', age: 29 },
+      { id: 10, conn: 'netball', pri: 1, title: 'Finals day: everything you need to know', text: "We made the grand final! It's on Saturday 29 November at the Domain courts, court 3, at 10:20am. Please have players there by 9:50 for warm-up.\n\nUniforms: full club kit, including the navy socks. If your child has lost theirs, we have spares at the canteen.\n\nParking fills up fast on finals day. The Queens Walk car park is the best bet, or the 9:30 bus from the city stops right outside.\n\nAfter the game we're doing a team breakfast at Elm St Bakehouse. The club is covering the players; parents pay their own. Let me know by Thursday if you're coming so I can give them numbers.\n\nWin or lose, it's been a brilliant season. Thanks for every early morning, every lift and every orange quarter.", time: '8:15am', age: 0 }
     ]
   });
 
@@ -597,7 +607,13 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   // ---------- Radar ----------
   // ---------- Radar ----------
   const nearby = () => S.connections.filter((c) => !c.owner && c.dist != null && c.dist <= RANGE && strength(c.verified) > 0).sort((a, b) => a.dist - b.dist);
+  // A ping's signal fades as it gets older. The slider widens how far back the radar listens.
+  const WINDOWS = [{ d: 0, label: 'Today' }, { d: 3, label: 'Last 3 days' }, { d: 7, label: 'This week' }, { d: 14, label: 'Last 2 weeks' }, { d: 30, label: 'Last month' }];
+  const pingSig = (age) => age === 0 ? 4 : age <= 3 ? 3 : age <= 7 ? 2 : age <= 30 ? 1 : 0;
+  const SIG = { 4: 'Strong signal', 3: 'Good signal', 2: 'Fading', 1: 'Faint' };
+  const inWin = (p) => p.age <= WINDOWS[S.win].d;
   const latestOf = (c) => S.posts.filter((p) => p.conn === c.id).sort((a, b) => b.id - a.id)[0];
+  const latestIn = (c) => S.posts.filter((p) => p.conn === c.id && inWin(p)).sort((a, b) => a.age - b.age || b.id - a.id)[0];
   const hereTrove = () => nearby().find((c) => c.dist <= 50);
   function searchNearby(q) {
     const words = (q.toLowerCase().match(/[a-z0-9]{3,}/g) || []).map((w) => w.replace(/s$/, ''));
@@ -605,7 +621,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     const out = [];
     for (const c of nearby()) {
       const texts = [{ src: 'name', t: c.name }]
-        .concat(S.posts.filter((p) => p.conn === c.id).map((p) => ({ src: 'ping', t: (p.title ? p.title + '. ' : '') + p.text, time: p.time })))
+        .concat(S.posts.filter((p) => p.conn === c.id && inWin(p)).map((p) => ({ src: 'ping', t: (p.title ? p.title + '. ' : '') + p.text, time: p.time, age: p.age })))
         .concat(c.docs.map((d) => ({ src: 'doc', t: d.t + ': ' + d.b })));
       let best = null;
       for (const x of texts) {
@@ -621,8 +637,8 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     for (const w of (q.toLowerCase().match(/[a-z0-9]{3,}/g) || []).map((x) => x.replace(/s$/, ''))) h = h.replace(new RegExp(`(${w}[a-z]*)`, 'gi'), '<mark>$1</mark>');
     return h;
   }
-  function nearRow(c, preview, wrap) {
-    const s = strength(c.verified);
+  function nearRow(c, preview, wrap, sig) {
+    const s = sig == null ? strength(c.verified) : sig;
     return `<button type="button" class="near-row" data-act="trove" data-arg="${c.id}">
       <span style="min-width:0"><span class="nm">${esc(c.name)}${c.joined ? '<span class="subd-tag">Subscribed</span>' : ''}</span><span class="pv ${wrap ? 'wrap' : ''}">${preview}</span></span>
       <span class="side">${km(c.dist)}${meter(s)}</span></button>`;
@@ -639,7 +655,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   function results() {
     const q = S.nearQ.trim(), r = searchNearby(q);
     return `<div class="band-h">${r.length} result${r.length === 1 ? '' : 's'} near you</div>
-      ${r.length ? r.map(({ c, best }) => nearRow(c, (best.src === 'ping' ? `${esc(best.time)} · ` : best.src === 'doc' ? 'From their info · ' : '') + hl(best.t, q), true)).join('')
+      ${r.length ? r.map(({ c, best }) => nearRow(c, (best.src === 'ping' ? `${esc(best.time)} · ` : best.src === 'doc' ? 'From their info · ' : '') + hl(best.t, q), true, best.src === 'ping' ? pingSig(best.age) : 0)).join('')
         : `<p class="sub">No nearby Troves mention “${esc(q)}”. Try fewer words.</p>`}
       <p class="demo-note" style="color:#7F95A4">Searches every public Trove within ${km(RANGE)} and their recent pings.</p>`;
   }
@@ -659,17 +675,26 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   function radarBody() {
     if (S.nearQ.trim()) return results();
     const others = nearby().filter((c) => c !== hereTrove());
-    const preview = (c) => { const l = latestOf(c); return l ? esc(l.title || l.text) : `${STRENGTH[strength(c.verified)]} · verified ${ago(c.verified)}`; };
-    const band = (title, list) => list.length ? `<div class="band-h">${title}</div>${list.map((c) => nearRow(c, preview(c))).join('')}` : '';
-    return `${hereCard(true)}${band('A short walk · under 500 m', others.filter((c) => c.dist < 500))}${band('Walkable · under 1.5 km', others.filter((c) => c.dist >= 500 && c.dist < 1500))}${band('Further out', others.filter((c) => c.dist >= 1500))}`;
+    const live = others.filter((c) => latestIn(c)), quietN = others.length - live.length;
+    const row = (c) => { const l = latestIn(c); return nearRow(c, `${esc(l.time)} · ${esc(l.title || l.text)}`, false, pingSig(l.age)); };
+    const band = (title, list) => list.length ? `<div class="band-h">${title}</div>${list.map(row).join('')}` : '';
+    return `${hereCard(true)}${live.length ? '' : `<p class="sub">No pings nearby ${S.win === 0 ? 'today' : 'in this time'}. Slide to listen further back.</p>`}
+      ${band('A short walk · under 500 m', live.filter((c) => c.dist < 500))}${band('Walkable · under 1.5 km', live.filter((c) => c.dist >= 500 && c.dist < 1500))}${band('Further out', live.filter((c) => c.dist >= 1500))}
+      ${quietN ? `<p class="sub" style="text-align:center">${quietN} more Trove${quietN === 1 ? ' hasn’t' : 's haven’t'} pinged ${S.win === 0 ? 'today' : 'in this time'}.</p>` : ''}`;
   }
+
   function radar() {
     if (S.scanning) return `<div class="scan">${radarCircle(300)}<p>Scanning nearby…</p></div>`;
     const faint = S.connections.filter((c) => !c.owner && c.dist != null && strength(c.verified) === 0).length;
     const head = `${S.rlayout === 'accent' ? `<div class="arc" aria-hidden="true">${radarCircle(340)}</div>` : ''}
-      <h1 ${S.rlayout === 'accent' ? 'style="margin-top:-28px;position:relative"' : ''}>Nearby</h1><p class="sub">${nearby().length} Troves within ${km(RANGE)}, closest first</p>`;
+      <h1 ${S.rlayout === 'accent' ? 'style="margin-top:-28px;position:relative"' : ''}>Nearby</h1>`;
     return `<div class="${S.rlayout === 'scan' ? 'reveal' : ''}" style="display:flex;flex-direction:column;gap:14px">
       <button type="button" class="back" data-act="go" data-arg="home">‹ Home</button>${head}
+      <div class="win">
+        <div class="win-top"><label for="win" class="win-label">Listening back</label><span class="win-val" id="win-val">${WINDOWS[S.win].label}</span></div>
+        <input type="range" id="win" min="0" max="${WINDOWS.length - 1}" step="1" value="${S.win}" aria-valuetext="${WINDOWS[S.win].label}">
+        <div class="win-ends" aria-hidden="true"><span>Today</span><span>A month</span></div>
+      </div>
       <div class="qchips" ${S.nearQ.trim() ? 'hidden' : ''} id="near-chips">${['good bagels', 'coffee', 'kids', 'this weekend', 'records'].map((t) => `<button type="button" class="qchip" data-act="near-try" data-arg="${t}">${t}</button>`).join('')}</div>
       <div id="near-results" style="display:flex;flex-direction:column;gap:12px">${radarBody()}</div>
       ${faint ? `<p class="sub" style="text-align:center">${faint} Trove${faint === 1 ? ' is' : 's are'} too faint to show. Their details haven't been confirmed in over six months.</p>` : ''}
@@ -1012,7 +1037,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
     share: () => {
       const d = S.draft; if (!d.text.trim()) return;
       const c = conn(d.ch), r = reachFor(c, d.pri);
-      S.posts.push({ id: ++S.seq, read: true, conn: c.id, pri: d.pri, text: d.text.trim(), time: 'Just now', isNew: true, reach: `${r.pinged} pinged · ${r.quiet} in feed · ${r.ai} AI` });
+      S.posts.push({ id: ++S.seq, read: true, conn: c.id, pri: d.pri, text: d.text.trim(), time: 'Just now', age: 0, isNew: true, reach: `${r.pinged} pinged · ${r.quiet} in feed · ${r.ai} AI` });
       Object.assign(S.draft, { text: '', pri: 1, manual: false });
       c.verified = 0;
       S.screen = 'home';
@@ -1039,6 +1064,13 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && S.sheet) { S.sheet = null; render(); } });
   document.addEventListener('input', (e) => {
     if (e.target.id === 'draft') { S.draft.text = e.target.value; if (!e.target.value.trim()) S.draft.manual = false; updateCompose(); }
+    if (e.target.id === 'win') {
+      S.win = +e.target.value;
+      $('win-val').textContent = WINDOWS[S.win].label;
+      e.target.setAttribute('aria-valuetext', WINDOWS[S.win].label);
+      $('near-results').innerHTML = radarBody();
+      return;
+    }
     if (e.target.id === 'near-q') {
       S.nearQ = e.target.value;
       $('near-results').innerHTML = radarBody();
@@ -1065,7 +1097,7 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
 
   const hot = window.claude && window.claude.hot;
   if (hot && hot.snapshot) hot.snapshot(() => S);
-  const boot = (data) => { if (data && data.v === 12) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
+  const boot = (data) => { if (data && data.v === 13) S = Object.assign(fresh(), data, { sheet: null, scanning: false }); render(); };
   if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>
