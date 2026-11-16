@@ -109,3 +109,4 @@ screens, from which the owner picks one (recorded as a decision).
 - 2026-11-16: home design language carried through every screen (D-015 updated)
 - 2026-11-16: three ping-strength designs to compare instead of wifi bars (sonar rings, ring on the icon, glow)
 - 2026-11-16: sonar rings chosen for ping strength, small and top right on cards (D-009 updated)
+- 2026-11-16: ping strength now on the icon circle: strong = rich yellow rim, good = normal, weak = faded (D-009 updated)

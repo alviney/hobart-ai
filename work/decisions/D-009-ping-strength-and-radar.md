@@ -27,11 +27,15 @@ ones mean possibly out of date.
 
 ## Update 2026-11-16: how strength is drawn
 
-Ping strength is shown as **sonar rings**: a small purple dot with up to
-three full rings around it (three rings is strong, a lone grey dot is
-faint, a hollow dot is too faint). In Trove lists it sits small in the
-top-right corner of each card. Chosen over wifi-style bars, a ring on the
-Trove's icon, and a glow.
+Ping strength is shown on the Trove's icon circle, with nothing extra on
+the row:
+
+- **Strong:** a rich yellow rim around the circle.
+- **Good:** the normal circle.
+- **Weak or faint:** the circle drops to low opacity.
+
+Tried and replaced the same day: wifi-style bars, sonar rings (a dot with
+up to three rings), a thinning ring and a glow.
 
 ## Options considered
 
