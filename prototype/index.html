@@ -970,9 +970,9 @@ mark { background: rgba(111,195,236,.28); color: #FFFFFF; border-radius: 3px; pa
   // ---------- Shell ----------
   function floatBar() {
     if (S.screen === 'home' && S.radarOn) return `<div class="fab">
-      <form class="fab-ask near" data-form="near">
-        <label for="near-q" class="sr">Search nearby Troves and their pings</label>
-        <input class="input" id="near-q" placeholder="Search nearby" autocomplete="off" value="${esc(S.nearQ)}">
+      <form class="fab-ask" data-form="near">
+        <label for="near-q" class="sr">Ask anything. While the radar is on, this also searches nearby Troves and their pings.</label>
+        <input class="input" id="near-q" placeholder="Ask anything" autocomplete="off" value="${esc(S.nearQ)}">
         <button class="fab-send" type="${S.nearQ ? 'button' : 'submit'}" ${S.nearQ ? 'data-act="near-clear" aria-label="Clear search"' : 'aria-label="Search"'}>${S.nearQ ? '×' : '↑'}</button></form></div>`;
     return `<div class="fab">
       <form class="fab-ask" data-form="ask">

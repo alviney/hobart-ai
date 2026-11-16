@@ -27,7 +27,8 @@ space on the screen.
   - The other nearby public Troves that pinged in the time window, closest
     first: name and distance, then the latest ping on a second line. Older
     pings fade; there are no meters, headings or dividers.
-- While the radar is on, the bottom bar becomes **Search nearby**: it searches
+- The bottom bar always says **Ask anything**. While the radar is on, what
+  you type also searches nearby: it searches
   the names, info pages and recent pings of every public Trove nearby,
   including ones you don't subscribe to (see Q-006).
 
