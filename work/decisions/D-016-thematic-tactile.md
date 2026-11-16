@@ -19,8 +19,10 @@ Three ideas, used with restraint (a fourth, portholes, was dropped):
   light background, and each older day band (Yesterday, Earlier this week,
   Older) sits on a deeper blue, down to navy. Cards dim with depth. This
   replaces fading rows as the way to show that old pings lose signal.
-- ~~Portholes~~ (tried and dropped the same day). Rows have no avatar at
-  all: just the Trove's name with an unread dot, orange for urgent.
+- ~~Portholes~~ (tried and dropped the same day). Rows have no avatar.
+  Instead each row starts with a **category icon** for its Trove (school,
+  sport, food, coffee, nature, home, music, shop, group), then the name
+  with an unread dot, orange for urgent.
 - **Rows fade after the first two.** The newest two pings are at full
   strength and each one after is fainter (down to about a third); hovering
   or focusing a row brings it back to full.

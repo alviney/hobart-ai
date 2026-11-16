@@ -67,3 +67,4 @@ posting weekly (see `work/signals.md`).
 - 2026-11-16: home is a timeline of recent pings (D-014)
 - 2026-11-16: Friendly look with submarine-yellow accents (D-015)
 - 2026-11-16: thematic layer: depth is time, portholes, pressable controls, the ripple (D-016)
+- 2026-11-16: Troves need a category (drives the row icon); chosen when a Trove is created
