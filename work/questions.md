@@ -12,10 +12,10 @@ in the cloud environment's settings, never in the repository.
 - [ ] Check the Sub1 name: domain availability and a basic Australian trademark search (IP Australia) before registering anything (D-008)
 - [ ] Register a domain once the name check passes — unblocks email sending (DNS verification) and the public site. Tell a session the domain; DNS records come later.
 - [ ] Create an email-sending account (e.g. Resend or Postmark free tier) and verify the domain — unblocks invites and email delivery in notify-core. Save the API key in the cloud environment's settings, never in the repository.
-- [ ] Put the app online on Cloudflare (D-019), about five minutes:
-  1. Merge the pull request so the app is on `main`.
-  2. Cloudflare dashboard → **Storage & Databases → D1 → Create database**, named `sub1`. Copy its **Database ID** (not a secret) and paste it to a session, which puts it in `wrangler.toml`.
-  3. **Workers & Pages → Create → Import a repository**, pick `sub1` (the repo, previously `hobart-ai`). Build command `npm run build`; deploy command `npx wrangler deploy`.
+- [ ] Put the app online on Cloudflare (D-019), a couple of minutes left:
+  1. ~~Create the D1 database~~ Done 2026-11-17: a session created `sub1` (region OC) via `wrangler d1 create` and put its ID in `wrangler.toml`.
+  2. Merge the open pull request so the database ID is on `main`.
+  3. **Workers & Pages → Create → Import a repository**, pick `sub1` (the repo, previously `hobart-ai`). Build command `npm run build`; deploy command `npx wrangler deploy`. This needs you because it authorizes Cloudflare's GitHub app from your browser.
   4. Open the `sub1.<your-subdomain>.workers.dev` link it gives you, in any browser. Each merge to `main` redeploys.
   Unblocks testing the app outside Claude ([app-v1](projects/app-v1.md)). No sign-in yet, so share the link carefully.
 - [ ] Set up an ad account (e.g. Meta) and decide a test budget — unblocks finding publishers (D-004). Sessions draft the creative; only you can run and pay for ads.
