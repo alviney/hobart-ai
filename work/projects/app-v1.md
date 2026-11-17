@@ -34,10 +34,11 @@ works against the API and database, with tests on the rules.
 - [x] Tests for the shared rules and the API
 - [ ] Editable summary prompt
 - [ ] Sign-in (with notify-core)
-- [x] Runs on Cloudflare Workers + D1 (`wrangler.toml`, `server/worker.ts`), checked locally with `wrangler dev`; waiting on the owner's D1 database ID and GitHub connection (D-019)
+- [x] Runs on Cloudflare Workers + D1 (`wrangler.toml`, `server/worker.ts`), checked locally with `wrangler dev`; D1 database created and connected (D-019)
 
 ## Log
 
 - 2026-11-17: created; first slice built (all screens above against a real API and SQLite); 18 tests passing
 - 2026-11-17: production build checked (one server serves app and API); `render.yaml` added for a free test deployment
 - 2026-11-17: hosting moved to Cloudflare Workers + D1 (D-019); database layer works on both Node SQLite and D1; API rewritten to a few queries per request; full browser walkthrough passes on both
+- 2026-11-17: production D1 database `sub1` created (region OC) and its ID wired into `wrangler.toml`; the first Cloudflare build failed on the placeholder ID and the GitHub connection had dropped — both fixed (ID merged, owner reconnected the repo). This merge is the first end-to-end test of deploy-on-merge.
