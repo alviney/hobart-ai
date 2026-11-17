@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently -k -n api,web -c yellow,magenta \"tsx watch server/index.ts\" \"vite --host 0.0.0.0\"",
-    "build": "vite build",
+    "build": "rm -rf dist && vite build && cp -R site/. dist/",
     "start": "NODE_ENV=production tsx server/index.ts",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",

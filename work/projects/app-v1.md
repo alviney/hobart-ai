@@ -42,3 +42,4 @@ works against the API and database, with tests on the rules.
 - 2026-11-17: production build checked (one server serves app and API); `render.yaml` added for a free test deployment
 - 2026-11-17: hosting moved to Cloudflare Workers + D1 (D-019); database layer works on both Node SQLite and D1; API rewritten to a few queries per request; full browser walkthrough passes on both
 - 2026-11-17: production D1 database `sub1` created (region OC) and its ID wired into `wrangler.toml`; the first Cloudflare build failed on the placeholder ID and the GitHub connection had dropped — both fixed (ID merged, owner reconnected the repo). This merge is the first end-to-end test of deploy-on-merge.
+- 2026-11-17: one origin now serves everything (D-020): marketing site at `/`, app at `/app/`, "Log in" on the marketing header opens the app; the app gains a desktop layout from 720px up (same one-column screens, wider card).

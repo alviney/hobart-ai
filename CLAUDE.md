@@ -13,8 +13,9 @@ and their subscribers stay connected (`work/signals.md`).
 Stack: [D-018](work/decisions/D-018-app-stack.md). Node 22.
 
 - `npm install` once.
-- `npm run dev`: API on :8787 and the web app on :5173 (open :5173). The
-  database is `data/sub1.db`, created with sample data on first run.
+- `npm run dev`: API on :8787; :5173 serves the marketing site at `/` and
+  the app at `/app/` (D-020). The database is `data/sub1.db`, created with
+  sample data on first run.
 - `npm test`: shared rules and API tests (Vitest).
 - `npm run typecheck`: TypeScript across `app/`, `server/` and `shared/`.
 - `npm run build` then `npm start`: production build served by the API.

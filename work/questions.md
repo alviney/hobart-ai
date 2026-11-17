@@ -19,7 +19,7 @@ in the cloud environment's settings, never in the repository.
   4. Open the `sub1.<your-subdomain>.workers.dev` link it gives you, in any browser. Each merge to `main` redeploys.
   Unblocks testing the app outside Claude ([app-v1](projects/app-v1.md)). No sign-in yet, so share the link carefully.
 - [ ] Set up an ad account (e.g. Meta) and decide a test budget — unblocks finding publishers (D-004). Sessions draft the creative; only you can run and pay for ads.
-- [ ] Publish the landing page once one is chosen (hosting plus domain) — ads need somewhere to point.
+- [ ] Point a real domain at the site once the name check passes — the landing page now ships with the app (D-020) and is live at the `workers.dev` URL, but ads need a proper domain.
 - [ ] Set up wherever waitlist sign-ups go once Q-007 is answered (e.g. a free form or mailing-list account) — the landing page form does nothing until then.
 - [ ] Later, for the paid tier: an SMS provider account and payments (ABN, Stripe). Not needed for the pilot.
 
