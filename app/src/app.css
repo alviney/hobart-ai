@@ -1,9 +1,17 @@
-/* The real app fills a phone screen; on a desktop it shows as a phone-sized column. */
+/* One responsive app for every screen (D-020): full-bleed on a phone, a
+   phone-sized column on small windows, and a desktop card from 720px up.
+   One column throughout, so every screen works unchanged at any width. */
 body { justify-content: center; min-height: 100dvh; padding-top: 0; }
+/* React renders into #root, so it, not body, centres the app card. */
+#root { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .phone { height: min(844px, calc(100dvh - 32px)); margin: 16px 0; min-height: 0; }
 @media (max-width: 480px) {
   body { padding-left: 0; padding-right: 0; }
   .phone { width: 100%; height: 100dvh; margin: 0; border-radius: 0; border: 0; }
+}
+@media (min-width: 720px) {
+  .phone { width: min(780px, calc(100% - 64px)); height: calc(100dvh - 48px); border-radius: 28px; }
+  .bar { max-width: min(780px, calc(100% - 64px)); }
 }
 .screen.has-top { padding-top: calc(86px + env(safe-area-inset-top, 0px)); }
 #topbar { padding-top: calc(22px + env(safe-area-inset-top, 0px)); }

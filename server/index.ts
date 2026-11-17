@@ -15,8 +15,11 @@ app.onError((err, c) => {
   return c.json({ error: 'Something went wrong on our side. Try again.' }, 500);
 });
 
-// In production the built app is served from dist/; in development Vite serves it.
+// In production dist/ holds the marketing site at / and the app at /app/
+// (D-020); in development Vite serves both.
 if (process.env.NODE_ENV === 'production') {
+  app.get('/app', (c) => c.redirect('/app/'));
+  app.get('/app/', serveStatic({ path: './dist/app/index.html' }));
   app.use('/*', serveStatic({ root: './dist' }));
   app.get('*', serveStatic({ path: './dist/index.html' }));
 }
