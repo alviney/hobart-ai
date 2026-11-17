@@ -1,0 +1,17 @@
+# Cloudflare Workers + D1 (D-019). Deployed by Cloudflare from GitHub: build `npm run build`, deploy `npx wrangler deploy`.
+name = "sub1"
+main = "server/worker.ts"
+compatibility_date = "2025-06-01"
+
+# The built web app. Cloudflare serves these files directly; only /api/* runs the Worker,
+# and any other unknown path gets index.html so links into the app work.
+[assets]
+directory = "./dist"
+not_found_handling = "single-page-application"
+run_worker_first = ["/api/*"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "sub1"
+# Paste the ID of the D1 database you create in the Cloudflare dashboard (not a secret).
+database_id = "00000000-0000-0000-0000-000000000000"

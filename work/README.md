@@ -24,10 +24,11 @@ Update this table whenever a project changes status. Every file in
 
 | Project | Status | Next step |
 | --- | --- | --- |
+| [App v1](projects/app-v1.md) | building | Owner tries it and asks for changes; then sign-in with notify-core |
 | [UI mockups](projects/ui-mockups.md) | shipped | Direction chosen (D-005) |
 | [Notify core](projects/notify-core.md) | scoping | Pick the stack, build to D-005's look |
 | [Agent access](projects/agent-access.md) | scoping | Settle MCP auth; waits on the notify-core data model |
-| [Pilot publishers](projects/pilot-publishers.md) | scoping | Landing page and ad drafts, after mockups |
+| [Pilot publishers](projects/pilot-publishers.md) | building | Owner reviews the landing page draft; connect the waitlist (Q-007) |
 
 ## Lifecycle
 

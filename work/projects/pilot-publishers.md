@@ -1,6 +1,6 @@
 # Pilot publishers: first Hobart publishers, found through ads
 
-- **Status:** scoping
+- **Status:** building
 - **Size guess:** M
 - **Touches:** `marketing/`, landing page, onboarding docs, `work/signals.md`
 - **Related decisions:** [D-002](../decisions/D-002-start-with-notifications.md), [D-003](../decisions/D-003-marketing-sells-the-dream.md), [D-004](../decisions/D-004-mockups-first-and-ads.md)
@@ -36,7 +36,7 @@ for a month without being nagged.
 
 ## Done when
 
-- [ ] Landing page with waitlist built (from the chosen [ui-mockups](ui-mockups.md) direction)
+- [x] Landing page with waitlist built (`site/index.html`, draft at https://claude.ai/artifact/G44NJqi3R8CFhpt1E4mRjd). The form isn't connected to anything yet ([Q-007](../questions.md))
 - [ ] Ad creative and targeting drafts in `marketing/` (Hobart small businesses and community groups)
 - [ ] Waitlist sign-ups measured per ad (see `work/signals.md`)
 - [ ] Founding-publisher pitch and onboarding guide approved
@@ -47,3 +47,4 @@ for a month without being nagged.
 
 - 2026-11-15: created
 - 2026-11-15: switched from hand-recruiting to ads plus a waitlist (D-004)
+- 2026-11-17: landing page drafted in the Sub1 look (`site/index.html`); waitlist form not yet connected
