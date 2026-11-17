@@ -3,7 +3,7 @@
 - **Status:** building
 - **Size guess:** L (in slices)
 - **Touches:** `app/`, `server/`, `shared/`, `package.json`
-- **Related decisions:** [D-018](../decisions/D-018-app-stack.md), [D-014](../decisions/D-014-home-timeline.md), [D-012](../decisions/D-012-radar-screen.md), [D-015](../decisions/D-015-friendly-look.md), [D-016](../decisions/D-016-thematic-tactile.md), [D-017](../decisions/D-017-stations.md)
+- **Related decisions:** [D-019](../decisions/D-019-cloudflare.md), [D-018](../decisions/D-018-app-stack.md), [D-014](../decisions/D-014-home-timeline.md), [D-012](../decisions/D-012-radar-screen.md), [D-015](../decisions/D-015-friendly-look.md), [D-016](../decisions/D-016-thematic-tactile.md), [D-017](../decisions/D-017-stations.md)
 
 ## Why
 
@@ -34,9 +34,10 @@ works against the API and database, with tests on the rules.
 - [x] Tests for the shared rules and the API
 - [ ] Editable summary prompt
 - [ ] Sign-in (with notify-core)
-- [x] Hosting blueprint for a test deployment (`render.yaml`); waiting on the owner's account
+- [x] Runs on Cloudflare Workers + D1 (`wrangler.toml`, `server/worker.ts`), checked locally with `wrangler dev`; waiting on the owner's D1 database ID and GitHub connection (D-019)
 
 ## Log
 
 - 2026-11-17: created; first slice built (all screens above against a real API and SQLite); 18 tests passing
 - 2026-11-17: production build checked (one server serves app and API); `render.yaml` added for a free test deployment
+- 2026-11-17: hosting moved to Cloudflare Workers + D1 (D-019); database layer works on both Node SQLite and D1; API rewritten to a few queries per request; full browser walkthrough passes on both

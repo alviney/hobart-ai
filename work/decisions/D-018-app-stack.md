@@ -1,7 +1,7 @@
 # D-018: The app is TypeScript: React on Vite, Hono on Node, SQLite
 
 - **Date:** 2026-11-17
-- **Status:** accepted
+- **Status:** accepted (hosting updated by D-019: Cloudflare Workers + D1)
 - **Projects:** [app-v1](../projects/app-v1.md), [notify-core](../projects/notify-core.md)
 
 ## Context

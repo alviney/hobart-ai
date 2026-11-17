@@ -1,9 +1,10 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { api } from './api';
-import { openDb, type DB } from './db';
+import { openNodeDb } from './store-node';
+import type { Db } from './store';
 import { DEMO_HERE } from './seed';
 
-let db: DB;
+let db: Db;
 let app: ReturnType<typeof api>;
 const get = async (path: string) => (await app.request(path)).json() as Promise<any>;
 const send = async (method: string, path: string, body?: unknown) => {
@@ -11,7 +12,7 @@ const send = async (method: string, path: string, body?: unknown) => {
   return { status: res.status, json: (await res.json()) as any };
 };
 
-beforeEach(() => { db = openDb(':memory:'); app = api(db); });
+beforeEach(async () => { db = await openNodeDb(':memory:'); app = api(db); });
 
 describe('timeline', () => {
   it('shows pings from subscribed Stations only, newest first', async () => {
@@ -71,5 +72,16 @@ describe('nearby', () => {
   it('searches names, info and recent pings', async () => {
     const n = await get(`/nearby?lat=${DEMO_HERE.lat}&lng=${DEMO_HERE.lng}&q=good%20bagels`);
     expect(n.results[0].station.id).toBe('bagels');
+  });
+});
+
+describe('reset', () => {
+  it('puts the sample data back', async () => {
+    await send('POST', '/stations', { name: 'Temporary', category: 'group', access: 'invite' });
+    await send('POST', '/dev/reset');
+    const subs = await get('/subs');
+    expect(subs.own).toEqual([]);
+    expect(subs.following.length).toBeGreaterThan(3);
+    expect((await get('/timeline')).some((p: any) => !p.read)).toBe(true);
   });
 });

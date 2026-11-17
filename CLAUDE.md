@@ -19,7 +19,11 @@ Stack: [D-018](work/decisions/D-018-app-stack.md). Node 22.
 - `npm run typecheck`: TypeScript across `app/`, `server/` and `shared/`.
 - `npm run build` then `npm start`: production build served by the API.
 - `npm run check`: validates `work/`.
+- `npx wrangler dev --local`: the Cloudflare version (Worker + local D1), after `npm run build`.
+- Hosting is Cloudflare Workers + D1 ([D-019](work/decisions/D-019-cloudflare.md)). Cloudflare deploys from `main`; sessions never deploy.
 
+The API talks to the database through `server/store.ts` (Node SQLite locally,
+D1 on Cloudflare); keep each request to a few queries (D1 allows 50).
 Sample data lives in `server/seed.ts`; the menu's "Reset sample data" (or
 `POST /api/dev/reset`) reloads it. There's one built-in person ("You") until
 sign-in exists.

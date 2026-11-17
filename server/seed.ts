@@ -1,5 +1,5 @@
-import type { DatabaseSync } from 'node:sqlite';
 import { offset } from '../shared/domain';
+import type { Arg } from './store';
 
 // Sample data carried over from the prototype. Times are relative to "now" so the
 // timeline always looks fresh. "You" are standing at Lansdowne Primary School.
@@ -69,30 +69,30 @@ const PINGS: [string, number, boolean, string | null, string, boolean][] = [
   ['swim', 5 * H, false, null, 'Water is 14 degrees this morning. Sunrise swim and coffee on Saturday.', true],
 ];
 
-export function seed(db: DatabaseSync, now: number = Date.now()): void {
+// SQL literal for sample data we wrote ourselves (no user input reaches here).
+const lit = (v: string | number | null) => (v === null ? 'NULL' : typeof v === 'number' ? String(v) : `'${v.replace(/'/g, "''")}'`);
+const rows = (table: string, cols: string[], values: (string | number | null)[][]) =>
+  `INSERT INTO ${table} (${cols.join(', ')}) VALUES ${values.map((r) => `(${r.map(lit).join(', ')})`).join(', ')}`;
+
+/** The sample data as a handful of multi-row inserts (D1 allows 50 queries per request). */
+export function seedStatements(now: number = Date.now()): [string, Arg[]][] {
   const iso = (minutesAgo: number) => new Date(now - minutesAgo * 60_000).toISOString();
-  db.exec('BEGIN');
-  try {
-    db.prepare('INSERT INTO users (id, name) VALUES (?, ?)').run(ME, 'You');
-    db.prepare('INSERT INTO users (id, name) VALUES (?, ?)').run('others', 'Other Hobart people');
-    const st = db.prepare('INSERT INTO stations (id, name, short, category, access, owner_id, lat, lng, verified_at, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-    const doc = db.prepare('INSERT INTO docs (station_id, title, body) VALUES (?, ?, ?)');
-    const sub = db.prepare('INSERT INTO subscriptions (user_id, station_id, level, via, paused, created_at) VALUES (?, ?, ?, ?, ?, ?)');
-    for (const s of STATIONS) {
-      const at = offset(DEMO_HERE, s.dist, s.bearing);
-      st.run(s.id, s.name, s.short, s.category, s.access ?? 'public', 'others', at.lat, at.lng, iso(s.verifiedDays * D), iso(400 * D));
-      for (const [t, b] of s.docs) doc.run(s.id, t, b);
-      if (s.sub) sub.run(ME, s.id, s.sub.level, s.sub.via, s.sub.paused ? 1 : 0, iso(30 * D));
-    }
-    const ping = db.prepare('INSERT INTO pings (station_id, urgent, title, body, created_at) VALUES (?, ?, ?, ?, ?)');
-    const read = db.prepare('INSERT INTO reads (user_id, ping_id) VALUES (?, ?)');
-    for (const [stationId, ago, urgent, title, body, isRead] of [...PINGS].sort((a, b) => b[1] - a[1])) {
-      const r = ping.run(stationId, urgent ? 1 : 0, title, body, iso(ago));
-      if (isRead) read.run(ME, Number(r.lastInsertRowid));
-    }
-    db.exec('COMMIT');
-  } catch (e) {
-    db.exec('ROLLBACK');
-    throw e;
+  const stations: (string | number | null)[][] = [], docs: (string | number | null)[][] = [], subs: (string | number | null)[][] = [];
+  for (const s of STATIONS) {
+    const at = offset(DEMO_HERE, s.dist, s.bearing);
+    stations.push([s.id, s.name, s.short, s.category, s.access ?? 'public', 'others', at.lat, at.lng, iso(s.verifiedDays * D), iso(400 * D)]);
+    for (const [t, b] of s.docs) docs.push([s.id, t, b]);
+    if (s.sub) subs.push([ME, s.id, s.sub.level, s.sub.via, s.sub.paused ? 1 : 0, iso(30 * D)]);
   }
+  const ordered = [...PINGS].sort((a, b) => b[1] - a[1]);
+  const pings = ordered.map(([stationId, ago, urgent, title, body], i) => [i + 1, stationId, urgent ? 1 : 0, title, body, iso(ago)]);
+  const reads = ordered.flatMap((p, i) => (p[5] ? [[ME, i + 1]] : []));
+  return [
+    [rows('users', ['id', 'name'], [[ME, 'You'], ['others', 'Other Hobart people']]), []],
+    [rows('stations', ['id', 'name', 'short', 'category', 'access', 'owner_id', 'lat', 'lng', 'verified_at', 'created_at'], stations), []],
+    [rows('docs', ['station_id', 'title', 'body'], docs), []],
+    [rows('subscriptions', ['user_id', 'station_id', 'level', 'via', 'paused', 'created_at'], subs), []],
+    [rows('pings', ['id', 'station_id', 'urgent', 'title', 'body', 'created_at'], pings), []],
+    [rows('reads', ['user_id', 'ping_id'], reads), []],
+  ];
 }

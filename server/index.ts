@@ -1,11 +1,12 @@
+// Runs Sub1 on Node: local development and `npm start`. Cloudflare uses worker.ts instead.
 import { serve } from '@hono/node-server';
 import { serveStatic } from '@hono/node-server/serve-static';
 import { Hono } from 'hono';
 import { api } from './api';
-import { openDb } from './db';
+import { openNodeDb } from './store-node';
 
 const port = Number(process.env.PORT || 8787);
-const db = openDb(process.env.DB_FILE || 'data/sub1.db');
+const db = await openNodeDb(process.env.DB_FILE || 'data/sub1.db');
 
 const app = new Hono();
 app.route('/api', api(db));
