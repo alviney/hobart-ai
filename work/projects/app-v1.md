@@ -34,7 +34,9 @@ works against the API and database, with tests on the rules.
 - [x] Tests for the shared rules and the API
 - [ ] Editable summary prompt
 - [ ] Sign-in (with notify-core)
+- [x] Hosting blueprint for a test deployment (`render.yaml`); waiting on the owner's account
 
 ## Log
 
 - 2026-11-17: created; first slice built (all screens above against a real API and SQLite); 18 tests passing
+- 2026-11-17: production build checked (one server serves app and API); `render.yaml` added for a free test deployment

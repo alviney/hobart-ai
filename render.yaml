@@ -1,0 +1,15 @@
+# Render blueprint for a test deployment of Sub1 (free plan).
+# On the free plan the server sleeps when idle and its disk is wiped on each
+# deploy or restart, so the app comes back with fresh sample data. Fine for
+# trying it out; real users need a paid disk or a hosted database (D-018).
+services:
+  - type: web
+    name: sub1
+    runtime: node
+    plan: free
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/me
+    envVars:
+      - key: NODE_VERSION
+        value: "22"

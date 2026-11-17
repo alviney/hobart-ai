@@ -12,7 +12,7 @@ in the cloud environment's settings, never in the repository.
 - [ ] Check the Sub1 name: domain availability and a basic Australian trademark search (IP Australia) before registering anything (D-008)
 - [ ] Register a domain once the name check passes — unblocks email sending (DNS verification) and the public site. Tell a session the domain; DNS records come later.
 - [ ] Create an email-sending account (e.g. Resend or Postmark free tier) and verify the domain — unblocks invites and email delivery in notify-core. Save the API key in the cloud environment's settings, never in the repository.
-- [ ] Create a hosting account once the stack decision is written (free tier) — unblocks a live pilot. A session will say which one.
+- [ ] Put the app online for testing: create a free Render account, choose **New → Blueprint**, and connect this GitHub repository (it reads `render.yaml`). That gives a link to open in any browser. Free plan: it sleeps when idle and resets to sample data on each deploy. Check Render's current free-plan terms first; nothing in the blueprint needs a card. Unblocks testing the app outside Claude ([app-v1](projects/app-v1.md)).
 - [ ] Set up an ad account (e.g. Meta) and decide a test budget — unblocks finding publishers (D-004). Sessions draft the creative; only you can run and pay for ads.
 - [ ] Publish the landing page once one is chosen (hosting plus domain) — ads need somewhere to point.
 - [ ] Set up wherever waitlist sign-ups go once Q-007 is answered (e.g. a free form or mailing-list account) — the landing page form does nothing until then.
