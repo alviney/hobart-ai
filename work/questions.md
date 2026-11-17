@@ -15,7 +15,7 @@ in the cloud environment's settings, never in the repository.
 - [ ] Put the app online on Cloudflare (D-019), about five minutes:
   1. Merge the pull request so the app is on `main`.
   2. Cloudflare dashboard → **Storage & Databases → D1 → Create database**, named `sub1`. Copy its **Database ID** (not a secret) and paste it to a session, which puts it in `wrangler.toml`.
-  3. **Workers & Pages → Create → Import a repository**, pick `hobart-ai`. Build command `npm run build`; deploy command `npx wrangler deploy`.
+  3. **Workers & Pages → Create → Import a repository**, pick `sub1` (the repo, previously `hobart-ai`). Build command `npm run build`; deploy command `npx wrangler deploy`.
   4. Open the `sub1.<your-subdomain>.workers.dev` link it gives you, in any browser. Each merge to `main` redeploys.
   Unblocks testing the app outside Claude ([app-v1](projects/app-v1.md)). No sign-in yet, so share the link carefully.
 - [ ] Set up an ad account (e.g. Meta) and decide a test budget — unblocks finding publishers (D-004). Sessions draft the creative; only you can run and pay for ads.
